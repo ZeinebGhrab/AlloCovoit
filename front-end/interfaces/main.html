@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlloCovoit - Partagez vos trajets</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles/style.css">
+    <script type="module" src="../script/main.js"></script>
+</head>
+<body>
+    
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">Allo<span>Covoit</span></div>
+        <div class="nav-buttons">
+            <span><i class="fas fa-user"></i> Zeineb Ghrab</span>
+            <button data-page="all-trajets"><i class="fas fa-search"></i> Tous les trajets</button>
+            <button data-page="publier-trajet"><i class="fas fa-plus"></i> Publier un trajet</button>
+            <button data-page="panier"><i class="fas fa-shopping-cart"></i> Mon panier</button>
+            <button data-page="mes-trajets"><i class="fas fa-car"></i> Mes trajets publiés</button>
+            <button data-page="deconnexion"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+        </div>
+    </nav>
+
+
+    <!-- Page des trajets -->
+        <div class="page">
+            <h2><i class="fas fa-route"></i> Rechercher un trajet</h2>
+            <div class="filter-section">
+                <div class="filter-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-map-marker-alt"></i> Départ</label>
+                        <input type="text" id="searchDepart" placeholder="Ville de départ">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-map-marker-alt"></i> Arrivée</label>
+                        <input type="text" id="searchArrivee" placeholder="Ville d'arrivée">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar"></i> Date</label>
+                        <input type="date">
+                    </div>
+                </div>
+                <button class="btn"><i class="fas fa-search"></i> Rechercher</button>
+            </div>
+
+            <h3>Trajets disponibles</h3>
+            <div id="trajetsContainer">
+            </div>
+        </div>
+        <footer>
+        <p>© 2025 AlloCovoit. Tous droits réservés.</p>
+        <div class="footer-links">
+            <a href="#confidentialite">Politique de confidentialité</a>
+            <a href="#conditions">Conditions d'utilisation</a>
+            <a href="#support">Support</a>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlloCovoit - Partagez vos trajets</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="../../styles/style.css">
+    <script type="module" src="../../script/main.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">Allo<span>Covoit</span></div>
+        <div class="nav-buttons">
+            <span><i class="fas fa-user"></i> Zeineb Ghrab</span>
+            <button data-page="all-trajets"><i class="fas fa-search"></i> Tous les trajets</button>
+            <button data-page="publier-trajet"><i class="fas fa-plus"></i> Publier un trajet</button>
+            <button data-page="panier"><i class="fas fa-shopping-cart"></i> Mon panier</button>
+            <button data-page="mes-trajets"><i class="fas fa-car"></i> Mes trajets publiés</button>
+            <button data-page="deconnexion"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+        </div>
+    </nav>
+
+        <!-- Page de publication -->
+        <div class="page">
+            <h2><i class="fas fa-plus-circle"></i> Publier un trajet</h2>
+            <form class="form-grid" action="../../../back-end/route/api/save.php" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label><i class="fas fa-map-marker-alt"></i> Ville de départ</label>
+                    <input type="text" id="pubDepart" name="Ville_depart" placeholder="Sfax">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-map-marker-alt"></i> Ville d'arrivée</label>
+                    <input type="text" id="pubArrivee" name="Ville_arrivee" placeholder="Sousse">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-calendar"></i> Date</label>
+                    <input type="date" id="pubDate" name="date_publication">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-clock"></i> Heure</label>
+                    <input type="time" id="pubHeure" name="heure_depart">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-euro-sign"></i> Prix par place (DT)</label>
+                    <input type="number" id="pubPrix" name="prix" placeholder="15">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-users"></i> Places disponibles</label>
+                    <input type="number" id="pubPlaces" name="places_disponibles" placeholder="3" min="1" max="8">
+                </div>
+                <div class="form-group full-width">
+                    <label><i class="fas fa-comment"></i> Description</label>
+                    <textarea id="pubDesc" rows="3" name="description" placeholder="Informations supplémentaires..."></textarea>
+                </div>
+                <button class="btn"><i class="fas fa-paper-plane"></i> Publier le trajet</button>
+            </form>
+        </div>
+        <footer>
+        <p>© 2025 AlloCovoit. Tous droits réservés.</p>
+        <div class="footer-links">
+            <a href="#confidentialite">Politique de confidentialité</a>
+            <a href="#conditions">Conditions d'utilisation</a>
+            <a href="#support">Support</a>
+        </div>
+    </footer>
+    </body>
+</html>

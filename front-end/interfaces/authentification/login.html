@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlloCovoit - Partagez vos trajets</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="../../styles/style.css">
+    <script type="module" src="../../script/main.js"></script>
+</head>
+<body>
+    <!-- Cercles décoratives -->
+    <div class="circle circle-1"></div>
+    <div class="circle circle-2"></div>
+    <div class="circle circle-3"></div>
+    <div class="circle circle-4"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">Allo<span>Covoit</span></div>
+    </nav>
+
+    <!-- Page de connexion -->
+     <div class="form">
+        <div class="login-card">
+        <div class="logo-container">
+            <i class="fas fa-user-circle"></i>
+            <h2>Connexion</h2>
+        </div>
+
+        <form id="loginForm" action="../../../back-end/authentification/login.php" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label class="email-label"><i class="fas fa-envelope"></i>Adresse email</label>
+                <input 
+                    type="email" 
+                    placeholder="nom.prenom@gmail.com" 
+                    name="email"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label class="password-label"><i class="fas fa-lock"></i>Mot de passe</label>
+                <div class="input-wrapper">
+                    <input 
+                        type="password" 
+                        id="passwordInput"
+                        placeholder="••••••••••••" 
+                        name="mot_passe"
+                        required
+                    >
+                </div>
+            </div>
+
+            <button type="submit" class="btn">
+                Se connecter
+            </button>
+        </form>
+
+        <div class="signup-section">
+            Vous n'avez pas de compte ? <a href="./sign.html" class="signup-link">Inscrivez-vous ici</a>
+        </div>
+    </div>
+     </div>
+        <footer>
+        <p>© 2025 AlloCovoit. Tous droits réservés.</p>
+        <div class="footer-links">
+            <a href="#confidentialite">Politique de confidentialité</a>
+            <a href="#conditions">Conditions d'utilisation</a>
+            <a href="#support">Support</a>
+        </div>
+    </footer>
+    </body>
+</html>

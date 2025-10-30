@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CovoitExpress - Partagez vos trajets</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="../../styles/style.css">
+    <script type="module" src="../../js/main.js"></script>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">Allo<span>Covoit</span></div>
+          <div class="nav-buttons">
+            <span><i class="fas fa-user"></i></span>
+            <button><i class="fas fa-search"></i> Trajets</button>
+            <button><i class="fas fa-plus"></i> Publier</button>
+            <button><i class="fas fa-shopping-cart"></i> Panier</button>
+            <button><i class="fas fa-car"></i> Mes trajets</button>
+            <button><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+          </div>
+    </nav> 
+
+ <!-- Page admin -->
+        <div class="page">
+            <h2><i class="fas fa-user-shield"></i> Tableau de bord administrateur</h2>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <i class="fas fa-users" style="font-size: 48px; margin-bottom: 15px;"></i>
+                    <h3 id="statUsers">0</h3>
+                    <p>Utilisateurs inscrits</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-route" style="font-size: 48px; margin-bottom: 15px;"></i>
+                    <h3 id="statTrajets">0</h3>
+                    <p>Trajets publiés</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-ticket-alt" style="font-size: 48px; margin-bottom: 15px;"></i>
+                    <h3 id="statReservations">0</h3>
+                    <p>Réservations</p>
+                </div>
+            </div>
+
+            <h3>Tous les trajets</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Conducteur</th>
+                        <th>Départ</th>
+                        <th>Arrivée</th>
+                        <th>Date</th>
+                        <th>Prix</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="adminTrajetsTable"></tbody>
+            </table>
+
+            <h3>Utilisateurs</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Email</th>
+                        <th>Téléphone</th>
+                        <th>Type</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="adminUsersTable"></tbody>
+            </table>
+
+            <h3>Réservations</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Utilisateur</th>
+                        <th>Trajet</th>
+                        <th>Date</th>
+                        <th>Prix</th>
+                        <th>Statut</th>
+                    </tr>
+                </thead>
+                <tbody id="adminReservationsTable"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 AlloCovoit. Tous droits réservés.</p>
+        <div class="footer-links">
+            <a href="#confidentialite">Politique de confidentialité</a>
+            <a href="#conditions">Conditions d'utilisation</a>
+            <a href="#support">Support</a>
+        </div>
+    </footer>
+    </body>
+</html>
