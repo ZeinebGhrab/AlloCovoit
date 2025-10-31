@@ -1,5 +1,9 @@
 <?php
 
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
+error_reporting(E_ALL);
+
 header('Content-Type: application/json');
 
 require_once '../../authentification/check_session.php';
@@ -29,10 +33,14 @@ try {
     $success = $manager->cancel($idTrajet);
     $manager->close();
 
+    // Supprimer toute sortie éventuelle avant le JSON
+    ob_clean();
     echo json_encode(['success' => $success]);
 
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode(['success' => false, 'error' => $e->getMessage()]);
 }
+// Vider et arrêter le buffer
+ob_end_flush();
 ?>

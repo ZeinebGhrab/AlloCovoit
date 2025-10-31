@@ -24,7 +24,6 @@ export async function checkSession() {
 export function updateUserDisplay() {
     const userElement = document.querySelector('.nav-buttons span');
     if (userElement && currentUser) {
-        // Garder l'icône et ajouter le texte
         userElement.innerHTML = `<i class="fas fa-user"></i> ${currentUser.prenom} ${currentUser.nom}`;
     }
 }

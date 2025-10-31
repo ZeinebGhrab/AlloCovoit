@@ -9,6 +9,7 @@ class User {
     private $nom;
     private $prenom;
     private $email;
+    private $role;
 
     public function __construct($database) {
         $this->db = $database;
@@ -23,6 +24,7 @@ class User {
 
         $result = $stmt->get_result();
         $user = $result->fetch_assoc();
+        $stmt->close();
 
         if ($user && password_verify($mot_de_passe, $user['mot_de_passe'])) {
             session_start();
@@ -30,21 +32,18 @@ class User {
             $_SESSION['user_id'] = $user['id_utilisateur'];
             $_SESSION['nom'] = $user['nom'];
             $_SESSION['prenom'] = $user['prenom'];
+            $_SESSION['role'] = $user['type_compte'] ?? 'utilisateur';
 
             // Remplir les attributs de l'objet
             $this->id = $user['id_utilisateur'];
             $this->nom = $user['nom'];
             $this->prenom = $user['prenom'];
             $this->email = $user['email'];
+            $this->role = $_SESSION['role'];
 
-            header("Location: ../../front-end/interfaces/main.html");
-            exit();
-        } else {
-            echo "Email ou mot de passe incorrect.";
-        }
-
-        $stmt->close();
-        $this->db->close(); // Fermer la connexion
+           return true;
+        } 
+         return false;
     }
 
     // Getters

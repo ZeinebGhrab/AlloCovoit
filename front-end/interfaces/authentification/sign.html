@@ -6,7 +6,7 @@
     <title>AlloCovoit - Partagez vos trajets</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="../../styles/style.css">
-    <script type="module" src="../../script/main.js"></script>
+    <script type="module" src="../../script/authentification/sign.js"></script>
 </head>
 <body>
     <!-- Cercles décoratives -->
@@ -30,31 +30,30 @@
             <form id="loginForm" action="../../../back-end/authentification/save.php" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
                     <label><i class="fas fa-user"></i> Nom </label>
-                    <input type="text" name="nom" placeholder="Nom">
+                    <input type="text" name="nom" placeholder="Nom" required />
                 </div>
                 <div class="form-group">
                     <label><i class="fas fa-user"></i> Prenom</label>
-                    <input type="text" name="prenom" placeholder="Prenom">
+                    <input type="text" name="prenom" placeholder="Prenom" required />
                 </div>
                 <div class="form-group">
                     <label><i class="fas fa-envelope"></i> Email</label>
-                    <input type="email" name="email" placeholder="votre@email.com">
+                    <input type="email" name="email" placeholder="votre@email.com" required /> 
                 </div>
                 <div class="form-group">
                     <label><i class="fas fa-phone"></i> Téléphone</label>
-                    <input type="tel" name="telephone" placeholder="+216 12 345 678">
+                    <input type="tel" name="telephone" placeholder="+216 12 345 678" required/>
                 </div>
                 <div class="form-group">
                     <label><i class="fas fa-lock"></i> Mot de passe</label>
-                    <input type="password" name="mot_passe" placeholder="••••••••">
+                    <input type="password" name="mot_passe" placeholder="••••••••" required />
                 </div>
-                <div class="form-group full-width">
-                    <label><i class="fas fa-user-tag"></i> Type de compte</label>
-                    <select name="type_compte">
-                        <option value="utilisateur">Utilisateur</option>
-                        <option value="admin">Administrateur</option>
-                    </select>
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> Confirme Mot de passe</label>
+                    <input type="password" name="confirme_mot_passe" placeholder="••••••••" required />
                 </div>
+                <!-- Zone pour afficher les erreurs -->
+                <div id="errorMessage" style="color: #ef4444; margin-bottom: 15px; display: none;"></div>
                 <div>
                     <button class="btn" type="submit"><i class="fas fa-check"></i> S'inscrire</button>
                 </div>

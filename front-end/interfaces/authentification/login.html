@@ -6,7 +6,7 @@
     <title>AlloCovoit - Partagez vos trajets</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="../../styles/style.css">
-    <script type="module" src="../../script/main.js"></script>
+    <script type="module" src="../../script/authentification/login.js"></script>
 </head>
 <body>
     <!-- Cercles décoratives -->
@@ -51,7 +51,8 @@
                     >
                 </div>
             </div>
-
+            <!-- Zone pour afficher les erreurs -->
+            <div id="errorMessage" style="color: #ef4444; margin-bottom: 15px; display: none;"></div>
             <button type="submit" class="btn">
                 Se connecter
             </button>

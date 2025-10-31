@@ -2,7 +2,7 @@
 -- Base de données AlloCovoit
 -- ============================================
 
-CREATE DATABASE IF NOT EXISTS allocovoit CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS allocovoit CHARACTER SET utf8mb4 COLLATE utf8_unicode_ci;
 USE allocovoit;
 
 -- ============================================
@@ -103,8 +103,8 @@ CREATE TABLE IF NOT EXISTS message (
 
 -- Utilisateurs de test
 INSERT INTO utilisateur (nom, prenom, email, telephone, mot_de_passe, type_compte) VALUES
-('Ghrab', 'Zeineb', 'zeineb.ghrab@email.com', '+216 12 345 678', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin'),
-('Ben Ali', 'Amin', 'amin.benali@email.com', '+216 23 456 789', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'utilisateur'),
+('Ghrab', 'Zeineb', 'zeineb.ghrab@enetcom.u-sfax.tn', '+216 12 345 678', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin'),
+('Ghrab', 'Zeineb', 'zeinebghrab8@email.com', '+216 23 456 789', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'utilisateur'),
 ('Trabelsi', 'Eya', 'eya.trabelsi@email.com', '+216 34 567 890', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'utilisateur'),
 ('Jlassi', 'Mohamed', 'mohamed.jlassi@email.com', '+216 45 678 901', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'utilisateur');
 
@@ -122,127 +122,5 @@ INSERT INTO reservation (id_utilisateur, id_trajet, statut, nombre_places) VALUE
 (1, 1, 'confirmé', 1),
 (4, 2, 'confirmé', 1),
 (1, 3, 'en_attente', 1);
-
--- ============================================
--- Vues utiles
--- ============================================
-
--- Vue pour les statistiques
-CREATE OR REPLACE VIEW v_statistiques AS
-SELECT 
-    (SELECT COUNT(*) FROM utilisateur WHERE statut = 'actif') as total_utilisateurs,
-    (SELECT COUNT(*) FROM trajet WHERE statut = 'actif') as trajets_actifs,
-    (SELECT COUNT(*) FROM reservation WHERE statut IN ('confirmé', 'en_attente')) as reservations_actives,
-    (SELECT SUM(prix) FROM reservation r JOIN trajet t ON r.id_trajet = t.id_trajet WHERE r.statut = 'confirmé') as chiffre_affaires;
-
--- Vue pour les trajets avec informations complètes
-CREATE OR REPLACE VIEW v_trajets_complets AS
-SELECT 
-    t.*,
-    u.nom as conducteur_nom,
-    u.prenom as conducteur_prenom,
-    u.email as conducteur_email,
-    u.telephone as conducteur_telephone,
-    (SELECT COUNT(*) FROM reservation WHERE id_trajet = t.id_trajet AND statut = 'confirmé') as reservations_confirmees
-FROM trajet t
-JOIN utilisateur u ON t.id_conducteur = u.id_utilisateur;
-
--- ============================================
--- Triggers
--- ============================================
-
--- Trigger pour mettre à jour le statut du trajet quand il est complet
-DELIMITER $$
-CREATE TRIGGER after_reservation_insert 
-AFTER INSERT ON reservation
-FOR EACH ROW
-BEGIN
-    DECLARE places_restantes INT;
-    
-    SELECT places_disponibles INTO places_restantes
-    FROM trajet
-    WHERE id_trajet = NEW.id_trajet;
-    
-    IF places_restantes = 0 THEN
-        UPDATE trajet 
-        SET statut = 'complet' 
-        WHERE id_trajet = NEW.id_trajet;
-    END IF;
-END$$
-
--- Trigger pour remettre une place disponible en cas d'annulation
-CREATE TRIGGER after_reservation_cancel 
-AFTER UPDATE ON reservation
-FOR EACH ROW
-BEGIN
-    IF OLD.statut != 'annulé' AND NEW.statut = 'annulé' THEN
-        UPDATE trajet 
-        SET places_disponibles = places_disponibles + NEW.nombre_places,
-            statut = 'actif'
-        WHERE id_trajet = NEW.id_trajet;
-    END IF;
-END$$
-DELIMITER ;
-
--- ============================================
--- Procédures stockées
--- ============================================
-
--- Procédure pour rechercher des trajets
-DELIMITER $$
-CREATE PROCEDURE sp_rechercher_trajets(
-    IN p_ville_depart VARCHAR(100),
-    IN p_ville_arrivee VARCHAR(100),
-    IN p_date_depart DATE
-)
-BEGIN
-    SELECT * FROM v_trajets_complets
-    WHERE statut = 'actif'
-        AND (p_ville_depart IS NULL OR ville_depart LIKE CONCAT('%', p_ville_depart, '%'))
-        AND (p_ville_arrivee IS NULL OR ville_arrivee LIKE CONCAT('%', p_ville_arrivee, '%'))
-        AND (p_date_depart IS NULL OR date_depart = p_date_depart)
-    ORDER BY date_depart ASC, heure_depart ASC;
-END$$
-
--- Procédure pour créer une réservation
-CREATE PROCEDURE sp_creer_reservation(
-    IN p_id_utilisateur INT,
-    IN p_id_trajet INT,
-    IN p_nombre_places INT
-)
-BEGIN
-    DECLARE v_places_disponibles INT;
-    
-    -- Vérifier les places disponibles
-    SELECT places_disponibles INTO v_places_disponibles
-    FROM trajet
-    WHERE id_trajet = p_id_trajet AND statut = 'actif';
-    
-    IF v_places_disponibles >= p_nombre_places THEN
-        -- Créer la réservation
-        INSERT INTO reservation (id_utilisateur, id_trajet, nombre_places, statut)
-        VALUES (p_id_utilisateur, p_id_trajet, p_nombre_places, 'confirmé');
-        
-        -- Mettre à jour les places
-        UPDATE trajet
-        SET places_disponibles = places_disponibles - p_nombre_places
-        WHERE id_trajet = p_id_trajet;
-        
-        SELECT 'success' as status, LAST_INSERT_ID() as id_reservation;
-    ELSE
-        SELECT 'error' as status, 'Places insuffisantes' as message;
-    END IF;
-END$$
-DELIMITER ;
-
--- ============================================
--- Index pour optimisation
--- ============================================
-
--- Optimiser les recherches de trajets
-CREATE INDEX idx_trajet_search ON trajet(ville_depart, ville_arrivee, date_depart, statut);
-
--- Optimiser les recherches de réservations
-CREATE INDEX idx_reservation_user_status ON reservation(id_utilisateur, statut);
 
 -- Mot de passe par défaut pour tous les comptes de test : "password123"

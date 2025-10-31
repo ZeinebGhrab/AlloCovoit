@@ -1,4 +1,4 @@
-import { checkSession } from './auth.js';
+import { checkSession } from './authentification/auth.js';
 import { navigation } from './navigation.js';
 import { loadTrajets } from './trajets.js';
 import { loadCart, updateCartDisplay } from './panier.js';
