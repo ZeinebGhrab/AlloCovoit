@@ -1,4 +1,3 @@
-// utils.js
 export function showNotification(message, type = 'info') {
     let notification = document.getElementById('notification');
     if (!notification) {

@@ -1,3 +1,5 @@
+import { showNotification } from '../utils.js';
+
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('loginForm');
     const errorMsg = document.getElementById('errorMessage');
@@ -31,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         errorMsg.style.display = 'none';
                     }, 5000);
                 } else {
-                    alert(result.message || 'Erreur inconnue');
+                    showNotification(result.message || 'Erreur inconnue');
                 }
             }
         } catch (error) {
@@ -40,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 errorMsg.textContent = 'Impossible de contacter le serveur. Vérifiez votre connexion.';
                 errorMsg.style.display = 'block';
             } else {
-                alert('Erreur de connexion au serveur.');
+                showNotification('Erreur de connexion au serveur.');
             }
         }
     });

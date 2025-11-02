@@ -1,3 +1,5 @@
+import { showNotification } from './utils.js';
+
 let allTrajets = [];
 let currentFilter = 'tous';
 let trajetToCancel = null;
@@ -11,7 +13,7 @@ function filterTrajets(filter) {
     displayTrajets(filtered);
 }
 
-// Afficher trajets
+// Afficher mes trajets
 function displayTrajets(trajets) {
     const container = document.getElementById('mesTrajets');
     container.innerHTML = '';
@@ -28,50 +30,102 @@ function displayTrajets(trajets) {
             <p>Places: ${t.places_disponibles}</p>
             <p>Statut: ${t.statut}</p>
         `;
+
         if (t.statut === 'actif') {
-            const btn = document.createElement('button');
-            btn.textContent = 'Annuler ce trajet';
-            btn.style.cssText = 'background:red;color:white;padding:5px;border:none;border-radius:4px;margin-top:10px;cursor:pointer;';
-            btn.addEventListener('click', () => openModal(t.id_trajet));
-            div.appendChild(btn);
+            // Bouton Annuler
+            const btn_cancel = document.createElement('button');
+            btn_cancel.textContent = 'Annuler ce trajet';
+            btn_cancel.style.cssText = `background: orange;color: white;padding: 0.875rem 0.875rem;border: none;border-radius: 10px;font-weight: 100;cursor: pointer;display: inline-flex;align-items: center;gap: 0.5rem;justify-content: center;transition: all 0.3s ease;font-size: 0.9rem;text-decoration: none;`;
+            
+            btn_cancel.addEventListener('click', () => openModal(t.id_trajet, 'cancel'));
+            div.appendChild(btn_cancel);
         }
+
+        // Bouton Supprimer
+        const btn_delete = document.createElement('button');
+        btn_delete.textContent = 'Supprimer ce trajet';
+        btn_delete.style.cssText = `background: #dc3545;color: white;padding: 0.875rem 0.875rem;border: none;border-radius: 10px;font-weight: 100;cursor: pointer;display: inline-flex;align-items: center;gap: 0.5rem;justify-content: center;transition: all 0.3s ease;font-size: 0.9rem;text-decoration: none; margin-left:5px`;
+        btn_delete.addEventListener('click', () => openModal(t.id_trajet, 'delete'));
+        div.appendChild(btn_delete);
+
         container.appendChild(div);
     });
 }
 
+
 // Modale
-function openModal(id) {
+
+let currentAction = null; // 'cancel' ou 'delete'
+
+function openModal(id, action) {
     trajetToCancel = id;
+    currentAction = action;
+
     const modal = document.getElementById('cancelModal');
+    const title = modal.querySelector('h3');
+    const message = modal.querySelector('p');
+    const confirmBtn = modal.querySelector('#modalConfirmBtn');
+
+    // Adapter le texte selon l'action
+    if (action === 'cancel') {
+        title.textContent = "Confirmer l'annulation";
+        message.textContent = "Êtes-vous sûr de vouloir annuler ce trajet ? Cette action est irréversible.";
+        confirmBtn.innerHTML = '<i class="fas fa-check"></i> Oui, annuler';
+        confirmBtn.style.background = '#dc3545'; 
+    } else if (action === 'delete') {
+        title.textContent = "Confirmer la suppression";
+        message.textContent = "Êtes-vous sûr de vouloir supprimer ce trajet ? Cette action est irréversible et le trajet sera définitivement retiré.";
+        confirmBtn.innerHTML = '<i class="fas fa-trash"></i> Oui, supprimer';
+        confirmBtn.style.background = '#c0392b'; 
+    }
+
     modal.style.display = 'flex';
 }
-function closeModal() { 
-    document.getElementById('cancelModal').style.display = 'none'; 
-    trajetToCancel = null; 
+
+function closeModal() {
+    const modal = document.getElementById('cancelModal');
+    modal.style.display = 'none';
+    trajetToCancel = null;
+    currentAction = null;
 }
 
 // Confirmer annulation
 async function confirmCancel() {
-    if (!trajetToCancel) return alert('Aucun trajet sélectionné');
+    if (!trajetToCancel || !currentAction) {
+        return showNotification('Aucun trajet sélectionné', 'error');
+    }
+
+    const url = currentAction === 'cancel' 
+        ? '/Covoiturage/back-end/route/api/cancel.php'
+        : '/Covoiturage/back-end/route/api/delete.php'; 
+
     try {
-        const res = await fetch('/Covoiturage/back-end/route/api/cancel.php', {
+        const res = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id_trajet: trajetToCancel })
         });
         const data = await res.json();
+
         if (data.success) {
-            alert('Trajet annulé');
+            showNotification(
+                currentAction === 'cancel' ? 'Trajet annulé' : 'Trajet supprimé', 
+                'success'
+            );
             closeModal();
-            loadTrajets(); // Recharger après annulation
+            loadTrajets(); // Recharger les trajets après action
         } else {
-            alert('Erreur: ' + (data.error || 'Inconnu'));
+            showNotification(
+                currentAction === 'cancel' ? 'Erreur lors de l\'annulation' : 'Erreur lors de la suppression',
+                'error'
+            );
         }
     } catch (e) {
-        alert('Erreur: ' + e.message);
+        showNotification('Erreur lors de l’action', 'error');
         console.error(e);
     }
 }
+
 
 // Statistiques
 function updateStats() {
@@ -85,7 +139,7 @@ function updateStats() {
     document.getElementById('revenuTotal').textContent = '0 DT';   // À adapter selon API
 }
 
-// Charger trajets
+// Charger mes trajets 
 async function loadTrajets() {
     const container = document.getElementById('mesTrajets');
     const loading = document.getElementById('loadingIndicator');
@@ -108,7 +162,7 @@ async function loadTrajets() {
         }
     } catch (e) {
         loading.style.display = 'none';
-        alert('Erreur: ' + e.message);
+        showNotification('Erreur lors du chargement des trajets', 'error');
         console.error(e);
     }
 }

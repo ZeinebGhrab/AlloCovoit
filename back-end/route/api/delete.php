@@ -30,7 +30,7 @@ try {
     $manager = new TrajetManager();
     $idTrajet = intval($data['id_trajet']);
 
-    $success = $manager->cancel($idTrajet);
+    $success = $manager->delete($idTrajet,$_SESSION['user_id']);
     $manager->close();
 
     // Supprimer toute sortie éventuelle avant le JSON

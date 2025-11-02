@@ -1,11 +1,8 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
 
 require_once '../../config/Database.php';
 require_once '../models/Trajet.php';
-require_once '../../authentification/check_session.php';
+require_once '../../user/api/auth/check_session.php';
 
 
 $database = new Database();
@@ -26,12 +23,10 @@ $data = [
     'description' => $_POST['description'] ?? ''
 ];
 
-
 if ($trajet->save($data, $db)) {
-    header("Location: ../../../front-end/interfaces/main.html");
-    exit();
+     header("Location: /Covoiturage/front-end/interfaces/main.html");
 } else {
-    echo "Erreur lors de l'enregistrement du trajet.";
+    echo json_encode(['success' => false, 'message' => 'Erreur lors de l\'enregistrement']);
 }
 ?>
 

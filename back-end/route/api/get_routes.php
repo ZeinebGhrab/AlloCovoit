@@ -5,12 +5,18 @@ ini_set('display_startup_errors', 0);
 error_reporting(E_ALL);
 
 header('Content-Type: application/json');
+
 require_once '../../config/Database.php';
 require_once '../models/Trajet.php';
 require_once '../models/TrajetManager.php';
-require_once '../../authentification/check_session.php';
+require_once '../../user/api/auth/check_session.php'; // ne pas modifier
 
 try {
+    // Vider tout output accidentel
+    if (ob_get_length()) {
+        ob_clean();
+    }
+
     // Vérifier utilisateur connecté
     $userId = $_SESSION['user_id'] ?? null;
     if (!$userId) {
@@ -21,43 +27,54 @@ try {
 
     // Récupérer les filtres depuis l'URL
     $filters = [
-    'depart' => $_GET['depart'] ?? '',
-    'arrivee' => $_GET['arrivee'] ?? '',
-    'date' => $_GET['date'] ?? ''
-];
+        'depart' => $_GET['depart'] ?? '',
+        'arrivee' => $_GET['arrivee'] ?? '',
+        'date' => $_GET['date'] ?? ''
+    ];
 
+    // Pagination
+    $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+    $limit = isset($_GET['limit']) ? max(1, intval($_GET['limit'])) : 10;
 
-    // Récupérer tous les trajets de cet utilisateur selon les filtres
-    $rawTrajets = $manager->getAll($filters);
+    // Récupérer tous les trajets validés
+    $rawTrajets = $manager->getAllValidate($filters, 'date_depart', 'ASC', $page, $limit); 
 
-    // Transformer chaque ligne en objet Trajet
+    // Transformer chaque ligne en tableau prêt pour JSON
     $trajets = [];
     foreach ($rawTrajets as $t) {
-        $trajet = new Trajet($t);
         $trajets[] = [
-            'id_trajet' => $trajet->getId(),
-            'ville_depart' => $trajet->getDepart(),
-            'ville_arrivee' => $trajet->getArrivee(),
-            'date_depart' => $trajet->getDate(),
-            'heure_depart' => $trajet->getHeure(),
-            'prix' => $trajet->getPrix(),
-            'places_disponibles' => $trajet->getPlaces(),
-            'description' => $trajet->getDescription(),
-            'conducteur_nom' => $trajet->getConducteur(),
-            'statut' => $trajet->getStatut() 
+            'id_trajet' => $t['id_trajet'],
+            'ville_depart' => $t['ville_depart'],
+            'ville_arrivee' => $t['ville_arrivee'],
+            'date_depart' => $t['date_depart'],
+            'heure_depart' => $t['heure_depart'],
+            'prix' => $t['prix'],
+            'places_disponibles' => $t['places_disponibles'],
+            'description' => $t['description'],
+            'conducteur_nom' => $t['conducteur_nom'] ?? '', // utiliser la valeur directement du join
+            'conducteur_prenom' => $t['conducteur_prenom'] ?? '',
+            'statut' => $t['statut'],
+            'valider' => $t['valider'] ?? 0
         ];
     }
 
-    // Supprimer toute sortie éventuelle avant le JSON
-    ob_clean();
+    // Compter le total pour pagination
+    $total = count($trajets);
+    $totalPages = ceil($total / $limit);
 
-    echo json_encode($trajets);
+    // Envoyer le JSON final
+    echo json_encode([
+        'page' => $page,
+        'limit' => $limit,
+        'total' => $total,
+        'totalPages' => $totalPages,
+        'trajets' => $trajets
+    ]);
 
     $manager->close();
 
 } catch (Exception $e) {
+    if (ob_get_length()) ob_clean();
     echo json_encode(['error' => $e->getMessage()]);
 }
-// Vider et arrêter le buffer
-ob_end_flush();
-?>
+

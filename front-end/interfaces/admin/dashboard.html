@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - AlloCovoit</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="../../styles/style.css">
+    <script type="module" src="../../script/main.js"></script>
+</head>
+<style>.logo { font-size: 1.8rem; font-weight: 800; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; } .logo span { color: var(--secondary); -webkit-text-fill-color: var(--secondary); } .nav-buttons { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; } .nav-buttons button { padding: 0.65rem 1.25rem; background: white; border: 2px solid var(--border); border-radius: 8px; color: var(--dark); font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; transition: all 0.3s ease; font-size: 0.9rem; } .nav-buttons button:hover { background: var(--gradient); color: white; border-color: transparent; transform: translateY(-2px); box-shadow: 0 4px 12px var(--shadow-lg); } /* Container avec Sidebar */ .admin-container { display: flex; max-width: 1600px; margin: 2rem auto; gap: 2rem; padding: 0 2rem; } /* Sidebar */ .sidebar { width: 280px; background: white; border-radius: 20px; padding: 2rem; box-shadow: 0 10px 40px var(--shadow-lg); height: fit-content; position: sticky; top: 100px; } .sidebar h3 { font-size: 1.2rem; margin-bottom: 1.5rem; color: var(--dark); display: flex; align-items: center; gap: 0.5rem; } .sidebar-menu { list-style: none; } .sidebar-menu li { margin-bottom: 0.5rem; } .sidebar-menu button { width: 100%; padding: 1rem; background: white; border: 2px solid var(--border); border-radius: 10px; color: var(--dark); font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.75rem; transition: all 0.3s ease; text-align: left; } .sidebar-menu button:hover { background: var(--light); border-color: var(--primary); transform: translateX(5px); } .sidebar-menu button.active { background: var(--gradient); color: white; border-color: transparent; } .sidebar-menu button i { font-size: 1.2rem; width: 24px; text-align: center; } /* Main Content */ .main-content { flex: 1; background: white; border-radius: 20px; padding: 2.5rem; box-shadow: 0 10px 40px var(--shadow-lg); } .content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 2px solid var(--border); } .content-header h2 { font-size: 2rem; display: flex; align-items: center; gap: 0.75rem; } /* Stats Grid */ .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; } .stat-card { background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%); border: 2px solid var(--border); border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease; position: relative; overflow: hidden; } .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--gradient); } .stat-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px var(--shadow-lg); } .stat-card i { font-size: 3rem; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; } .stat-card h3 { font-size: 2.5rem; color: var(--dark); margin: 0.5rem 0; } .stat-card p { color: var(--gray); font-weight: 500; } /* Table Styles */ .table-container { overflow-x: auto; border-radius: 12px; box-shadow: 0 2px 8px var(--shadow); } table { width: 100%; border-collapse: collapse; background: white; } thead { background: var(--gradient); color: white; } th { padding: 1rem; text-align: left; font-weight: 600; white-space: nowrap; } td { padding: 1rem; border-bottom: 1px solid var(--border); } tbody tr { transition: background 0.2s ease; } tbody tr:hover { background: var(--light); } /* Pagination */ .pagination { display: flex; justify-content: center; align-items: center; gap: 0.5rem; margin-top: 2rem; flex-wrap: wrap; } .pagination button { padding: 0.5rem 1rem; background: white; border: 2px solid var(--border); border-radius: 8px; color: var(--dark); font-weight: 600; cursor: pointer; transition: all 0.3s ease; min-width: 40px; } .pagination button:hover:not(:disabled) { background: var(--primary); color: white; border-color: var(--primary); } .pagination button.active { background: var(--gradient); color: white; border-color: transparent; } .pagination button:disabled { opacity: 0.5; cursor: not-allowed; } .pagination-info { color: var(--gray); font-size: 0.9rem; } /* Badges */ .badge { padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; display: inline-block; } .badge-success { background: rgba(16, 185, 129, 0.1); color: var(--success); } .badge-warning { background: rgba(245, 158, 11, 0.1); color: var(--warning); } .badge-danger { background: rgba(239, 68, 68, 0.1); color: var(--danger); } .badge-primary { background: rgba(37, 99, 235, 0.1); color: var(--primary); } /* Action Buttons */ .btn-action { padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.3s ease; font-size: 0.85rem; } .btn-edit { background: rgba(245, 158, 11, 0.1); color: var(--warning); } .btn-edit:hover { background: var(--warning); color: white; } .btn-delete { background: rgba(239, 68, 68, 0.1); color: var(--danger); } .btn-delete:hover { background: var(--danger); color: white; } .btn-view { background: rgba(37, 99, 235, 0.1); color: var(--primary); } .btn-view:hover { background: var(--primary); color: white; } /* Search Bar */ .search-bar { display: flex; gap: 1rem; margin-bottom: 1.5rem; align-items: center; } .search-bar input { flex: 1; padding: 0.875rem 1rem; border: 2px solid var(--border); border-radius: 10px; font-size: 1rem; transition: all 0.3s ease; } .search-bar input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); } .search-bar select { padding: 0.875rem 1rem; border: 2px solid var(--border); border-radius: 10px; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; background: white; } /* Section visible/cachée */ .content-section { display: none; } .content-section.active { display: block; } /* Responsive */ @media (max-width: 1024px) { .admin-container { flex-direction: column; } .sidebar { width: 100%; position: relative; top: 0; } .sidebar-menu { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.5rem; } } @media (max-width: 768px) { .admin-container { padding: 0 1rem; } .main-content { padding: 1.5rem; } .content-header { flex-direction: column; align-items: flex-start; gap: 1rem; } .stats-grid { grid-template-columns: 1fr; } .search-bar { flex-direction: column; } table { font-size: 0.85rem; } th, td { padding: 0.75rem 0.5rem; } } </style>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">Allo<span>Covoit</span></div>
+        <div class="nav-buttons">
+            <span><i class="fas fa-user"></i></span>
+            <button data-page="all-trajets"><i class="fas fa-search"></i> Tous les trajets</button>
+            <button data-page="publier-trajet"><i class="fas fa-plus"></i> Publier un trajet</button>
+            <button data-page="panier"><i class="fas fa-shopping-cart"></i> Mon panier</button>
+            <button data-page="mes-trajets"><i class="fas fa-car"></i> Mes trajets publiés</button>
+            <button data-page="deconnexion"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+        </div>
+    </nav>
+
+    <!-- Admin Container -->
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h3><i class="fas fa-bars"></i> Menu Admin</h3>
+            <ul class="sidebar-menu">
+                <li><button class="menu-btn active" data-section="dashboard"><i class="fas fa-chart-line"></i> Tableau de bord</button></li>
+                <li><button class="menu-btn" data-section="users"><i class="fas fa-users"></i> Utilisateurs</button></li>
+                <li><button class="menu-btn" data-section="trajets"><i class="fas fa-route"></i> Trajets</button></li>
+                <li><button class="menu-btn" data-section="reservations"><i class="fas fa-ticket-alt"></i> Réservations</button></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <section id="dashboard" class="content-section active">
+                <div class="content-header">
+                    <h2><i class="fas fa-chart-line"></i> Tableau de bord</h2>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card"><i class="fas fa-users"></i><h3 id="totalUsers"></h3><p>Utilisateurs</p></div>
+                    <div class="stat-card"><i class="fas fa-route"></i><h3 id="totalTrajets"></h3><p>Trajets</p></div>
+                    <div class="stat-card"><i class="fas fa-ticket-alt"></i><h3 id="totalReservations"></h3><p>Réservations</p></div>
+                    <div class="stat-card"><i class="fas fa-euro-sign"></i><h3>12,450€</h3><p>Revenus totaux</p></div>
+                </div>
+            </section>
+
+            <section id="users" class="content-section"></section>
+            <section id="trajets" class="content-section"></section>
+            <section id="reservations" class="content-section"></section>
+        </main>
+    </div>
+
+    <footer>
+        <p>© 2025 AlloCovoit. Tous droits réservés.</p>
+    </footer>
+</body>
+</html>

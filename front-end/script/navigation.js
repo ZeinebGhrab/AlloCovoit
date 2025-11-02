@@ -1,4 +1,4 @@
-import { logout } from './auth.js';
+import { logout, currentUser } from './authentification/auth.js';
 import { searchTrajets } from './trajets.js';
 import { confirmReservations } from './panier.js';
 
@@ -27,10 +27,30 @@ export function navigation() {
         }
     });
 
+    //  Bouton Administration si utilisateur = admin
+    if (currentUser && currentUser.role === 'admin') {
+       
+        const navButtonsContainer = document.querySelector('.nav-buttons');
+        if (navButtonsContainer && !document.querySelector('button[data-page="admin"]')) {
+            const btnAdmin = document.createElement('button');
+            btnAdmin.dataset.page = 'admin';
+            btnAdmin.innerHTML = `<i class="fas fa-cogs"></i> Administration`;
+            btnAdmin.classList.add('btn-admin');
+            btnAdmin.addEventListener('click', () => {
+                window.location.href = '/Covoiturage/front-end/interfaces/admin/dashboard.html';
+            });
 
+            // Insérer avant "Déconnexion"
+            const logoutBtn = navButtonsContainer.querySelector('button[data-page="deconnexion"]');
+            navButtonsContainer.insertBefore(btnAdmin, logoutBtn);
+        }
+    }
+
+    // Gestion du bouton recherche
     const searchBtn = document.querySelector('.filter-section .btn');
     if (searchBtn) searchBtn.addEventListener('click', searchTrajets);
 
+    // Gestion du panier
     const confirmBtn = document.getElementById('confirmPanier');
     if (confirmBtn) confirmBtn.addEventListener('click', confirmReservations);
 }

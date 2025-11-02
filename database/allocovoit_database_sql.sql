@@ -5,9 +5,9 @@
 CREATE DATABASE IF NOT EXISTS allocovoit CHARACTER SET utf8mb4 COLLATE utf8_unicode_ci;
 USE allocovoit;
 
--- ============================================
+
 -- Table utilisateur
--- ============================================
+
 CREATE TABLE IF NOT EXISTS utilisateur (
     id_utilisateur INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(100) NOT NULL,
@@ -17,14 +17,14 @@ CREATE TABLE IF NOT EXISTS utilisateur (
     mot_de_passe VARCHAR(255) NOT NULL,
     type_compte ENUM('utilisateur', 'admin') DEFAULT 'utilisateur',
     date_inscription TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    statut ENUM('actif', 'inactif', 'suspendu') DEFAULT 'actif',
+    statut ENUM('actif', 'inactif') DEFAULT 'actif',
     INDEX idx_email (email),
     INDEX idx_type_compte (type_compte)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ============================================
+
 -- Table trajet
--- ============================================
+
 CREATE TABLE IF NOT EXISTS trajet (
     id_trajet INT AUTO_INCREMENT PRIMARY KEY,
     id_conducteur INT NOT NULL,
@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS trajet (
     places_disponibles INT NOT NULL,
     description TEXT,
     statut ENUM('actif', 'complet', 'annulé', 'terminé') DEFAULT 'actif',
+     valider TINYINT(1) DEFAULT 0, -- 0 = non validé, 1 = validé
     date_publication TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_conducteur) REFERENCES utilisateur(id_utilisateur) ON DELETE CASCADE,
     INDEX idx_conducteur (id_conducteur),
@@ -44,9 +45,9 @@ CREATE TABLE IF NOT EXISTS trajet (
     INDEX idx_statut (statut)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ============================================
+
 -- Table reservation
--- ============================================
+
 CREATE TABLE IF NOT EXISTS reservation (
     id_reservation INT AUTO_INCREMENT PRIMARY KEY,
     id_utilisateur INT NOT NULL,
@@ -62,40 +63,6 @@ CREATE TABLE IF NOT EXISTS reservation (
     INDEX idx_statut (statut)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ============================================
--- Table avis
--- ============================================
-CREATE TABLE IF NOT EXISTS avis (
-    id_avis INT AUTO_INCREMENT PRIMARY KEY,
-    id_auteur INT NOT NULL,
-    id_destinataire INT NOT NULL,
-    id_trajet INT NOT NULL,
-    note INT CHECK (note BETWEEN 1 AND 5),
-    commentaire TEXT,
-    date_avis TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_auteur) REFERENCES utilisateur(id_utilisateur) ON DELETE CASCADE,
-    FOREIGN KEY (id_destinataire) REFERENCES utilisateur(id_utilisateur) ON DELETE CASCADE,
-    FOREIGN KEY (id_trajet) REFERENCES trajet(id_trajet) ON DELETE CASCADE,
-    INDEX idx_destinataire (id_destinataire),
-    INDEX idx_trajet (id_trajet)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- ============================================
--- Table message (système de messagerie)
--- ============================================
-CREATE TABLE IF NOT EXISTS message (
-    id_message INT AUTO_INCREMENT PRIMARY KEY,
-    id_expediteur INT NOT NULL,
-    id_destinataire INT NOT NULL,
-    contenu TEXT NOT NULL,
-    date_envoi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    lu BOOLEAN DEFAULT FALSE,
-    FOREIGN KEY (id_expediteur) REFERENCES utilisateur(id_utilisateur) ON DELETE CASCADE,
-    FOREIGN KEY (id_destinataire) REFERENCES utilisateur(id_utilisateur) ON DELETE CASCADE,
-    INDEX idx_expediteur (id_expediteur),
-    INDEX idx_destinataire (id_destinataire),
-    INDEX idx_lu (lu)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================
 -- Données de test

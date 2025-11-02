@@ -16,7 +16,8 @@ echo json_encode([
         'id' => $_SESSION['user_id'],
         'nom' => $_SESSION['nom'],
         'prenom' => $_SESSION['prenom'],
-        'role' => $_SESSION['type_compte']
+        'role' => $_SESSION['role']
     ]
 ]);
+
 ?>

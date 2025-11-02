@@ -1,3 +1,5 @@
+import { showNotification } from '../utils.js';
+
 document.addEventListener('DOMContentLoaded', () => {
     // Sélectionner le formulaire de connexion 
     const form = document.querySelector('form[action$="login.php"]');
@@ -18,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Validation côté client
         if (!email || !password) {
+            showNotification('Veuillez remplir tous les champs.');
             showError('Veuillez remplir tous les champs.');
             return;
         }
@@ -36,10 +39,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Redirection en cas de succès
                 window.location.href = '/Covoiturage/front-end/interfaces/main.html';
             } else {
+                showNotification('Email ou mot de passe incorrect.');
                 showError(result.message || 'Email ou mot de passe incorrect.');
             }
         } catch (error) {
             console.error('Erreur réseau:', error);
+            showNotification('Impossible de contacter le serveur. Veuillez réessayer.');
             showError('Impossible de contacter le serveur. Veuillez réessayer.');
         }
     });

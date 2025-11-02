@@ -3,9 +3,10 @@ import { navigation } from './navigation.js';
 import { loadTrajets } from './trajets.js';
 import { loadCart, updateCartDisplay } from './panier.js';
 import { initMesTrajets } from './mesTrajets.js';
+import { loadUsersSection } from './administration/dashboard.js';
 
-document.addEventListener('DOMContentLoaded', () => {
-    checkSession();
+document.addEventListener('DOMContentLoaded', async () => {
+    await checkSession();
     navigation();
 
     const path = window.location.pathname;
@@ -19,5 +20,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (path.includes('ride-publication.html')) {
         initMesTrajets();
+    }
+
+    if (path.includes('dashboard.html')) {
+        loadUsersSection();
     }
 });

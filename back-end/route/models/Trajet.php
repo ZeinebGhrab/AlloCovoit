@@ -10,6 +10,7 @@ class Trajet {
     private int $places_disponibles;
     private string $description;
     private string $statut;
+    private int $valider;
     private string $conducteur_nom;
     private string $conducteur_prenom;
 
@@ -24,6 +25,7 @@ class Trajet {
         $this->places_disponibles = $data['places_disponibles'] ?? 0;
         $this->description = $data['description'] ?? '';
         $this->statut = $data['statut'] ?? 'actif';
+        $this->valider = $data['valider'] ?? 0;
         $this->conducteur_nom = $data['conducteur_nom'] ?? '';
         $this->conducteur_prenom = $data['conducteur_prenom'] ?? '';
     }
@@ -31,8 +33,10 @@ class Trajet {
     //  Méthode pour enregistrer le trajet en base 
 public function save(array $data, $db): bool {
     $stmt = $db->prepare("
-        INSERT INTO trajet (id_conducteur, ville_depart, ville_arrivee, date_depart, heure_depart, prix, places_disponibles, description, statut)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO trajet (
+            id_conducteur, ville_depart, ville_arrivee, date_depart, heure_depart,
+            prix, places_disponibles, description, statut, valider
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ");
 
     if (!$stmt) {
@@ -41,8 +45,9 @@ public function save(array $data, $db): bool {
     }
 
     $statut = 'actif';
+
     $stmt->bind_param(
-        "issssdiss",
+        "issssdissi",
         $data['id_conducteur'],
         $data['ville_depart'],
         $data['ville_arrivee'],
@@ -51,7 +56,8 @@ public function save(array $data, $db): bool {
         $data['prix'],
         $data['places_disponibles'],
         $data['description'],
-        $statut
+        $statut,
+        $this->valider
     );
 
     return $stmt->execute();
@@ -68,6 +74,7 @@ public function save(array $data, $db): bool {
     public function getPlaces(): int { return $this->places_disponibles; }
     public function getDescription(): string { return $this->description; }
     public function getStatut(): string { return $this->statut; }
+    public function getValider(): int { return $this->valider; }
     public function getConducteur(): string { return $this->conducteur_nom . ' ' . $this->conducteur_prenom; }
 
     // Modifier statut
