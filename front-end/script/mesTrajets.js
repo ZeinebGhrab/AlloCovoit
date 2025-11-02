@@ -34,7 +34,7 @@ function displayTrajets(trajets) {
         if (t.statut === 'actif') {
             // Bouton Annuler
             const btn_cancel = document.createElement('button');
-            btn_cancel.textContent = 'Annuler ce trajet';
+            btn_cancel.innerHTML = '<i class="fa-solid fa-ban"></i>Annuler ce trajet';
             btn_cancel.style.cssText = `background: orange;color: white;padding: 0.875rem 0.875rem;border: none;border-radius: 10px;font-weight: 100;cursor: pointer;display: inline-flex;align-items: center;gap: 0.5rem;justify-content: center;transition: all 0.3s ease;font-size: 0.9rem;text-decoration: none;`;
             
             btn_cancel.addEventListener('click', () => openModal(t.id_trajet, 'cancel'));
@@ -43,7 +43,7 @@ function displayTrajets(trajets) {
 
         // Bouton Supprimer
         const btn_delete = document.createElement('button');
-        btn_delete.textContent = 'Supprimer ce trajet';
+        btn_delete.innerHTML = '<i class="fa-solid fa-trash"></i>Supprimer ce trajet';
         btn_delete.style.cssText = `background: #dc3545;color: white;padding: 0.875rem 0.875rem;border: none;border-radius: 10px;font-weight: 100;cursor: pointer;display: inline-flex;align-items: center;gap: 0.5rem;justify-content: center;transition: all 0.3s ease;font-size: 0.9rem;text-decoration: none; margin-left:5px`;
         btn_delete.addEventListener('click', () => openModal(t.id_trajet, 'delete'));
         div.appendChild(btn_delete);
@@ -96,8 +96,8 @@ async function confirmCancel() {
     }
 
     const url = currentAction === 'cancel' 
-        ? '/Covoiturage/back-end/route/api/cancel.php'
-        : '/Covoiturage/back-end/route/api/delete.php'; 
+        ? '/AlloCovoit/back-end/route/api/cancel.php'
+        : '/AlloCovoit/back-end/route/api/delete.php'; 
 
     try {
         const res = await fetch(url, {
@@ -149,7 +149,7 @@ async function loadTrajets() {
     noMsg.style.display = 'none';
 
     try {
-        const res = await fetch('/Covoiturage/back-end/route/api/get_my_routes.php');
+        const res = await fetch('/AlloCovoit/back-end/route/api/get_my_routes.php');
         const data = await res.json();
         allTrajets = Array.isArray(data) ? data : [];
         loading.style.display = 'none';

@@ -25,30 +25,30 @@
         <!-- Page de publication -->
         <div class="page">
             <h2><i class="fas fa-plus-circle"></i> Publier un trajet</h2>
-            <form class="form-grid" action="/Covoiturage/back-end/route/api/save.php" method="POST">
+            <form class="form-grid" action="/AlloCovoit/back-end/route/api/save.php" method="POST">
                 <div class="form-group">
                     <label><i class="fas fa-map-marker-alt"></i> Ville de départ</label>
-                    <input type="text" id="pubDepart" name="Ville_depart" placeholder="Sfax">
+                    <input type="text" id="pubDepart" name="Ville_depart" placeholder="Sfax" required/>
                 </div>
                 <div class="form-group">
                     <label><i class="fas fa-map-marker-alt"></i> Ville d'arrivée</label>
-                    <input type="text" id="pubArrivee" name="Ville_arrivee" placeholder="Sousse">
+                    <input type="text" id="pubArrivee" name="Ville_arrivee" placeholder="Sousse" required/>
                 </div>
                 <div class="form-group">
                     <label><i class="fas fa-calendar"></i> Date</label>
-                    <input type="date" id="pubDate" name="date_publication">
+                    <input type="date" id="pubDate" name="date_publication" required/>
                 </div>
                 <div class="form-group">
                     <label><i class="fas fa-clock"></i> Heure</label>
-                    <input type="time" id="pubHeure" name="heure_depart">
+                    <input type="time" id="pubHeure" name="heure_depart" required/>
                 </div>
                 <div class="form-group">
                     <label><i class="fas fa-euro-sign"></i> Prix par place (DT)</label>
-                    <input type="number" id="pubPrix" name="prix" placeholder="15">
+                    <input type="number" id="pubPrix" name="prix" placeholder="15" required/>
                 </div>
                 <div class="form-group">
                     <label><i class="fas fa-users"></i> Places disponibles</label>
-                    <input type="number" id="pubPlaces" name="places_disponibles" placeholder="3" min="1" max="8">
+                    <input type="number" id="pubPlaces" name="places_disponibles" placeholder="3" min="1" max="5" required/>
                 </div>
                 <div class="form-group full-width">
                     <label><i class="fas fa-comment"></i> Description</label>

@@ -44,7 +44,7 @@ async function fetchUsers(page = 1, limit = 10) {
         formData.append('page', page);
         formData.append('limit', limit);
 
-        const response = await fetch('/Covoiturage/back-end/user/api/user/get_users.php', {
+        const response = await fetch('/AlloCovoit/back-end/user/api/user/get_users.php', {
             method: 'POST',
             body: formData
         });
@@ -83,9 +83,9 @@ function displayUsers(users, container) {
                         <td>${u.statut}</td>
                         <td>
                             ${u.statut === 'actif' 
-                                ? `<button class="block-btn " style="background: orange; color: white; padding: 0.875rem 0.875rem; border: none; border-radius: 10px; font-weight: 100; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; justify-content: center; transition: all 0.3s ease; font-size: 0.9rem; text-decoration: none;" data-id="${u.id_utilisateur}">Bloquer</button>` 
-                                : `<button class="unblock-btn" style="background: green; color: white; padding: 0.875rem 0.875rem; border: none; border-radius: 10px; font-weight: 100; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; justify-content: center; transition: all 0.3s ease; font-size: 0.9rem; text-decoration: none;"  data-id="${u.id_utilisateur}">Débloquer</button>`}
-                            <button class="delete-btn" style="background: #dc3545;color: white;padding: 0.875rem 0.875rem;border: none;border-radius: 10px;font-weight: 100;cursor: pointer;display: inline-flex;align-items: center;gap: 0.5rem;justify-content: center;transition: all 0.3s ease;font-size: 0.9rem;text-decoration: none; margin-left:5px" data-id="${u.id_utilisateur}">Supprimer</button>
+                                ? `<button class="block-btn " style="background: orange; color: white; padding: 0.875rem 0.875rem; border: none; border-radius: 10px; font-weight: 100; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; justify-content: center; transition: all 0.3s ease; font-size: 0.9rem; text-decoration: none;" data-id="${u.id_utilisateur}"><i class="fa-solid fa-lock"></i>Bloquer</button>` 
+                                : `<button class="unblock-btn" style="background: green; color: white; padding: 0.875rem 0.875rem; border: none; border-radius: 10px; font-weight: 100; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; justify-content: center; transition: all 0.3s ease; font-size: 0.9rem; text-decoration: none;"  data-id="${u.id_utilisateur}"><i class="fa-solid fa-unlock"></i>Débloquer</button>`}
+                            <button class="delete-btn" style="background: #dc3545;color: white;padding: 0.875rem 0.875rem;border: none;border-radius: 10px;font-weight: 100;cursor: pointer;display: inline-flex;align-items: center;gap: 0.5rem;justify-content: center;transition: all 0.3s ease;font-size: 0.9rem;text-decoration: none; margin-left:5px" data-id="${u.id_utilisateur}"><i class="fa-solid fa-trash"></i>Supprimer</button>
                         </td>
                     </tr>
                 `).join('')}
@@ -123,15 +123,15 @@ function displayUsers(users, container) {
 // Gestion API (bloquer, débloquer, supprimer)
 
 async function blockUser(id) {
-    await callUserApi('/Covoiturage/back-end/user/api/user/block_user.php', id);
+    await callUserApi('/AlloCovoit/back-end/user/api/user/block_user.php', id);
 }
 
 async function unblockUser(id) {
-    await callUserApi('/Covoiturage/back-end/user/api/user/unblock_user.php', id);
+    await callUserApi('/AlloCovoit/back-end/user/api/user/unblock_user.php', id);
 }
 
 async function deleteUser(id) {
-    await callUserApi('/Covoiturage/back-end/user/api/user/delete_user.php', id);
+    await callUserApi('/AlloCovoit/back-end/user/api/user/delete_user.php', id);
 }
 
 async function callUserApi(url, id) {
@@ -202,7 +202,7 @@ async function fetchTrajets(page = 1, limit = 10) {
         formData.append('page', page);
         formData.append('limit', limit);
 
-        const response = await fetch('/Covoiturage/back-end/route/api/get_routes_admin.php', {
+        const response = await fetch('/AlloCovoit/back-end/route/api/get_routes_admin.php', {
             method: 'POST',
             body: formData
         });
@@ -251,10 +251,10 @@ function displayTrajets(trajets, container) {
                             <td>${isValidated ? 'Validé' : 'En attente'}</td>
                             <td>
                                 ${isValidated
-                                    ? `<button class="refuse-btn" style="background: orange; color: white; padding: 0.875rem 0.875rem; border: none; border-radius: 10px; font-weight: 100; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; justify-content: center; transition: all 0.3s ease; font-size: 0.9rem; text-decoration: none;" data-id="${t.id_trajet}">Refuser</button>`
-                                    : `<button class="validate-btn" style="background: green; color: white; padding: 0.875rem 0.875rem; border: none; border-radius: 10px; font-weight: 100; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; justify-content: center; transition: all 0.3s ease; font-size: 0.9rem; text-decoration: none;" data-id="${t.id_trajet}">Valider</button>`
+                                    ? `<button class="refuse-btn" style="background: orange; color: white; padding: 0.875rem 0.875rem; border: none; border-radius: 10px; font-weight: 100; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; justify-content: center; transition: all 0.3s ease; font-size: 0.9rem; text-decoration: none;" data-id="${t.id_trajet}"><i class="fa-solid fa-ban"></i>Refuser</button>`
+                                    : `<button class="validate-btn" style="background: green; color: white; padding: 0.875rem 0.875rem; border: none; border-radius: 10px; font-weight: 100; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; justify-content: center; transition: all 0.3s ease; font-size: 0.9rem; text-decoration: none;" data-id="${t.id_trajet}"><i class="fa-solid fa-square-check"></i>Valider</button>`
                                 }
-                                <button class="delete-trajet-btn" style="background: #dc3545;color: white;padding: 0.875rem 0.875rem;border: none;border-radius: 10px;font-weight: 100;cursor: pointer;display: inline-flex;align-items: center;gap: 0.5rem;justify-content: center;transition: all 0.3s ease;font-size: 0.9rem;text-decoration: none; margin-left:5px" data-id="${t.id_trajet}">Supprimer</button>
+                                <button class="delete-trajet-btn" style="background: #dc3545;color: white;padding: 0.875rem 0.875rem;border: none;border-radius: 10px;font-weight: 100;cursor: pointer;display: inline-flex;align-items: center;gap: 0.5rem;justify-content: center;transition: all 0.3s ease;font-size: 0.9rem;text-decoration: none; margin-left:5px" data-id="${t.id_trajet}"><i class="fa-solid fa-trash"></i>Supprimer</button>
                             </td>
                         </tr>
                     `;
@@ -291,15 +291,15 @@ function displayTrajets(trajets, container) {
 
 // ---- Appels API ----
 async function validateTrajet(id) {
-    await callTrajetApi('/Covoiturage/back-end/route/api/validate_route.php', id);
+    await callTrajetApi('/AlloCovoit/back-end/route/api/validate_route.php', id);
 }
 
 async function refuseTrajet(id) {
-    await callTrajetApi('/Covoiturage/back-end/route/api/refuse_route.php', id);
+    await callTrajetApi('/AlloCovoit/back-end/route/api/refuse_route.php', id);
 }
 
 async function deleteTrajet(id) {
-    await callTrajetApi('/Covoiturage/back-end/route/api/delete.php', id);
+    await callTrajetApi('/AlloCovoit/back-end/route/api/delete.php', id);
 }
 
 async function callTrajetApi(url, id) {
@@ -355,8 +355,8 @@ async function loadTrajetsSection(page = 1) {
 
 async function loadDashboardStats() {
     const stats = [
-        { url: '/Covoiturage/back-end/route/api/get_total_trajets.php', elementId: 'totalTrajets', fallback: 0 },
-        { url: '/Covoiturage/back-end/user/api/user/get_total_users.php', elementId: 'totalUsers', fallback: 0 }
+        { url: '/AlloCovoit/back-end/route/api/get_total_trajets.php', elementId: 'totalTrajets', fallback: 0 },
+        { url: '/AlloCovoit/back-end/user/api/user/get_total_users.php', elementId: 'totalUsers', fallback: 0 }
     ];
 
     await Promise.all(stats.map(async ({ url, elementId, fallback }) => {

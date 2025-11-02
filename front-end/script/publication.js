@@ -31,11 +31,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
  try {
     const response = await fetch(pubForm.action, { method: 'POST', body: formData });
-    const result = await response.json(); // JSON valide maintenant
+    const result = await response.json(); 
     if (result.success) {
         showNotification(result.message, 'success');
         pubForm.reset();
-        setTimeout(() => window.location.href = '/Covoiturage/front-end/main.html', 1500);
+        setTimeout(() => window.location.href = '/AlloCovoit/front-end/main.html', 1500);
     } else {
         showNotification(result.message, 'error');
     }

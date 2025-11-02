@@ -8,7 +8,7 @@ const limit = 10; // trajets par page
 export async function loadTrajets(filters = {}, page = 1) {
     try {
         currentPage = page; // mettre à jour la page actuelle
-        let url = `/Covoiturage/back-end/route/api/get_routes.php`;
+        let url = `/AlloCovoit/back-end/route/api/get_routes.php`;
 
         const params = new URLSearchParams();
         if (filters.depart) params.append('depart', filters.depart);

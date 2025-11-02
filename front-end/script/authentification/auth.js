@@ -3,7 +3,7 @@ export let currentUser = null;
 // Vérifier session utilisateur
 export async function checkSession() {
     try {
-        const response = await fetch(`/Covoiturage/back-end/user/api/auth/check_session.php`);
+        const response = await fetch(`/AlloCovoit/back-end/user/api/auth/check_session.php`);
         const data = await response.json();
 
         if (data.connected) {
@@ -12,7 +12,7 @@ export async function checkSession() {
         } else {
             if (!window.location.href.includes('login.html') &&
                 !window.location.href.includes('sign.html')) {
-                window.location.href = '/Covoiturage/front-end/interfaces/authentification/login.html';
+                window.location.href = '/AlloCovoit/front-end/interfaces/authentification/login.html';
             }
         }
     } catch (error) {
@@ -31,5 +31,5 @@ export function updateUserDisplay() {
 
 // Déconnexion
 export function logout() {
-    window.location.href = `/Covoiturage/back-end/user/api/auth/logout.php`;
+    window.location.href = `/AlloCovoit/back-end/user/api/auth/logout.php`;
 }

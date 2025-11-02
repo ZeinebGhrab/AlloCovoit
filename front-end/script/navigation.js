@@ -10,16 +10,16 @@ export function navigation() {
         const page = button.dataset.page;
         switch(page) {
             case 'all-trajets':
-                button.addEventListener('click', () => window.location.href = '/Covoiturage/front-end/interfaces/main.html');
+                button.addEventListener('click', () => window.location.href = '/AlloCovoit/front-end/interfaces/main.html');
                 break;
             case 'publier-trajet':
-                button.addEventListener('click', () => window.location.href = '/Covoiturage/front-end/interfaces/route/publication.html');
+                button.addEventListener('click', () => window.location.href = '/AlloCovoit/front-end/interfaces/route/publication.html');
                 break;
             case 'panier':
-                button.addEventListener('click', () => window.location.href = '/Covoiturage/front-end/interfaces/route/ride-cart.html');
+                button.addEventListener('click', () => window.location.href = '/AlloCovoit/front-end/interfaces/route/ride-cart.html');
                 break;
             case 'mes-trajets':
-                button.addEventListener('click', () => window.location.href = '/Covoiturage/front-end/interfaces/route/ride-publication.html');
+                button.addEventListener('click', () => window.location.href = '/AlloCovoit/front-end/interfaces/route/ride-publication.html');
                 break;
             case 'deconnexion':
                 button.addEventListener('click', logout);
@@ -37,7 +37,7 @@ export function navigation() {
             btnAdmin.innerHTML = `<i class="fas fa-cogs"></i> Administration`;
             btnAdmin.classList.add('btn-admin');
             btnAdmin.addEventListener('click', () => {
-                window.location.href = '/Covoiturage/front-end/interfaces/admin/dashboard.html';
+                window.location.href = '/AlloCovoit/front-end/interfaces/admin/dashboard.html';
             });
 
             // Insérer avant "Déconnexion"

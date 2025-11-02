@@ -24,7 +24,7 @@ $data = [
 ];
 
 if ($trajet->save($data, $db)) {
-     header("Location: /Covoiturage/front-end/interfaces/main.html");
+     header("Location: /AlloCovoit/front-end/interfaces/main.html");
 } else {
     echo json_encode(['success' => false, 'message' => 'Erreur lors de l\'enregistrement']);
 }

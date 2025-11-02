@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (result.success) {
                
-                window.location.href = '/Covoiturage/front-end/interfaces/main.html';
+                window.location.href = '/AlloCovoit/front-end/interfaces/main.html';
             } else {
                 // Afficher l'erreur dans la page 
                 if (errorMsg) {
