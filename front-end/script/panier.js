@@ -1,61 +1,85 @@
 import { showNotification } from './utils.js';
 
+const API_CART_URL = '/AlloCovoit/back-end/route/api/session_routes.php';
 let cart = [];
 
-// Charger panier depuis localStorage
-export function loadCart() {
-    const saved = localStorage.getItem('allocovoit_cart');
-    if (saved) {
-        cart = JSON.parse(saved);
+// Charger le panier depuis la session PHP
+export async function loadCart() {
+    try {
+        const res = await fetch(API_CART_URL, {
+            method: 'GET',
+            credentials: 'include' // pour envoyer le cookie de session PHP
+        });
+        const data = await res.json();
+        if (data.success) {
+            cart = data.cart || [];
+            updateCartDisplay();
+        }
+    } catch (error) {
+        console.error('Erreur lors du chargement du panier :', error);
     }
 }
 
-// Sauvegarder panier
-export function saveCart() {
-    localStorage.setItem('allocovoit_cart', JSON.stringify(cart));
-}
+// Ajouter un trajet au panier (côté PHP)
+export async function addToCart(id, depart, arrivee, date, heure, prix) {
+    try {
+        const res = await fetch(API_CART_URL, {
+            method: 'POST',
+            credentials: 'include', // pour garder la même session
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, depart, arrivee, date, heure, prix })
+        });
 
-// Ajouter au panier
-export function addToCart(id, depart, arrivee, date, heure, prix) {
-    // Vérifier si déjà dans le panier
-    if (cart.some(item => item.id === id)) {
-        showNotification('Ce trajet est déjà dans votre panier', 'warning');
-        return;
+        const data = await res.json();
+        showNotification(data.message, data.success ? 'success' : 'warning');
+
+        if (data.success) {
+            cart = data.cart || [];
+            updateCartDisplay();
+        }
+
+    } catch (error) {
+        console.error('Erreur ajout panier :', error);
     }
-    
-    cart.push({ id, depart, arrivee, date, heure, prix });
-    saveCart();
-    showNotification('Trajet ajouté au panier', 'success');
-    updateCartDisplay();
 }
 
-// Retirer du panier
-export function removeFromCart(id) {
-    cart = cart.filter(item => item.id !== id);
-    saveCart();
-    showNotification('Trajet retiré du panier', 'success');
-    updateCartDisplay();
+// Retirer un trajet du panier (côté PHP)
+export async function removeFromCart(id) {
+    try {
+        const res = await fetch(API_CART_URL, {
+            method: 'DELETE',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id })
+        });
+
+        const data = await res.json();
+        showNotification(data.message, data.success ? 'success' : 'error');
+
+        if (data.success) loadCart();
+    } catch (error) {
+        console.error('Erreur suppression panier :', error);
+    }
 }
 
-// Afficher panier
+// Afficher le panier à l’écran
 export function updateCartDisplay() {
     const panierList = document.getElementById('panierList');
     const totalElement = document.getElementById('totalPanier');
     
     if (!panierList) return;
-    
+
     panierList.innerHTML = '';
     let total = 0;
-    
+
     if (cart.length === 0) {
         panierList.innerHTML = '<p style="text-align: center; color: #666;">Votre panier est vide</p>';
         if (totalElement) totalElement.textContent = '0';
         return;
     }
-    
+
     cart.forEach(item => {
         total += parseFloat(item.prix);
-        
         const div = document.createElement('div');
         div.className = 'panier-item';
         div.innerHTML = `
@@ -71,34 +95,39 @@ export function updateCartDisplay() {
         div.querySelector("button").addEventListener("click", () => removeFromCart(item.id));
         panierList.appendChild(div);
     });
-    
-    if (totalElement) {
-        totalElement.textContent = total.toFixed(2);
-    }
+
+    if (totalElement) totalElement.textContent = total.toFixed(2);
 }
-// Confirmer réservation
+
+// Confirmer la réservation
 export async function confirmReservations() {
     if (cart.length === 0) {
         showNotification('Votre panier est vide', 'warning');
         return;
     }
-    
+
     try {
         const response = await fetch(`${API_BASE_URL}/reservation/create.php`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ trajets: cart })
         });
-        
+
         const result = await response.json();
-        
+
         if (result.success) {
             showNotification('Réservations confirmées !', 'success');
+
+            // vider la session panier côté PHP
+            await fetch(API_CART_URL, {
+                method: 'PUT',
+                credentials: 'include'
+            });
+
             cart = [];
-            saveCart();
-            
+            updateCartDisplay();
+
             setTimeout(() => {
                 window.location.href = './confirmation.html';
             }, 1500);
@@ -112,4 +141,5 @@ export async function confirmReservations() {
 }
 
 export { cart };
+
 

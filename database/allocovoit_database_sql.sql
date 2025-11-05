@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS trajet (
     places_disponibles INT NOT NULL,
     description TEXT,
     statut ENUM('actif', 'complet', 'annulé', 'terminé') DEFAULT 'actif',
-     valider TINYINT(1) DEFAULT 0, -- 0 = non validé, 1 = validé
+    valider TINYINT(1) DEFAULT 0, -- 0 = non validé, 1 = validé
     date_publication TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_conducteur) REFERENCES utilisateur(id_utilisateur) ON DELETE CASCADE,
     INDEX idx_conducteur (id_conducteur),

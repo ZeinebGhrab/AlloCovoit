@@ -27,6 +27,15 @@ try {
     $loginResult = $user->login($email, $mot_de_passe);
 
     if ($loginResult) {
+        // Vérifier si le statut du compte est inactif
+        if ($_SESSION['statut'] === 'inactif') {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Votre compte est inactif. Veuillez contacter l\'administrateur.'
+            ]);
+            exit;
+        }
+
         echo json_encode([
             'success' => true,
             'user' => [
@@ -34,7 +43,8 @@ try {
                 'nom' => $user->getNom(),
                 'prenom' => $user->getPrenom(),
                 'email' => $user->getEmail(),
-                'role' => $_SESSION['role']
+                'role' => $_SESSION['role'],
+                'statut' => $_SESSION['statut']
             ]
         ]);
     } else {

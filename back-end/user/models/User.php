@@ -10,6 +10,7 @@ class User {
     private $prenom;
     private $email;
     private $role;
+    private $statut;
 
     public function __construct($database) {
         $this->db = $database;
@@ -33,6 +34,7 @@ class User {
             $_SESSION['nom'] = $user['nom'];
             $_SESSION['prenom'] = $user['prenom'];
             $_SESSION['role'] = $user['type_compte'] ?? 'utilisateur';
+            $_SESSION['statut'] = $user['statut'];
 
             // Remplir les attributs de l'objet
             $this->id = $user['id_utilisateur'];
@@ -40,6 +42,7 @@ class User {
             $this->prenom = $user['prenom'];
             $this->email = $user['email'];
             $this->role = $_SESSION['role'];
+            $this->statut = $_SESSION['statut'];
 
            return true;
         } 
@@ -61,6 +64,14 @@ class User {
 
     public function getEmail() {
         return $this->email;
+    }
+
+    public function getRole() {
+        return $this->role;
+    }
+
+    public function getStatut() {
+        return $this->statut;
     }
 }
 ?>
