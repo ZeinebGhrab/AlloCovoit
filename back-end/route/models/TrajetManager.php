@@ -2,6 +2,19 @@
 require_once '../../config/Database.php';
 require_once 'Trajet.php';
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require_once '../../phpmailer/src/Exception.php';
+require_once '../../phpmailer/src/PHPMailer.php';
+require_once '../../phpmailer/src/SMTP.php';
+
+require_once '../../../vendor/autoload.php'; // Composer autoload
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../..'); 
+$dotenv->load();
+
+
 class TrajetManager {
     private Database $db;
     private $conn;
@@ -27,9 +40,10 @@ class TrajetManager {
         $sortOrder = strtoupper($sortOrder) === 'DESC' ? 'DESC' : 'ASC';
 
         $sql = "SELECT t.*, u.nom AS conducteur_nom, u.prenom AS conducteur_prenom
-        FROM trajet t
-        JOIN utilisateur u ON t.id_conducteur = u.id_utilisateur
-        WHERE t.valider = 1";
+                FROM trajet AS t JOIN utilisateur AS u 
+                ON t.id_conducteur = u.id_utilisateur
+                WHERE t.valider = 1 AND t.places_reservees != t.places_disponibles AND u.statut = 'actif'AND TIMESTAMP(t.date_depart, t.heure_depart) > SYSDATE()
+               ";
 
         $params = [];
         $types = '';
@@ -89,10 +103,10 @@ class TrajetManager {
         $sortField = in_array($sortField, $allowedSortFields) ? $sortField : 'date_depart';
         $sortOrder = strtoupper($sortOrder) === 'DESC' ? 'DESC' : 'ASC';
 
-        $sql = "SELECT t.*, u.nom, u.prenom 
-                FROM trajet t
-                JOIN utilisateur u ON t.id_conducteur = u.id_utilisateur
-                WHERE 1";
+        $sql = "SELECT t.*, u.nom AS conducteur_nom, u.prenom AS conducteur_prenom
+        FROM trajet t
+        JOIN utilisateur u ON t.id_conducteur = u.id_utilisateur
+        WHERE 1";
 
         $params = [];
         $types = '';
@@ -173,6 +187,25 @@ class TrajetManager {
         $stmt->bind_param('i', $id);
         $res = $stmt->execute();
         $stmt->close();
+         if ($res) {
+            // Récupérer l'email du conducteur concerné
+            $sql = "SELECT u.email, u.nom, u.prenom, t.date_depart, t.heure_depart 
+                    FROM trajet t 
+                    JOIN utilisateur u ON t.id_conducteur = u.id_utilisateur 
+                    WHERE t.id_trajet = ?";
+                    
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param('i', $id);
+            $stmt->execute();
+            $result = $stmt->get_result()->fetch_assoc();
+            $stmt->close();
+
+            if ($result) {
+                // Envoyer l'email
+                $this->sendValidationEmail($result['email'], $result['nom'], $result['prenom'], $result['date_depart'], $result['heure_depart']);
+            }
+        }
+
         return $res;
     }
 
@@ -212,6 +245,43 @@ class TrajetManager {
     // Fermer la connexion
     public function close(): void {
         $this->db->close();
+    }
+
+    // Méthode pour envoyer l'email
+    private function sendValidationEmail($to, $nom, $prenom, $date, $heure) {
+        $mail = new PHPMailer(true);
+        try {
+            // Serveur SMTP
+            $mail->isSMTP();
+            $mail->Host = $_ENV['MAIL_HOST'];
+            $mail->SMTPAuth = true;
+            $mail->Username = $_ENV['MAIL_USERNAME'];
+            $mail->Password = $_ENV['MAIL_PASSWORD']; 
+            $mail->SMTPSecure =  $_ENV['MAIL_ENCRYPTION'] === 'tls' ? PHPMailer::ENCRYPTION_STARTTLS : PHPMailer::ENCRYPTION_SMTPS;
+            $mail->Port = $_ENV['MAIL_PORT'];
+            
+            // Encodage correct
+            $mail->CharSet = 'UTF-8';
+            $mail->Encoding = 'base64';
+
+            // Expéditeur et destinataire
+            $mail->setFrom($_ENV['MAIL_FROM'], $_ENV['MAIL_FROM_NAME']);
+            $mail->addAddress($to, "$prenom $nom");
+
+            // Contenu du mail
+            $mail->isHTML(true);
+            $mail->Subject = 'Votre trajet a été validé ✅';
+            $mail->Body = "
+                Bonjour <b>$prenom $nom</b>,<br><br>
+                Votre trajet prévu le <b>$date</b> à <b>$heure</b> a été validé avec succès.<br>
+                Merci pour votre confiance.<br><br>
+                <i>Équipe Covoiturage AlloCovoit</i>
+            ";
+
+            $mail->send();
+        } catch (Exception $e) {
+            error_log("Erreur d'envoi d'email : {$mail->ErrorInfo}");
+        }
     }
 }
 ?>

@@ -48,7 +48,7 @@ async function fetchUsers(page = 1, limit = 10) {
             method: 'POST',
             body: formData
         });
-
+        console.log( response);
         if (!response.ok) throw new Error('Erreur lors de la récupération des utilisateurs.');
 
         const data = await response.json();
@@ -64,7 +64,7 @@ async function fetchUsers(page = 1, limit = 10) {
 
 function displayUsers(users, container) {
     container.innerHTML = `
-        <table>
+        <table class="table-container">
             <thead>
                 <tr>
                     <th>Nom</th>
@@ -222,7 +222,7 @@ async function fetchTrajets(page = 1, limit = 10) {
 // ---- Affichage des trajets dans le tableau ----
 function displayTrajets(trajets, container) {
     container.innerHTML = `
-        <table>
+        <table class="table-container">
             <thead>
                 <tr>
                     <th>Départ</th>
@@ -231,7 +231,8 @@ function displayTrajets(trajets, container) {
                     <th>Heure</th>
                     <th>Conducteur</th>
                     <th>Prix</th>
-                    <th>Places</th>
+                    <th>Places Totales</th>
+                    <th>Places Réservées</th>
                     <th>Statut</th>
                     <th>Actions</th>
                 </tr>
@@ -248,6 +249,7 @@ function displayTrajets(trajets, container) {
                             <td>${t.conducteur_nom || ''} ${t.conducteur_prenom || ''}</td>
                             <td>${t.prix} DT</td>
                             <td>${t.places_disponibles}</td>
+                            <td>${t.places_reservees}</td>
                             <td>${isValidated ? 'Validé' : 'En attente'}</td>
                             <td>
                                 ${isValidated

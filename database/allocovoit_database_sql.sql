@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS trajet (
     heure_depart TIME NOT NULL,
     prix DECIMAL(10, 2) NOT NULL,
     places_disponibles INT NOT NULL,
+    places_reservees INT DEFAULT 0,
     description TEXT,
     statut ENUM('actif', 'complet', 'annulé', 'terminé') DEFAULT 'actif',
     valider TINYINT(1) DEFAULT 0, -- 0 = non validé, 1 = validé

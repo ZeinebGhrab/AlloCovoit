@@ -8,6 +8,7 @@ class Trajet {
     private string $heure_depart;
     private float $prix;
     private int $places_disponibles;
+    private int $places_reservees;
     private string $description;
     private string $statut;
     private int $valider;
@@ -23,6 +24,7 @@ class Trajet {
         $this->heure_depart = $data['heure_depart'] ?? '';
         $this->prix = $data['prix'] ?? 0.0;
         $this->places_disponibles = $data['places_disponibles'] ?? 0;
+        $this->places_reservees = $data['places_reservees'] ?? 0;
         $this->description = $data['description'] ?? '';
         $this->statut = $data['statut'] ?? 'actif';
         $this->valider = $data['valider'] ?? 0;
@@ -72,6 +74,7 @@ public function save(array $data, $db): bool {
     public function getHeure(): string { return $this->heure_depart; }
     public function getPrix(): float { return $this->prix; }
     public function getPlaces(): int { return $this->places_disponibles; }
+    public function getPlacesReservees(): int { return $this->places_reservees; }
     public function getDescription(): string { return $this->description; }
     public function getStatut(): string { return $this->statut; }
     public function getValider(): int { return $this->valider; }

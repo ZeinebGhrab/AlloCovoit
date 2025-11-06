@@ -56,6 +56,7 @@ try {
             'heure_depart' => $trajet->getHeure(),
             'prix' => $trajet->getPrix(),
             'places_disponibles' => $trajet->getPlaces(),
+            'places_reservees'=> $trajet->getPlacesReservees(),
             'description' => $trajet->getDescription(),
             'conducteur_nom' => $t['conducteur_nom'],
             'conducteur_prenom' => $t['conducteur_prenom'],
