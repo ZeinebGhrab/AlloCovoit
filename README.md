@@ -196,7 +196,7 @@ http://localhost/AlloCovoit/front-end/interfaces/main.html
 
 ##💡 Usage
 
-**For Users
+**For Users**
 
 - Register, login, browse trips
 
@@ -208,7 +208,7 @@ http://localhost/AlloCovoit/front-end/interfaces/main.html
 
 - Receive email notifications
 
-**For Admins
+**For Admins**
 
 - Access dashboard
 
