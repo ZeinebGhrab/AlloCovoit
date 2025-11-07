@@ -194,7 +194,7 @@ http://localhost/AlloCovoit/front-end/interfaces/main.html
 
 ---
 
-##💡 Usage
+## 💡 Usage
 
 **For Users**
 
@@ -243,7 +243,7 @@ class Database {
 
 ---
 
-##📝 License
+## 📝 License
 
 MIT License © Zeineb Ghrab
 
