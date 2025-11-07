@@ -3,36 +3,31 @@
 ini_set('display_errors', 0);
 ini_set('display_startup_errors', 0);
 error_reporting(E_ALL);
+header('Content-Type: application/json; charset=utf-8');
 
 header('Content-Type: application/json');
 
+// Import des fichiers nécessaires
 require_once '../../config/Database.php';
 require_once '../models/Trajet.php';
 require_once '../models/TrajetManager.php';
 require_once '../../user/api/auth/check_session.php'; // ne pas modifier
 
 try {
-    // Vider tout output accidentel
-    if (ob_get_length()) {
-        ob_clean();
-    }
+    if (ob_get_length()) ob_clean();
 
     // Vérifier utilisateur connecté
     $userId = $_SESSION['user_id'] ?? null;
-    if (!$userId) {
-        throw new Exception("Utilisateur non connecté");
-    }
+    if (!$userId) throw new Exception("Utilisateur non connecté");
 
     $manager = new TrajetManager();
 
-    // Récupérer les filtres depuis l'URL
     $filters = [
         'depart' => $_GET['depart'] ?? '',
         'arrivee' => $_GET['arrivee'] ?? '',
         'date' => $_GET['date'] ?? ''
     ];
 
-    // Pagination
     $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
     $limit = isset($_GET['limit']) ? max(1, intval($_GET['limit'])) : 10;
 
@@ -51,19 +46,20 @@ try {
             'prix' => $t['prix'],
             'places_disponibles' => $t['places_disponibles'],
             'description' => $t['description'],
-            'conducteur_nom' => $t['conducteur_nom'] ?? '', // utiliser la valeur directement du join
+            'conducteur_nom' => $t['conducteur_nom'] ?? '',
             'conducteur_prenom' => $t['conducteur_prenom'] ?? '',
             'statut' => $t['statut'],
             'valider' => $t['valider'] ?? 0
         ];
     }
 
-    // Compter le total pour pagination
-    $total = count($trajets);
+    // Total réel pour pagination (à calculer via SQL idéalement)
+    $total = $manager->getTotalValidate($filters); 
     $totalPages = ceil($total / $limit);
 
     // Envoyer le JSON final
     echo json_encode([
+        'success' => true,
         'page' => $page,
         'limit' => $limit,
         'total' => $total,
@@ -72,6 +68,7 @@ try {
     ]);
 
     $manager->close();
+    exit;
 
 } catch (Exception $e) {
     if (ob_get_length()) ob_clean();
