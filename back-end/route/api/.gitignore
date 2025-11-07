@@ -1,0 +1,16 @@
+# Dépendances PHP
+/vendor/
+
+# Fichiers de configuration sensibles
+.env
+.env.local
+.env.*
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# Cache, logs, etc.
+*.log
+/cache/
+/storage/
