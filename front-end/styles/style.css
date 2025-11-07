@@ -681,7 +681,8 @@ footer p {
    ============================================ */
 
 /* Styles pour les boutons de filtre */
-        .btn-filter {
+        .btn-filter, 
+        .btn-filter-res {
             padding: 0.75rem 1.5rem;
             background: white;
             border: 2px solid var(--border);
@@ -695,13 +696,15 @@ footer p {
             transition: all 0.3s ease;
         }
 
-        .btn-filter:hover {
+        .btn-filter:hover, 
+        .btn-filter-res:hover {
             border-color: var(--primary);
             color: var(--primary);
             transform: translateY(-2px);
         }
 
-        .btn-filter.active {
+        .btn-filter.active, 
+        .btn-filter-res.active {
             background: var(--gradient);
             color: white;
             border-color: transparent;
@@ -852,7 +855,8 @@ footer p {
 
         /* Responsive */
         @media (max-width: 768px) {
-            .btn-filter {
+            .btn-filter, 
+            .btn-filter-res {
                 padding: 0.5rem 1rem;
                 font-size: 0.9rem;
             }

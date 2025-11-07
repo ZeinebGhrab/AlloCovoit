@@ -21,6 +21,15 @@ class ReservationManager {
         $this->conn = $conn;
     }
 
+    // Compter tous les réservations
+    public function countAllReservations(): int {
+        $stmt = $this->conn->prepare("SELECT COUNT(*) AS total_reservations FROM reservation");
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        return (int)$result['total_reservations'];
+    }
+
     // Obtenir toutes les réservations d’un utilisateur
     public function getUserReservations(int $userId): array {
         $query = "
@@ -66,6 +75,25 @@ class ReservationManager {
 
         $stmt->close();
         return $reservations;
+    }
+
+    // Obtenir seulement le nombre total de réservations d’un utilisateur
+
+    public function getUserReservationCount(int $userId): int {
+        $query = "
+            SELECT COUNT(*) AS total_Reservations
+            FROM reservation
+            WHERE id_utilisateur = ?
+        ";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+
+        $stmt->close();
+        return $row['total_Reservations'] ?? 0;
     }
 
     //  Obtenir les demandes reçues par le conducteur
@@ -119,87 +147,107 @@ class ReservationManager {
         return $demandes;
     }
 
+    // Obtenir seulement le nombre total de demande de réservations d’un utilisateur
+
+    public function getReceivedRequestsCount(int $driverId): int {
+        $query = "
+            SELECT COUNT(*) AS total_Request_Reservations
+            FROM reservation r
+            JOIN trajet t ON r.id_trajet = t.id_trajet
+            WHERE t.id_conducteur = ?
+        ";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("i", $driverId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+
+        $stmt->close();
+        return $row['total_Request_Reservations'] ?? 0;
+    }
+
     // Ajouter une réservation et notifier le conducteur
-public function addReservation(int $userId, int $routeId, int $seatCount = 1, string $message = ''): array {
+    public function addReservation(int $userId, int $routeId, int $seatCount = 1, string $message = ''): array {
 
-    // Vérifier les places disponibles avant insertion
-    $stmt = $this->conn->prepare("
-        SELECT t.places_disponibles, t.places_reservees, t.ville_depart, t.ville_arrivee, t.date_depart
-        FROM trajet t
-        WHERE id_trajet = ? 
-        FOR UPDATE
-    ");
-    $stmt->bind_param('i', $routeId);
-    $stmt->execute();
-    $trajet = $stmt->get_result()->fetch_assoc();
-    $stmt->close();
+        // Vérifier les places disponibles avant insertion
+        $stmt = $this->conn->prepare("
+            SELECT t.places_disponibles, t.places_reservees, t.ville_depart, t.ville_arrivee, t.date_depart
+            FROM trajet t
+            WHERE id_trajet = ? 
+            FOR UPDATE
+        ");
+        $stmt->bind_param('i', $routeId);
+        $stmt->execute();
+        $trajet = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
 
-    if (!$trajet) {
+        if (!$trajet) {
+            return [
+                'success' => false,
+                'message' => "Trajet introuvable (ID $routeId)"
+            ];
+        }
+
+        $placesRestantes = (int)$trajet['places_disponibles'] - (int)$trajet['places_reservees'];
+        if ($seatCount > $placesRestantes) {
+            return [
+                'success' => false,
+                'message' => "Impossible de réserver $seatCount place(s) pour le trajet {$trajet['ville_depart']} → {$trajet['ville_arrivee']} le {$trajet['date_depart']} : seulement $placesRestantes disponible(s)"
+            ];
+        }
+
+        // Insérer la réservation
+        $stmt = $this->conn->prepare("
+            INSERT INTO reservation (id_utilisateur, id_trajet, nombre_places, message, statut)
+            VALUES (?, ?, ?, ?, 'en_attente')
+        ");
+        $stmt->bind_param('iiis', $userId, $routeId, $seatCount, $message);
+        $res = $stmt->execute();
+        $stmt->close();
+
+        if (!$res) {
+            return [
+                'success' => false,
+                'message' => "Erreur lors de la création de la réservation pour le trajet $routeId"
+            ];
+        }
+
+        // Récupérer le conducteur du trajet
+        $stmt = $this->conn->prepare("
+            SELECT u.email, u.prenom, u.nom 
+            FROM trajet t 
+            JOIN utilisateur u ON t.id_conducteur = u.id_utilisateur 
+            WHERE t.id_trajet = ?
+        ");
+        $stmt->bind_param('i', $routeId);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+
+        if ($result) {
+            $subject = "Nouvelle réservation en attente 🚗";
+            $body = "Bonjour {$result['prenom']} {$result['nom']},<br><br>
+                    Une nouvelle réservation a été effectuée pour votre trajet (ID: $routeId).<br>
+                    Nombre de places réservées : $seatCount.<br>
+                    Veuillez vérifier votre tableau de bord pour confirmer ou gérer cette réservation.<br><br>
+                    Merci,<br>
+                    <i>L'équipe AlloCovoit</i>";
+
+            $this->sendUserEmail(
+                $result['email'],
+                $result['prenom'],
+                $result['nom'],
+                $subject,
+                $body
+            );
+        }
+
         return [
-            'success' => false,
-            'message' => "Trajet introuvable (ID $routeId)"
+            'success' => true,
+            'message' => "Réservation ajoutée avec succès pour le trajet $routeId"
         ];
     }
-
-    $placesRestantes = (int)$trajet['places_disponibles'] - (int)$trajet['places_reservees'];
-    if ($seatCount > $placesRestantes) {
-        return [
-            'success' => false,
-            'message' => "Impossible de réserver $seatCount place(s) pour le trajet {$trajet['ville_depart']} → {$trajet['ville_arrivee']} le {$trajet['date_depart']} : seulement $placesRestantes disponible(s)"
-        ];
-    }
-
-    // Insérer la réservation
-    $stmt = $this->conn->prepare("
-        INSERT INTO reservation (id_utilisateur, id_trajet, nombre_places, message, statut)
-        VALUES (?, ?, ?, ?, 'en_attente')
-    ");
-    $stmt->bind_param('iiis', $userId, $routeId, $seatCount, $message);
-    $res = $stmt->execute();
-    $stmt->close();
-
-    if (!$res) {
-        return [
-            'success' => false,
-            'message' => "Erreur lors de la création de la réservation pour le trajet $routeId"
-        ];
-    }
-
-    // Récupérer le conducteur du trajet
-    $stmt = $this->conn->prepare("
-        SELECT u.email, u.prenom, u.nom 
-        FROM trajet t 
-        JOIN utilisateur u ON t.id_conducteur = u.id_utilisateur 
-        WHERE t.id_trajet = ?
-    ");
-    $stmt->bind_param('i', $routeId);
-    $stmt->execute();
-    $result = $stmt->get_result()->fetch_assoc();
-    $stmt->close();
-
-    if ($result) {
-        $subject = "Nouvelle réservation en attente 🚗";
-        $body = "Bonjour {$result['prenom']} {$result['nom']},<br><br>
-                Une nouvelle réservation a été effectuée pour votre trajet (ID: $routeId).<br>
-                Nombre de places réservées : $seatCount.<br>
-                Veuillez vérifier votre tableau de bord pour confirmer ou gérer cette réservation.<br><br>
-                Merci,<br>
-                <i>L'équipe AlloCovoit</i>";
-
-        $this->sendUserEmail(
-            $result['email'],
-            $result['prenom'],
-            $result['nom'],
-            $subject,
-            $body
-        );
-    }
-
-    return [
-        'success' => true,
-        'message' => "Réservation ajoutée avec succès pour le trajet $routeId"
-    ];
-}
 
 
     // Confirmer une réservation et mettre à jour les places

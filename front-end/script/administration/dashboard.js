@@ -358,7 +358,8 @@ async function loadTrajetsSection(page = 1) {
 async function loadDashboardStats() {
     const stats = [
         { url: '/AlloCovoit/back-end/route/api/get_total_trajets.php', elementId: 'totalTrajets', fallback: 0 },
-        { url: '/AlloCovoit/back-end/user/api/user/get_total_users.php', elementId: 'totalUsers', fallback: 0 }
+        { url: '/AlloCovoit/back-end/user/api/user/get_total_users.php', elementId: 'totalUsers', fallback: 0 },
+        { url: '/AlloCovoit/back-end/reservation/api/get_reservations_count.php', elementId: 'totalReservations', fallback: 0 }
     ];
 
     await Promise.all(stats.map(async ({ url, elementId, fallback }) => {
@@ -367,8 +368,17 @@ async function loadDashboardStats() {
             if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
 
             const data = await res.json();
-            const value = Object.values(data)[0]; 
-            document.getElementById(elementId).textContent = value ?? fallback;
+            let value = fallback;
+
+            // Si on récupère l'API des réservations
+            if (elementId === 'totalReservations' && data.counts) {
+                value = data.counts.totalReservations ?? fallback;
+            } else {
+                // Autres APIs simples 
+                value = Object.values(data)[0] ?? fallback;
+            }
+
+            document.getElementById(elementId).textContent = value;
         } catch (err) {
             console.error(`Erreur chargement stats (${elementId}) :`, err);
             document.getElementById(elementId).textContent = fallback;

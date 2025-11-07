@@ -2,9 +2,8 @@ import { showNotification } from './utils.js';
 
 let cart = [];
 
-/**
- * 🔹 Charger le panier depuis la session PHP
- */
+// Charger le panier depuis la session PHP
+
 export async function loadCart() {
     try {
         const res = await fetch('/AlloCovoit/back-end/route/api/session_routes.php', {
@@ -18,14 +17,14 @@ export async function loadCart() {
         cart = data.success ? (data.cart || []) : [];
         updateCartDisplay();
     } catch (error) {
-        console.error('❌ Erreur lors du chargement du panier :', error);
+        console.error('Erreur lors du chargement du panier :', error);
         showNotification('Erreur lors du chargement du panier', 'error');
     }
 }
 
-/**
- * 🔹 Ajouter un trajet au panier
- */
+
+// Ajouter un trajet au panier
+
 export async function addToCart(id, depart, arrivee, date, heure, prix, nombrePlaces = 1) {
     try {
         const res = await fetch('/AlloCovoit/back-end/route/api/session_routes.php', {
@@ -45,14 +44,14 @@ export async function addToCart(id, depart, arrivee, date, heure, prix, nombrePl
             updateCartDisplay();
         }
     } catch (error) {
-        console.error('❌ Erreur ajout panier :', error);
+        console.error('Erreur ajout panier :', error);
         showNotification('Erreur lors de l\'ajout au panier', 'error');
     }
 }
 
-/**
- * 🔹 Retirer un trajet du panier
- */
+
+// Retirer un trajet du panier
+
 export async function removeFromCart(id) {
     try {
         const res = await fetch('/AlloCovoit/back-end/route/api/session_routes.php', {
@@ -72,9 +71,9 @@ export async function removeFromCart(id) {
     }
 }
 
-/**
- * 🔹 Afficher le panier à l'écran avec réglage du nombre de places
- */
+
+// Afficher le panier à l'écran avec réglage du nombre de places
+ 
 export function updateCartDisplay() {
     const panierList = document.getElementById('panierList');
     const totalElement = document.getElementById('totalPanier');
@@ -212,9 +211,9 @@ if (window.innerWidth <= 768) {
         });
     });
 }
-/**
- * 🔹 Confirmer les réservations
- */
+
+// Confirmer les réservations
+
 export async function confirmReservations() {
     if (cart.length === 0) {
         showNotification('Votre panier est vide', 'warning');
@@ -239,7 +238,7 @@ export async function confirmReservations() {
 
         try { data = JSON.parse(text); } 
         catch (err) {
-            console.error('❌ Réponse non JSON du serveur:', text);
+            console.error('Réponse non JSON du serveur:', text);
             showNotification('Erreur serveur inattendue', 'error');
             return;
         }
@@ -253,7 +252,7 @@ export async function confirmReservations() {
         }
 
     } catch (error) {
-        console.error('❌ Erreur confirmation fetch:', error);
+        console.error('Erreur confirmation fetch:', error);
         showNotification('Impossible de contacter le serveur', 'error');
     }
 }

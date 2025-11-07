@@ -32,7 +32,9 @@ export async function initRideRequests() {
         loadReceivedRequests(),
         loadMyReservations()
     ]);
-
+    // Initialisation des filtres
+    setupReceivedRequestsFilter();
+    setupMyReservationsFilter();
     setupModalEvents();
 }
 
@@ -45,7 +47,6 @@ async function loadReceivedRequests() {
         const res = await fetch('/AlloCovoit/back-end/reservation/api/get_received_request.php');
         const data = await res.json();
 
-        console.log("✅ Données reçues :", data);
         container.innerHTML = '';
 
         if (!data.success || !Array.isArray(data.received_requests) || data.received_requests.length === 0) {
@@ -284,6 +285,7 @@ function displayReceivedRequests(container, requests) {
         }
         
         container.appendChild(card);
+        updateReceivedRequestsStats(requests);
     });
     
     // Message si aucune réservation
@@ -320,6 +322,27 @@ function applyResponsiveStyles() {
 window.addEventListener('resize', applyResponsiveStyles);
 window.addEventListener('load', applyResponsiveStyles);
 
+
+// === Filtrage des demandes reçues ===
+function setupReceivedRequestsFilter() {
+    const filterButtons = document.querySelectorAll('.btn-filter');
+    filterButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const filter = btn.dataset.filter;
+            const filtered = filter === 'tous'
+                ? receivedRequests
+                : receivedRequests.filter(r => r.statut_reservation === filter);
+
+            const container = document.getElementById('demandesRecuesListe');
+            displayReceivedRequests(container, filtered);
+        });
+    });
+}
+
+
 // === Charger mes réservations ===
 async function loadMyReservations() {
     const container = document.getElementById('mesReservationsListe');
@@ -328,7 +351,6 @@ async function loadMyReservations() {
     try {
         const res = await fetch(`/AlloCovoit/back-end/reservation/api/get_user_reservation.php`);
         const data = await res.json();
-        console.log("✅ Données reçues :", data);
         container.innerHTML = '';
 
         if (!data.success || !Array.isArray(data.reservations) || data.reservations.length === 0) {
@@ -345,6 +367,30 @@ async function loadMyReservations() {
         container.innerHTML = `<p style="color: gray;">Erreur de chargement.</p>`;
     }
 }
+
+// === Afficher le nombre des demandes reçues par filtre ===
+
+function updateReceivedRequestsStats(requests) {
+    const counts = {
+        en_attente: 0,
+        'confirmé': 0,
+        annulé: 0
+    };
+
+    requests.forEach(r => {
+        const status = r.statut_reservation;
+        if (counts.hasOwnProperty(status)) counts[status]++;
+    });
+
+    document.getElementById('pendingCount').textContent = counts.en_attente;
+    document.getElementById('confirmedCount').textContent = counts['confirmé'];
+    document.getElementById('rejectedCount').textContent = counts.annulé;
+    document.getElementById('totalDemandesCount').textContent = requests.length;
+
+    // Mettre à jour les badges des onglets
+    document.getElementById('demandesBadge').textContent = requests.length;
+}
+
 
 // === Afficher mes réservations ===
 function displayMyReservations(container) {
@@ -578,6 +624,7 @@ function displayMyReservations(container) {
         `;
         container.appendChild(emptyState);
     }
+    updateMyReservationsStats(myReservations);
 }
 
 // Responsive pour mobile
@@ -596,6 +643,49 @@ function applyMyReservationsResponsive() {
 // Appeler au chargement et au redimensionnement
 window.addEventListener('resize', applyMyReservationsResponsive);
 window.addEventListener('load', applyMyReservationsResponsive);
+
+// === Filtrage mes réservations ===
+function setupMyReservationsFilter() {
+    const filterButtons = document.querySelectorAll('.btn-filter-res');
+    filterButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const filter = btn.dataset.filterRes;
+            const filtered = filter === 'tous'
+                ? myReservations
+                : myReservations.filter(r => r.statut_reservation === filter);
+
+            const container = document.getElementById('mesReservationsListe');
+            displayMyReservations(container, filtered);
+        });
+    });
+}
+
+// === Afficher le nombre des réservations par filtre ===
+function updateMyReservationsStats(reservations) {
+    const counts = {
+        en_attente: 0,
+        'confirmé': 0,
+        annulé: 0
+    };
+
+    reservations.forEach(r => {
+        const status = r.statut_reservation;
+        if (counts.hasOwnProperty(status)) counts[status]++;
+    });
+
+    document.getElementById('myPendingCount').textContent = counts.en_attente;
+    document.getElementById('myConfirmedCount').textContent = counts['confirmé'];
+    document.getElementById('myRejectedCount').textContent = counts.annulé;
+    document.getElementById('totalReservationsCount').textContent = reservations.length;
+
+    // Badge onglet
+    document.getElementById('reservationsBadge').textContent = reservations.length;
+}
+
+
 // === Gestion de la modale ===
 function openModal(id, action) {
     selectedReservationId = id;

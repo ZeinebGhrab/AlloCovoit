@@ -131,10 +131,6 @@ async function confirmCancel() {
 function updateStats() {
     document.getElementById('totalTrajets').textContent = allTrajets.length;
     document.getElementById('trajetsActifs').textContent = allTrajets.filter(t => t.statut === 'actif').length;
-    // Si vous avez les données dans `allTrajets`, vous pouvez aussi calculer :
-    // - réservations reçues (ex: t.reservations ?)
-    // - revenu estimé (ex: t.prix * t.reservations)
-    // Pour l'instant, on laisse à 0 si non implémenté.
     document.getElementById('totalReservations').textContent = '0'; // À adapter selon API
     document.getElementById('revenuTotal').textContent = '0 DT';   // À adapter selon API
 }
