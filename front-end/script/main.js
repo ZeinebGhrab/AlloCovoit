@@ -4,6 +4,7 @@ import { loadTrajets } from './trajets.js';
 import { loadCart, updateCartDisplay } from './panier.js';
 import { initMesTrajets } from './mesTrajets.js';
 import { loadUsersSection } from './administration/dashboard.js';
+import { initRideRequests } from './reservation/ride-request.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     await checkSession();
@@ -24,5 +25,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (path.includes('dashboard.html')) {
         loadUsersSection();
+    }
+
+     if (path.includes('ride-request.html')) {
+        initRideRequests();
     }
 });

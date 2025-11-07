@@ -21,6 +21,9 @@ export function navigation() {
             case 'mes-trajets':
                 button.addEventListener('click', () => window.location.href = '/AlloCovoit/front-end/interfaces/route/ride-publication.html');
                 break;
+            case 'demandes':
+                button.addEventListener('click', () => window.location.href = '/AlloCovoit/front-end/interfaces/reservation/ride-request.html');
+                break;
             case 'deconnexion':
                 button.addEventListener('click', logout);
                 break;
