@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AlloCovoit - Mes Demandes & Réservations</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../../styles/style.css">
+  <link rel="stylesheet" href="../../styles/ride_request.css">
+  <script type="module" src="../../script/main.js"></script>
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav>
+    <div class="logo">Allo<span>Covoit</span></div>
+    <div class="nav-buttons">
+      <span><i class="fas fa-user"></i></span>
+      <button data-page="all-trajets"><i class="fas fa-search"></i> Tous les trajets</button>
+      <button data-page="publier-trajet"><i class="fas fa-plus"></i> Publier un trajet</button>
+      <button data-page="panier"><i class="fas fa-shopping-cart"></i> Mon panier</button>
+      <button data-page="mes-trajets"><i class="fas fa-car"></i> Mes trajets publiés</button>
+      <button data-page="demandes" class="active"><i class="fas fa-inbox"></i> Mes demandes</button>
+      <button data-page="deconnexion"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+    </div>
+  </nav>
+
+  <!-- Contenu principal -->
+  <div class="page">
+    <!-- Onglets -->
+    <div class="tabs-nav">
+      <button class="tab-btn active" data-tab="demandes-recues">
+        <i class="fas fa-inbox"></i> Demandes reçues
+        <span class="badge badge-warning" id="demandesBadge">0</span>
+      </button>
+      <button class="tab-btn" data-tab="mes-reservations">
+        <i class="fas fa-ticket-alt"></i> Mes réservations
+        <span class="badge badge-primary" id="reservationsBadge">0</span>
+      </button>
+    </div>
+
+    <!-- Demandes reçues -->
+    <div class="tab-content active" id="demandes-recues">
+      <div class="section-header">
+        <h2><i class="fas fa-inbox"></i> Demandes de réservation reçues</h2>
+      </div>
+
+      <!-- Statistiques -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <i class="fas fa-clock"></i>
+          <h3 id="pendingCount">0</h3>
+          <p>En attente</p>
+        </div>
+        <div class="stat-card">
+          <i class="fas fa-check-circle" style="color: var(--success);"></i>
+          <h3 id="confirmedCount">0</h3>
+          <p>Confirmées</p>
+        </div>
+        <div class="stat-card">
+          <i class="fas fa-times-circle" style="color: var(--danger);"></i>
+          <h3 id="rejectedCount">0</h3>
+          <p>Refusées</p>
+        </div>
+        <div class="stat-card">
+          <i class="fas fa-users"></i>
+          <h3 id="totalDemandesCount">0</h3>
+          <p>Total</p>
+        </div>
+      </div>
+
+      <!-- Filtres -->
+      <div class="filter-buttons">
+        <button class="btn-filter active" data-filter="tous"><i class="fas fa-list"></i> Toutes</button>
+        <button class="btn-filter" data-filter="en_attente"><i class="fas fa-clock"></i> En attente</button>
+        <button class="btn-filter" data-filter="confirmé"><i class="fas fa-check-circle"></i> Confirmées</button>
+        <button class="btn-filter" data-filter="annulé"><i class="fas fa-times-circle"></i> Refusées</button>
+      </div>
+
+      <!-- Liste des demandes -->
+      <div id="demandesRecuesListe" class="reservations-list"></div>
+    </div>
+
+    <!-- Mes réservations -->
+    <div class="tab-content" id="mes-reservations">
+      <div class="section-header">
+        <h2><i class="fas fa-ticket-alt"></i> Mes réservations</h2>
+        <p style="color: var(--gray); margin-top: 0.5rem;">
+          Consultez et gérez vos réservations effectuées.
+        </p>
+      </div>
+
+      <!-- Statistiques -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <i class="fas fa-clock"></i>
+          <h3 id="myPendingCount">0</h3>
+          <p>En attente</p>
+        </div>
+        <div class="stat-card">
+          <i class="fas fa-check-circle" style="color: var(--success);"></i>
+          <h3 id="myConfirmedCount">0</h3>
+          <p>Confirmées</p>
+        </div>
+        <div class="stat-card">
+          <i class="fas fa-times-circle" style="color: var(--danger);"></i>
+          <h3 id="myRejectedCount">0</h3>
+          <p>Annulées</p>
+        </div>
+        <div class="stat-card">
+          <i class="fas fa-route"></i>
+          <h3 id="totalReservationsCount">0</h3>
+          <p>Total</p>
+        </div>
+      </div>
+
+      <!-- Filtres -->
+      <div class="filter-buttons">
+        <button class="btn-filter-res active" data-filter-res="tous"><i class="fas fa-list"></i> Toutes</button>
+        <button class="btn-filter-res" data-filter-res="en_attente"><i class="fas fa-clock"></i> En attente</button>
+        <button class="btn-filter-res" data-filter-res="confirmé"><i class="fas fa-check-circle"></i> Confirmées</button>
+        <button class="btn-filter-res" data-filter-res="annulé"><i class="fas fa-times-circle"></i> Annulées</button>
+      </div>
+
+      <!-- Liste des réservations -->
+      <div id="mesReservationsListe" class="reservations-list"></div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 AlloCovoit. Tous droits réservés.</p>
+    <div class="footer-links">
+      <a href="#confidentialite">Politique de confidentialité</a>
+      <a href="#conditions">Conditions d'utilisation</a>
+      <a href="#support">Support</a>
+    </div>
+  </footer>
+
+    <!-- Modal pour confirmer ou annuler une réservation -->
+  <div id="cancelModal" class="modal" style="display: none;">
+      <div class="modal-content">
+          <div style="text-align: center; margin-bottom: 1.5rem;">
+              <i class="fas fa-exclamation-triangle" style="font-size: 60px; color: orange;"></i>
+          </div>
+          <h3 style="text-align: center; margin-bottom: 1rem;"></h3>
+          <p style="text-align: center; color: #666; margin-bottom: 2rem;"></p>
+          <div style="display: flex; gap: 1rem; justify-content: center;">
+              <button class="btn-secondary" id="modalCancelBtn" style="padding: 10px 20px; cursor: pointer;">
+                  <i class="fas fa-times"></i> Non, garder
+              </button>
+              <button class="btn" id="modalConfirmBtn" style="background: #dc3545; padding: 10px 20px; cursor: pointer;">
+                  <i class="fas fa-check"></i> Oui
+              </button>
+          </div>
+      </div>
+  </div>
+
+</body>
+</html>

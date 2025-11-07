@@ -1,0 +1,441 @@
+/* Tabs Navigation */
+.tabs-nav {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 0;
+}
+
+.tab-btn {
+    padding: 1rem 2rem;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: var(--gray);
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    position: relative;
+}
+
+.tab-btn:hover {
+    color: var(--primary);
+}
+
+.tab-btn.active {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+}
+
+.tab-btn .badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    margin-left: 0.25rem;
+}
+
+/* Tab Content */
+.tab-content {
+    display: none;
+    animation: fadeIn 0.5s ease;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.section-header {
+    margin-bottom: 2rem;
+}
+
+.section-header h2 {
+    margin-bottom: 0.5rem;
+}
+
+
+/* Filter Buttons */
+.filter-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+/* Demande Card */
+.demande-card {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 15px;
+    padding: 1.75rem;
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.demande-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--gradient);
+    transform: scaleY(0);
+    transition: transform 0.3s ease;
+}
+
+.demande-card:hover {
+    border-color: var(--primary);
+    box-shadow: 0 8px 25px var(--shadow-lg);
+    transform: translateY(-3px);
+}
+
+.demande-card:hover::before {
+    transform: scaleY(1);
+}
+
+/* Demande Header */
+.demande-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.25rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--light);
+}
+
+.demande-user {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.user-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.user-info h3 {
+    color: var(--dark);
+    font-size: 1.2rem;
+    margin-bottom: 0.25rem;
+}
+
+.user-info p {
+    color: var(--gray);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+}
+
+.demande-status {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
+}
+
+.badge-pending {
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--warning);
+}
+
+.badge-confirmed {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--success);
+}
+
+.badge-rejected {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--danger);
+}
+
+.demande-time {
+    color: var(--gray);
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Demande Message */
+.demande-message {
+    background: rgba(37, 99, 235, 0.05);
+    padding: 1rem;
+    border-radius: 10px;
+    border-left: 4px solid var(--primary);
+    margin-bottom: 1.5rem;
+}
+
+.demande-message p {
+    color: var(--gray);
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* Demande Actions */
+.demande-actions {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    flex-wrap: wrap;
+    padding-top: 1.5rem;
+    border-top: 2px solid var(--border);
+}
+
+/* Buttons */
+.btn-confirm {
+    background: var(--success);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    border: none;
+    font-size: 1rem;
+}
+
+.btn-confirm:hover {
+    background: var(--secondary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.btn-reject {
+    background: white;
+    color: var(--danger);
+    border: 2px solid var(--danger);
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.btn-reject:hover {
+    background: var(--danger);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.btn-info {
+    background: white;
+    color: var(--primary);
+    border: 2px solid var(--primary);
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.btn-info:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Reservation Card (pour mes réservations) */
+.reservation-card {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 15px;
+    padding: 1.75rem;
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.reservation-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    transform: scaleY(0);
+    transition: transform 0.3s ease;
+}
+
+.reservation-card.status-en-attente::before {
+    background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
+}
+
+.reservation-card.status-confirmé::before {
+    background: linear-gradient(135deg, var(--success) 0%, var(--secondary-dark) 100%);
+}
+
+.reservation-card.status-refusé::before {
+    background: linear-gradient(135deg, var(--danger) 0%, #b91c1c 100%);
+}
+
+.reservation-card:hover {
+    border-color: var(--primary);
+    box-shadow: 0 8px 25px var(--shadow-lg);
+    transform: translateY(-3px);
+}
+
+.reservation-card:hover::before {
+    transform: scaleY(1);
+}
+
+.reservation-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.25rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--light);
+}
+
+.reservation-driver {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.response-message {
+    background: rgba(16, 185, 129, 0.05);
+    padding: 1rem;
+    border-radius: 10px;
+    border-left: 4px solid var(--success);
+    margin-bottom: 1.5rem;
+}
+
+.response-message.rejected {
+    background: rgba(239, 68, 68, 0.05);
+    border-left-color: var(--danger);
+}
+
+.response-message p {
+    color: var(--gray);
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.response-message strong {
+    color: var(--success);
+}
+
+.response-message.rejected strong {
+    color: var(--danger);
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+}
+
+.empty-state i {
+    font-size: 80px;
+    color: var(--gray);
+    opacity: 0.3;
+    margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+    color: var(--gray);
+    margin-bottom: 1rem;
+}
+
+.empty-state p {
+    color: var(--gray);
+    margin-bottom: 2rem;
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal.show {
+    display: flex;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .tabs-nav {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .tab-btn {
+        padding: 0.75rem 1.5rem;
+        font-size: 0.9rem;
+        white-space: nowrap;
+    }
+
+    .demande-header,
+    .reservation-header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .demande-status {
+        align-items: flex-start;
+    }
+
+    .demande-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .btn-confirm,
+    .btn-reject,
+    .btn-info {
+        justify-content: center;
+    }
+
+    .filter-buttons {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .btn-filter,
+    .btn-filter-res {
+        white-space: nowrap;
+    }
+}
