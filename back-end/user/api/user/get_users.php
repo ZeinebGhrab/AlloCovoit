@@ -7,26 +7,24 @@ error_reporting(E_ALL);
 header('Content-Type: application/json');
 
 require_once __DIR__ . '/../../models/UserManager.php';
+require_once '../auth/check_session_logic.php';
 
 try {
     // Vérifier que l'utilisateur est connecté
-    if (!isset($_SESSION['user_id'])) {
-        echo json_encode(['success' => false, 'error' => 'Utilisateur non connecté']);
-        exit();
-    }
+    requireLogin();
 
     // Vérifier que l'utilisateur est un admin
-    if ($_SESSION['role'] !== 'admin') {
-        echo json_encode(['success' => false, 'error' => "Utilisateur non autorisé"]);
-        exit();
-    }
+    requireAdmin();
 
     // Pagination depuis POST
     $page = isset($_POST['page']) ? max(1, intval($_POST['page'])) : 1;
-    $limit = isset($_POST['limit']) ? max(1, intval($_POST['limit'])) : 10;
+    $limit = isset($_POST['limit']) ? max(1, intval($_POST['limit'])) : 6;
 
     $userManager = new UserManager();
     $usersData = $userManager->getAllUsers($page, $limit);
+
+    // Nettoyer le buffer avant d'envoyer le JSON
+    ob_end_clean();
 
     echo json_encode([
         'success' => true,

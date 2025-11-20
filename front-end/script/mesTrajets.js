@@ -135,8 +135,8 @@ function updateStats() {
     document.getElementById('revenuTotal').textContent = '0 DT';   // À adapter selon API
 }
 
-// Charger mes trajets 
-async function loadTrajets() {
+// Charger mes trajets avec filtres
+async function loadTrajets(filters = {}) {
     const container = document.getElementById('mesTrajets');
     const loading = document.getElementById('loadingIndicator');
     const noMsg = document.getElementById('noTrajetsMessage');
@@ -145,9 +145,14 @@ async function loadTrajets() {
     noMsg.style.display = 'none';
 
     try {
-        const res = await fetch('/AlloCovoit/back-end/route/api/get_my_routes.php');
+        const res = await fetch('/AlloCovoit/back-end/route/api/get_my_routes.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+        });
+
         const data = await res.json();
-        allTrajets = Array.isArray(data) ? data : [];
+        console.log(data.trajets);
+        allTrajets = Array.isArray(data.trajets) ? data.trajets : [];
         loading.style.display = 'none';
 
         if (allTrajets.length === 0) {
@@ -162,6 +167,7 @@ async function loadTrajets() {
         console.error(e);
     }
 }
+
 
 // Initialisation
 export function initMesTrajets() {

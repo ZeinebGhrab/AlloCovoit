@@ -1,47 +1,42 @@
 <?php
-// Toujours au tout début du fichier, avant tout espace ou saut de ligne
 ini_set('display_errors', 0);
 ini_set('display_startup_errors', 0);
 error_reporting(E_ALL);
 header('Content-Type: application/json; charset=utf-8');
 
-header('Content-Type: application/json');
-
-// Import des fichiers nécessaires
 require_once '../../config/Database.php';
 require_once '../models/Trajet.php';
 require_once '../models/TrajetManager.php';
-require_once '../../user/api/auth/check_session.php'; // ne pas modifier
+require_once '../../user/api/auth/check_session_logic.php';
 
 try {
-    // Vider tout output accidentel
-    if (ob_get_length()) {
-        ob_clean();
-    }
-
-    // Vérifier utilisateur connecté
-    $userId = $_SESSION['user_id'] ?? null;
-    if (!$userId) {
-        throw new Exception("Utilisateur non connecté");
-    }
+    
+    // Vérifier si l'utilisateur est connecté
+    requireLogin();
 
     $manager = new TrajetManager();
 
-    // Récupérer les filtres depuis l'URL
+    // Récupérer les filtres depuis le corps de la requête
+    $input = json_decode(file_get_contents("php://input"), true) ?? [];
+
     $filters = [
-        'depart' => $_GET['depart'] ?? '',
-        'arrivee' => $_GET['arrivee'] ?? '',
-        'date' => $_GET['date'] ?? ''
+        'depart'  => $input['depart'] ?? '',
+        'arrivee' => $input['arrivee'] ?? '',
+        'date'    => $input['date'] ?? ''
     ];
 
     // Pagination
-    $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
-    $limit = isset($_GET['limit']) ? max(1, intval($_GET['limit'])) : 10;
+    $page = isset($input['page']) ? max(1, intval($input['page'])) : 1;
+    $limit = isset($input['limit']) ? max(1, intval($input['limit'])) : 10;
 
-    // Récupérer tous les trajets validés
+    // Récupérer tous les trajets validés (avec pagination)
     $rawTrajets = $manager->getAllValidate($filters, 'date_depart', 'ASC', $page, $limit); 
 
-    // Transformer chaque ligne en tableau prêt pour JSON
+    // Compter le total réel pour pagination
+    $total = $manager->countValidate($filters); 
+    $totalPages = ceil($total / $limit);
+
+    // Transformer chaque ligne en tableau JSON
     $trajets = [];
     foreach ($rawTrajets as $t) {
         $trajets[] = [
@@ -53,25 +48,23 @@ try {
             'prix' => $t['prix'],
             'places_disponibles' => $t['places_disponibles'],
             'description' => $t['description'],
-            'conducteur_nom' => $t['conducteur_nom'] ?? '', // utiliser la valeur directement du join
+            'conducteur_nom' => $t['conducteur_nom'] ?? '',
             'conducteur_prenom' => $t['conducteur_prenom'] ?? '',
             'statut' => $t['statut'],
             'valider' => $t['valider'] ?? 0
         ];
     }
 
-    // Compter le total pour pagination
-    $total = count($trajets);
-    $totalPages = ceil($total / $limit);
+    // Nettoyer le buffer avant d'envoyer le JSON
+    ob_end_clean();
 
-    // Envoyer le JSON final
     echo json_encode([
-        'success' => true,
-        'page' => $page,
-        'limit' => $limit,
-        'total' => $total,
+        'success'    => true,
+        'page'       => $page,
+        'limit'      => $limit,
+        'total'      => $total,
         'totalPages' => $totalPages,
-        'trajets' => $trajets
+        'trajets'    => $trajets
     ]);
 
     $manager->close();
@@ -79,6 +72,6 @@ try {
 
 } catch (Exception $e) {
     if (ob_get_length()) ob_clean();
-    echo json_encode(['error' => $e->getMessage()]);
+    echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+    exit;
 }
-

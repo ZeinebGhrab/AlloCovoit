@@ -4,15 +4,11 @@ ini_set('display_errors', 0); // désactiver affichage erreurs pour l'utilisateu
 error_reporting(E_ALL);
 
 header('Content-Type: application/json; charset=utf-8');
+require_once '../../user/api/auth/check_session_logic.php';
 
 try {
-    // Démarrer session si nécessaire
-    if (session_status() === PHP_SESSION_NONE) session_start();
-
-    // Vérifier si utilisateur connecté
-    if (empty($_SESSION['user_id'])) {
-        throw new Exception("Utilisateur non connecté.");
-    }
+   // Vérifier la session utilisateur
+   requireLogin();
 
     // Récupérer l'ID de réservation depuis le JSON reçu
     $input = json_decode(file_get_contents('php://input'), true);
@@ -31,6 +27,9 @@ try {
 
     // Essayer d'annuler la réservation
     $success = $manager->cancelReservation($reservationId);
+
+    // Nettoyer le buffer avant d'envoyer le JSON
+    ob_end_clean();
 
     if ($success) {
         echo json_encode([

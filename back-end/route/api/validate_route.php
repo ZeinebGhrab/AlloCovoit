@@ -8,9 +8,13 @@ header('Content-Type: application/json');
 require_once '../../config/Database.php';
 require_once '../models/Trajet.php';
 require_once '../models/TrajetManager.php';
-require_once '../../user/api/auth/check_session.php';
+require_once '../../user/api/auth/check_session_logic.php';
 
 try {
+
+    // Vérifier si l'utilisateur est connecté
+    requireLogin();
+    
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         throw new Exception("Méthode non autorisée");
     }

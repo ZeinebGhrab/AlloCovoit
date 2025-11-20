@@ -7,11 +7,10 @@ header('Content-Type: application/json; charset=utf-8');
 
 require_once '../../config/Database.php';
 require_once '../models/ReservationManager.php';
+require_once '../../user/api/auth/check_session_logic.php';
 
-if (empty($_SESSION['user_id'])) {
-    echo json_encode(['success' => false, 'message' => 'Utilisateur non connecté.'], JSON_UNESCAPED_UNICODE);
-    exit;
-}
+// Vérifier la session utilisateur
+requireLogin();
 
 $userId = (int) $_SESSION['user_id'];
 $input = json_decode(file_get_contents('php://input'), true);
@@ -79,6 +78,9 @@ try {
     $messageFinal = $trajetsConfirmes > 0
         ? "$trajetsConfirmes réservation(s) confirmée(s) avec succès."
         : (count($erreurs) > 0 ? $erreurs[0] : "Impossible de confirmer les réservations.");
+
+    // Nettoyer le buffer avant d'envoyer le JSON
+    ob_end_clean();
 
     echo json_encode([
         'success' => $trajetsConfirmes > 0,

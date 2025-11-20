@@ -1,0 +1,411 @@
+/* ============================================
+   Styles pour les pages légales - Design amélioré
+   ============================================ */
+
+.legal-section {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.legal-intro {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+    padding: 2rem;
+    border-radius: 15px;
+    border-left: 5px solid var(--primary);
+    margin-bottom: 2.5rem;
+    font-size: 1.05rem;
+    line-height: 1.9;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.legal-intro::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    border-radius: 50%;
+    transform: translate(30%, -30%);
+}
+
+.legal-section h3 {
+    color: var(--dark);
+    font-size: 1.5rem;
+    margin: 3rem 0 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 700;
+    padding: 1.25rem;
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.03) 0%, rgba(118, 75, 162, 0.03) 100%);
+    border-radius: 12px;
+    border-left: 4px solid var(--primary);
+    transition: all 0.3s ease;
+}
+
+.legal-section h3:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.1);
+}
+
+.legal-section h3 i {
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 1.6rem;
+    filter: drop-shadow(0 2px 4px rgba(37, 99, 235, 0.2));
+}
+
+.legal-section p {
+    color: var(--gray);
+    line-height: 1.9;
+    margin-bottom: 1.25rem;
+    font-size: 1.05rem;
+}
+
+.legal-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.75rem 0;
+}
+
+.legal-list li {
+    padding: 1rem 1.25rem 1rem 3rem;
+    margin-bottom: 1rem;
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    position: relative;
+    transition: all 0.3s ease;
+    line-height: 1.7;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.legal-list li:hover {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.03) 0%, rgba(118, 75, 162, 0.03) 100%);
+    border-color: var(--primary);
+    transform: translateX(8px);
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.15);
+}
+
+.legal-list li::before {
+    content: "";
+    position: absolute;
+    left: 1.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    background: var(--gradient);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.legal-list li::after {
+    content: "✓";
+    position: absolute;
+    left: 1.65rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.contact-box {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+    padding: 2rem;
+    border-radius: 15px;
+    margin: 2.5rem 0;
+    border: 2px solid var(--border);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.contact-box:hover {
+    border-color: var(--primary);
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.15);
+}
+
+.contact-box p {
+    margin: 1rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    color: var(--dark);
+    font-weight: 500;
+    font-size: 1.05rem;
+}
+
+.contact-box i {
+    color: var(--primary);
+    font-size: 1.3rem;
+    width: 30px;
+    text-align: center;
+}
+
+/* FAQ Items */
+.faq-item {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 15px;
+    padding: 1.75rem;
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    position: relative;
+    overflow: hidden;
+}
+
+.faq-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 100%;
+    background: var(--gradient);
+    transform: scaleY(0);
+    transition: transform 0.3s ease;
+}
+
+.faq-item:hover {
+    border-color: var(--primary);
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.15);
+    transform: translateY(-3px);
+}
+
+.faq-item:hover::before {
+    transform: scaleY(1);
+}
+
+.faq-item h4 {
+    color: var(--dark);
+    font-size: 1.15rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 700;
+}
+
+.faq-item h4 i {
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 1.3rem;
+}
+
+.faq-item p {
+    color: var(--gray);
+    line-height: 1.8;
+    margin: 0;
+    font-size: 1.02rem;
+}
+
+.faq-item a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border-bottom: 2px solid transparent;
+}
+
+.faq-item a:hover {
+    color: var(--primary-dark);
+    border-bottom-color: var(--primary);
+}
+
+/* Support Contacts */
+.support-contacts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.75rem;
+    margin: 2.5rem 0;
+}
+
+.contact-card {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 20px;
+    padding: 2.5rem;
+    text-align: center;
+    transition: all 0.4s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.contact-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: var(--gradient);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+}
+
+.contact-card:hover::before {
+    transform: scaleX(1);
+}
+
+.contact-card:hover {
+    border-color: var(--primary);
+    box-shadow: 0 10px 30px rgba(37, 99, 235, 0.2);
+    transform: translateY(-8px);
+}
+
+.contact-card i {
+    font-size: 3.5rem;
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1.25rem;
+    display: inline-block;
+    filter: drop-shadow(0 4px 8px rgba(37, 99, 235, 0.2));
+}
+
+.contact-card h4 {
+    color: var(--dark);
+    font-size: 1.4rem;
+    margin: 1rem 0 0.75rem;
+    font-weight: 700;
+}
+
+.contact-card p {
+    color: var(--gray);
+    margin: 0.5rem 0;
+    font-weight: 600;
+    font-size: 1.05rem;
+}
+
+.contact-desc {
+    font-size: 0.95rem !important;
+    color: var(--gray) !important;
+    font-weight: 400 !important;
+    font-style: italic;
+    margin-top: 0.75rem !important;
+}
+
+/* Support Form */
+.support-form {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.03) 0%, rgba(118, 75, 162, 0.03) 100%);
+    padding: 2.5rem;
+    border-radius: 20px;
+    margin: 2.5rem 0;
+    border: 2px solid var(--border);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.support-form .form-group {
+    margin-bottom: 1.75rem;
+}
+
+.support-form .form-group label {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+.support-form button {
+    width: 100%;
+    margin-top: 1.5rem;
+    padding: 1rem 2rem;
+    font-size: 1.05rem;
+}
+
+.support-form button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+}
+
+/* Animations améliorées */
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.legal-section h3 {
+    animation: slideInLeft 0.5s ease;
+}
+
+/* Responsive amélioré */
+@media (max-width: 768px) {
+    .legal-intro {
+        padding: 1.5rem;
+        font-size: 1rem;
+    }
+
+    .legal-section h3 {
+        font-size: 1.3rem;
+        padding: 1rem;
+        margin: 2rem 0 1rem;
+    }
+
+    .legal-section h3 i {
+        font-size: 1.4rem;
+    }
+
+    .legal-list li {
+        padding: 0.875rem 1rem 0.875rem 2.5rem;
+        font-size: 0.95rem;
+    }
+
+    .legal-list li::before {
+        width: 16px;
+        height: 16px;
+        left: 1rem;
+    }
+
+    .legal-list li::after {
+        left: 1.35rem;
+        font-size: 0.75rem;
+    }
+
+    .support-contacts {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+    }
+
+    .contact-card {
+        padding: 2rem;
+    }
+
+    .contact-card i {
+        font-size: 3rem;
+    }
+
+    .faq-item {
+        padding: 1.25rem;
+    }
+
+    .faq-item h4 {
+        font-size: 1.05rem;
+    }
+
+    .support-form {
+        padding: 1.75rem;
+    }
+
+    .contact-box p {
+        font-size: 0.95rem;
+    }
+}

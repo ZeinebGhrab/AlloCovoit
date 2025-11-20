@@ -1,67 +1,84 @@
 <?php
-// Toujours au tout début du fichier, avant tout espace ou saut de ligne
-ini_set('display_errors', 0);
-ini_set('display_startup_errors', 0);
-error_reporting(E_ALL);
-
-header('Content-Type: application/json');
-
-// Vérifier que aucune sortie n'est faite avant le JSON
+// Démarrer le buffer de sortie pour capturer toute sortie non désirée
 ob_start();
 
+// Configuration des erreurs
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 require_once '../../config/Database.php';
-require_once '../models/Trajet.php';
 require_once '../models/TrajetManager.php';
-require_once '../../user/api/auth/check_session.php';
+require_once '../../user/api/auth/check_session_logic.php';
 
 try {
-    // Vérifier utilisateur connecté
-    $userId = $_SESSION['user_id'] ?? null;
-    if (!$userId) {
-        throw new Exception("Utilisateur non connecté");
-    }
+    // Headers
+    header('Content-Type: application/json; charset=utf-8');
 
+    // Vérifier si l'utilisateur est connecté
+    requireLogin();
+
+    $userId = (int)$_SESSION['user_id'];
     $manager = new TrajetManager();
 
-    // Récupérer les filtres depuis l'URL
-    $filters = [
-        'depart' => $_GET['depart'] ?? '',
-        'arrivee' => $_GET['arrivee'] ?? '',
-        'date' => $_GET['date'] ?? '',
-        'user_id' => $userId
-    ];
+    // Récupérer les paramètres de pagination depuis le corps JSON
+    $input = json_decode(file_get_contents("php://input"), true) ?? [];
+    
+    $page = max(1, intval($input['page'] ?? 1));
+    $limit = max(1, min(100, intval($input['limit'] ?? 10)));
 
-    $rawTrajets = $manager->getMyRoutes($userId);
+    // Récupérer tous les trajets du conducteur
+    $rawTrajets = $manager->getMyRoutes($userId, $page, $limit);
+    
+    // Calculer le total de trajets pour ce conducteur
+    $total = $manager->countMyRoutes($userId);
+    $totalPages = ceil($total / $limit);
 
-
+    // Transformer les trajets en tableau JSON
     $trajets = [];
     foreach ($rawTrajets as $t) {
-        $trajet = new Trajet($t);
         $trajets[] = [
-            'id_trajet' => $trajet->getId(),
-            'ville_depart' => $trajet->getDepart(),
-            'ville_arrivee' => $trajet->getArrivee(),
-            'date_depart' => $trajet->getDate(),
-            'heure_depart' => $trajet->getHeure(),
-            'prix' => $trajet->getPrix(),
-            'places_disponibles' => $trajet->getPlaces(),
-            'description' => $trajet->getDescription(),
-            'conducteur_nom' => $trajet->getConducteur(),
-            'statut' => $trajet->getStatut()
+            'id_trajet' => (int)$t['id_trajet'],
+            'ville_depart' => $t['ville_depart'],
+            'ville_arrivee' => $t['ville_arrivee'],
+            'date_depart' => $t['date_depart'],
+            'heure_depart' => $t['heure_depart'],
+            'prix' => (float)$t['prix'],
+            'places_disponibles' => (int)$t['places_disponibles'],
+            'places_reservees' => (int)($t['places_reservees'] ?? 0),
+            'description' => $t['description'] ?? '',
+            'conducteur_nom' => $t['conducteur_nom'] ?? '',
+            'conducteur_prenom' => $t['conducteur_prenom'] ?? '',
+            'statut' => $t['statut'] ?? 'en_attente',
+            'valider' => (int)($t['valider'] ?? 0)
         ];
     }
 
-    // Supprimer toute sortie éventuelle avant le JSON
-    ob_clean();
-
-    echo json_encode($trajets);
-
     $manager->close();
-} catch (Exception $e) {
-    ob_clean();
-    echo json_encode(['error' => $e->getMessage()]);
-}
 
-// Vider et arrêter le buffer
-ob_end_flush();
+    // Nettoyer le buffer avant d'envoyer le JSON
+    ob_end_clean();
+
+    echo json_encode([
+        'success'    => true,
+        'page'       => $page,
+        'limit'      => $limit,
+        'total'      => $total,
+        'totalPages' => $totalPages,
+        'trajets'    => $trajets
+    ]);
+
+    exit;
+
+} catch (Exception $e) {
+
+    ob_end_clean();
+
+    echo json_encode([
+        'success' => false,
+        'error' => $e->getMessage()
+    ], JSON_UNESCAPED_UNICODE);
+    
+    exit;
+}
 ?>

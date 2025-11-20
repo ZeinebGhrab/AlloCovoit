@@ -871,6 +871,99 @@ footer p {
             }
         }
 
+
+/* Style pour la pagination */
+.pagination-container,
+.pagination-container-trajet,
+.pagination-container-reservation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 2rem;
+    padding: 1rem 0;
+}
+
+.pagination-btn {
+    min-width: 40px;
+    height: 40px;
+    padding: 0.5rem 0.75rem;
+    border: 2px solid #e0e0e0;
+    background: white;
+    color: #333;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pagination-btn:hover {
+    background: #f5f5f5;
+    border-color: #007bff;
+    color: #007bff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+}
+
+.pagination-btn.active {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    color: white;
+    border-color: #007bff;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    cursor: default;
+}
+
+.pagination-btn.active:hover {
+    transform: none;
+}
+
+/* Version alternative avec style moderne */
+.pagination-btn-alt {
+    min-width: 40px;
+    height: 40px;
+    padding: 0.5rem 0.75rem;
+    border: none;
+    background: #f8f9fa;
+    color: #495057;
+    border-radius: 50%;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.pagination-btn-alt:hover {
+    background: #e9ecef;
+    color: #007bff;
+    transform: scale(1.1);
+}
+
+.pagination-btn-alt.active {
+    background: #007bff;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .pagination-btn {
+        min-width: 35px;
+        height: 35px;
+        font-size: 0.85rem;
+        padding: 0.4rem 0.6rem;
+    }
+    
+    .pagination-container,
+    .pagination-container-trajet,
+    .pagination-container-reservation {
+        gap: 0.3rem;
+    }
+}
+
 /* ============================================
    Responsive Design
    ============================================ */

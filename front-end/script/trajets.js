@@ -2,45 +2,37 @@ import { showNotification } from './utils.js';
 import { addToCart } from './panier.js';
 
 let currentPage = 1;
+let currentFilters = {};
 const limit = 10; // trajets par page
 
 // Charger tous les trajets (avec filtres et pagination)
-export async function loadTrajets(filters = {}, page = 1) {
+export async function loadTrajets(filters = {}, page = 1, limit = 10) {
     try {
-        currentPage = page; // mettre à jour la page actuelle
-        let url = `/AlloCovoit/back-end/route/api/get_routes.php`;
+        currentPage = page;
+        currentFilters = filters; // garder les filtres pour pagination
 
-        const params = new URLSearchParams();
-        if (filters.depart) params.append('depart', filters.depart);
-        if (filters.arrivee) params.append('arrivee', filters.arrivee);
-        if (filters.date) params.append('date', filters.date);
+        const body = { ...filters, page, limit };
 
-        params.append('page', page);
-        params.append('limit', limit);
+        const response = await fetch("/AlloCovoit/back-end/route/api/get_routes.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body)
+        });
 
-        url += '?' + params.toString();
-
-        const response = await fetch(url);
         const data = await response.json();
 
-
         if (!data || !Array.isArray(data.trajets)) {
-            console.error('Réponse inattendue de l’API:', data);
-            showNotification('Erreur lors du chargement des trajets.');
+            showNotification("Erreur lors du chargement des trajets.");
             displayTrajets([]);
             displayPagination(0);
             return;
         }
 
-        if (data.trajets.length === 0) {
-            showNotification('Aucun trajet trouvé.');
-        }
-
         displayTrajets(data.trajets);
         displayPagination(data.totalPages);
+
     } catch (error) {
-        console.error('Erreur lors du chargement des trajets:', error);
-        showNotification('Erreur de connexion au serveur.');
+        showNotification("Erreur de connexion au serveur.");
         displayTrajets([]);
         displayPagination(0);
     }
@@ -84,8 +76,7 @@ function createTrajetCard(trajet) {
         </button>
     `;
 
-    const btn = div.querySelector('.btn-traj');
-    btn.addEventListener('click', () => {
+    div.querySelector('.btn-traj').addEventListener('click', () => {
         addToCart(
             trajet.id_trajet,
             trajet.ville_depart,
@@ -102,6 +93,8 @@ function createTrajetCard(trajet) {
 // Afficher la pagination
 function displayPagination(totalPages) {
     const container = document.querySelector('.page > div:last-child');
+    if (!container) return;
+
     let pagination = container.querySelector('.pagination');
     if (!pagination) {
         pagination = document.createElement('div');
@@ -116,7 +109,7 @@ function displayPagination(totalPages) {
     const prevBtn = document.createElement('button');
     prevBtn.textContent = 'Précédent';
     prevBtn.disabled = currentPage === 1;
-    prevBtn.addEventListener('click', () => loadTrajets({}, currentPage - 1));
+    prevBtn.addEventListener('click', () => loadTrajets(currentFilters, currentPage - 1, limit));
     pagination.appendChild(prevBtn);
 
     // Numéros de page
@@ -124,7 +117,7 @@ function displayPagination(totalPages) {
         const btn = document.createElement('button');
         btn.textContent = i;
         if (i === currentPage) btn.classList.add('active');
-        btn.addEventListener('click', () => loadTrajets({}, i));
+        btn.addEventListener('click', () => loadTrajets(currentFilters, i, limit));
         pagination.appendChild(btn);
     }
 
@@ -132,15 +125,15 @@ function displayPagination(totalPages) {
     const nextBtn = document.createElement('button');
     nextBtn.textContent = 'Suivant';
     nextBtn.disabled = currentPage === totalPages;
-    nextBtn.addEventListener('click', () => loadTrajets({}, currentPage + 1));
+    nextBtn.addEventListener('click', () => loadTrajets(currentFilters, currentPage + 1, limit));
     pagination.appendChild(nextBtn);
 }
 
 // Rechercher trajets via filtres HTML
 export function searchTrajets() {
-    const depart = document.getElementById('searchDepart')?.value.trim();
-    const arrivee = document.getElementById('searchArrivee')?.value.trim();
-    const date = document.querySelector('input[type="date"]')?.value;
+    const depart = document.getElementById("searchDepart")?.value.trim() || '';
+    const arrivee = document.getElementById("searchArrivee")?.value.trim() || '';
+    const date = document.querySelector("input[type='date']")?.value || '';
 
-    loadTrajets({ depart, arrivee, date }, 1); // reset à la page 1
+    loadTrajets({ depart, arrivee, date }, 1, limit); // page 1 à chaque nouvelle recherche
 }

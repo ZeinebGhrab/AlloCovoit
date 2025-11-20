@@ -6,7 +6,7 @@ if (session_status() === PHP_SESSION_NONE) session_start();
 header('Content-Type: application/json; charset=utf-8');
 
 require_once '../../config/Database.php';
-require_once '../models/ReservationManager.php';
+require_once '../../user/api/auth/check_session_logic.php';
 
 try {
     // Vérifier si l'utilisateur est connecté
@@ -27,6 +27,9 @@ try {
 
     // Récupérer les réservations
     $reservations = $manager->getUserReservations($userId);
+
+    // Nettoyer le buffer avant d'envoyer le JSON
+    ob_end_clean();
 
     echo json_encode([
         'success' => true,

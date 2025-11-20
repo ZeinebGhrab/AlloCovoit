@@ -1,6 +1,11 @@
 <?php
 session_start();
+require_once '../../user/api/auth/check_session_logic.php';
+
 header('Content-Type: application/json');
+
+// Vérifier si l'utilisateur est connecté
+requireLogin();
 
 if (!isset($_SESSION['panier'])) {
     $_SESSION['panier'] = [];

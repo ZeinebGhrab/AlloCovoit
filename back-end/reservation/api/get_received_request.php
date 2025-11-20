@@ -7,12 +7,11 @@ header('Content-Type: application/json; charset=utf-8');
 
 require_once '../../config/Database.php';
 require_once '../models/ReservationManager.php';
+require_once '../../user/api/auth/check_session_logic.php';
 
 try {
-    if (empty($_SESSION['user_id'])) {
-        echo json_encode(['success' => false, 'message' => 'Utilisateur non connecté.'], JSON_UNESCAPED_UNICODE);
-        exit;
-    }
+    // Vérifier la session utilisateur
+    requireLogin();
 
     $conducteurId = (int) $_SESSION['user_id'];
 
@@ -21,6 +20,9 @@ try {
     $manager = new ReservationManager($conn);
 
     $requests = $manager->getReceivedRequests($conducteurId);
+
+    // Nettoyer le buffer avant d'envoyer le JSON
+    ob_end_clean();
 
     echo json_encode([
         'success' => true,

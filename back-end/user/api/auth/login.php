@@ -26,6 +26,10 @@ try {
 
     $loginResult = $user->login($email, $mot_de_passe);
 
+    // Nettoyer le buffer avant d'envoyer le JSON
+    ob_end_clean();
+
+
     if ($loginResult) {
         // Vérifier si le statut du compte est inactif
         if ($_SESSION['statut'] === 'inactif') {
@@ -35,6 +39,7 @@ try {
             ]);
             exit;
         }
+        
 
         echo json_encode([
             'success' => true,
@@ -62,4 +67,4 @@ try {
         'message' => $e->getMessage()
     ]);
 }
-?>
+

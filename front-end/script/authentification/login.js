@@ -34,8 +34,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             const result = await response.json();
+            console.log(result);
 
-            if (result.success) {
+           if (result.success) {
                 // Redirection en cas de succès
                 window.location.href = '/AlloCovoit/front-end/interfaces/main.html';
             } else {

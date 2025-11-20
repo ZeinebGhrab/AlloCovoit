@@ -15,8 +15,12 @@ class Database {
         $this->conn = new mysqli($this->host, $this->user, $this->password, $this->dbname);
 
         if ($this->conn->connect_error) {
-            // Toujours renvoyer du JSON ou lever une exception
             die(json_encode(['error' => 'Erreur de connexion : ' . $this->conn->connect_error]));
+        }
+
+        // ⭐ AJOUTEZ CES LIGNES ICI
+        if (!$this->conn->set_charset("utf8mb4")) {
+            die(json_encode(['error' => 'Erreur set_charset : ' . $this->conn->error]));
         }
 
         return $this->conn;
@@ -26,8 +30,9 @@ class Database {
         // Fermer uniquement si la connexion existe et n'est pas déjà fermée
         if ($this->conn instanceof mysqli && $this->conn->ping()) {
             $this->conn->close();
-            $this->conn = null; // pour éviter de réutiliser une connexion fermée
+            $this->conn = null;
         }
     }
 }
+?>
 ?>

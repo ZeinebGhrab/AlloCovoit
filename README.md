@@ -84,6 +84,7 @@ AlloCovoit/
 │   │   ├─ api/
 │   │   │   ├─ auth/
 │   │   │   │   ├─ check_session.php     # Session validation
+│   │   │   │   ├─ check_session_logic.php     # Route validation
 │   │   │   │   ├─ login.php             # User login
 │   │   │   │   └─ logout.php            # Logout
 │   │   │   └─ user/
@@ -121,6 +122,7 @@ AlloCovoit/
 │   │   │   ├─ get_received_request.php
 │   │   │   ├─ get_reservations_count.php
 │   │   │   ├─ confirm_reservation.php
+│   │   │   ├─ get_total_reservation.php
 │   │   │   └─ cancel_reservation.php
 │   │   └─ models/
 │   │       ├─ Reservation.php

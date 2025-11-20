@@ -30,6 +30,46 @@ class ReservationManager {
         return (int)$result['total_reservations'];
     }
 
+
+    public function getAllReservations(int $page = 1, int $limit = 5): array {
+        $offset = ($page - 1) * $limit;
+
+        // Compter le total
+        $totalQuery = "SELECT COUNT(*) AS total FROM reservation";
+        $result = $this->conn->query($totalQuery);
+        $total = (int)$result->fetch_assoc()['total'];
+
+        // Récupérer les réservations
+        $query = "
+            SELECT r.*, t.ville_depart, t.ville_arrivee, t.date_depart, t.heure_depart, t.prix, u.nom AS nom_utilisateur, u.prenom AS prenom_utilisateur
+            FROM reservation r
+            JOIN trajet t ON r.id_trajet = t.id_trajet
+            JOIN utilisateur u ON r.id_utilisateur = u.id_utilisateur
+            ORDER BY r.date_reservation DESC
+            LIMIT ? OFFSET ?
+        ";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("ii", $limit, $offset);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $reservations = [];
+        while ($row = $result->fetch_assoc()) {
+            $reservations[] = $row;
+        }
+
+        $stmt->close();
+
+        return [
+            'reservations' => $reservations,
+            'page' => $page,
+            'limit' => $limit,
+            'total' => $total,
+            'totalPages' => ceil($total / $limit)
+        ];
+    }
+
     // Obtenir toutes les réservations d’un utilisateur
     public function getUserReservations(int $userId): array {
         $query = "

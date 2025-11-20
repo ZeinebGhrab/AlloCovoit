@@ -23,6 +23,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (sectionId === 'users') {
                 loadUsersSection();
             }
+
+            if (sectionId === 'reservations') {
+                loadReservationsSection();
+            }
         });
     });
 });
@@ -33,20 +37,23 @@ document.addEventListener('DOMContentLoaded', () => {
 //============================================
 
 let currentPage = 1;
-const limit = 10; // Nombre d'utilisateurs par page
+const limit = 6; // Nombre d'utilisateurs par page
 
 
 // Fetch users depuis le backend
 
-async function fetchUsers(page = 1, limit = 10) {
+async function fetchUsers(page = 1, limit = limit) {
     try {
-        const formData = new FormData();
-        formData.append('page', page);
-        formData.append('limit', limit);
-
+   
         const response = await fetch('/AlloCovoit/back-end/user/api/user/get_users.php', {
             method: 'POST',
-            body: formData
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+                page: page,
+                limit: limit
+            })
         });
         console.log( response);
         if (!response.ok) throw new Error('Erreur lors de la récupération des utilisateurs.');
@@ -193,18 +200,21 @@ async function loadUsersSection(page = 1) {
 //============================================
 
 let currentTrajetPage = 1;
-const trajetsPerPage = 10;
+const trajetsPerPage = 6;
 
 // ---- Récupérer les trajets depuis le backend ----
-async function fetchTrajets(page = 1, limit = 10) {
+async function fetchTrajets(page = 1, limit = trajetsPerPage) {
     try {
-        const formData = new FormData();
-        formData.append('page', page);
-        formData.append('limit', limit);
 
         const response = await fetch('/AlloCovoit/back-end/route/api/get_routes_admin.php', {
             method: 'POST',
-            body: formData
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+           body: JSON.stringify({
+                page: page,
+                limit: limit
+            })
         });
         console.log(response);
 
@@ -308,7 +318,9 @@ async function callTrajetApi(url, id) {
     try {
         const response = await fetch(url, {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: {
+                'Content-Type': 'application/json'  
+            },
             body: JSON.stringify({ id_trajet: id })
         });
 
@@ -380,6 +392,7 @@ async function loadDashboardStats() {
 
             document.getElementById(elementId).textContent = value;
         } catch (err) {
+            console.log(err);
             console.error(`Erreur chargement stats (${elementId}) :`, err);
             document.getElementById(elementId).textContent = fallback;
         }
@@ -390,3 +403,106 @@ document.addEventListener('DOMContentLoaded', () => {
     loadDashboardStats();
 });
 
+
+//============================================
+//        Gestion des réservations
+//============================================
+
+let currentReservationPage = 1;
+const reservationsPerPage = 8;
+
+// ---- Récupérer les réservations depuis le backend ----
+async function fetchReservations(page = 1, limit = reservationsPerPage) {
+    try {
+
+        const response = await fetch('/AlloCovoit/back-end/reservation/api/get_total_reservation.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+                page: page,
+                limit: limit
+            })
+        });
+        
+
+        if (!response.ok) throw new Error('Erreur lors de la récupération des réservations.');
+
+        const data = await response.json();
+        console.log('Réservations reçues :', data);
+
+        return data;
+    } catch (err) {
+        console.error(err);
+        return { reservations: [], totalPages: 0, page: 1 };
+    }
+}
+
+// ---- Affichage des réservations dans le tableau ----
+function displayReservations(reservations, container) {
+    container.innerHTML = `
+        <table class="table-container">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Utilisateur</th>
+                    <th>Trajet</th>
+                    <th>Date réservation</th>
+                    <th>Statut</th>
+                    <th>Nombre de places</th>
+                    <th>Message</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${reservations.map(r => `
+                    <tr>
+                        <td>${r.id_reservation}</td>
+                        <td>${r.nom_utilisateur} ${r.prenom_utilisateur}</td>
+                        <td>${r.ville_depart} → ${r.ville_arrivee} (${r.date_depart} ${r.heure_depart})</td>
+                        <td>${r.date_reservation}</td>
+                        <td>${r.statut}</td>
+                        <td>${r.nombre_places}</td>
+                        <td>${r.message || ''}</td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+        <div class="pagination-container-reservation"></div>
+    `;
+}
+
+// ---- Pagination ----
+function displayReservationPagination(totalPages, container) {
+    const paginationContainer = container.querySelector('.pagination-container-reservation');
+    paginationContainer.innerHTML = '';
+
+    if (totalPages <= 1) return;
+
+    for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement('button');
+        btn.textContent = i;
+        btn.classList.add('pagination-btn');
+        if (i === currentReservationPage) btn.classList.add('active');
+
+        btn.addEventListener('click', () => {
+            currentReservationPage = i;
+            loadReservationsSection(currentReservationPage);
+        });
+
+        paginationContainer.appendChild(btn);
+    }
+}
+
+// ---- Chargement de la section réservations ----
+async function loadReservationsSection(page = 1) {
+    const container = document.getElementById('reservations');
+    currentReservationPage = page;
+
+    const data = await fetchReservations(page, reservationsPerPage);
+    const reservations = data.reservations || [];
+    const totalPages = data.totalPages || 1;
+
+    displayReservations(reservations, container);
+    displayReservationPagination(totalPages, container);
+}

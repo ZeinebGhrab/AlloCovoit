@@ -1,4 +1,9 @@
 <?php
+
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
+error_reporting(E_ALL);
+
 require_once '../../config/Database.php';
 require_once 'Trajet.php';
 
@@ -33,17 +38,55 @@ class TrajetManager {
         return (int)$result['total'];
     }
 
+    // Ajouter cette méthode dans TrajetManager
+    public function countValidate($filters = []): int {
+        $sql = "SELECT COUNT(*) AS total
+            FROM trajet t
+            JOIN utilisateur u ON t.id_conducteur = u.id_utilisateur
+            WHERE t.valider = 1 AND t.places_reservees != t.places_disponibles AND u.statut = 'actif' AND TIMESTAMP(t.date_depart, t.heure_depart) > SYSDATE()";
+
+        $params = [];
+        $types = '';
+
+        if (!empty($filters['depart'])) {
+            $sql .= " AND t.ville_depart LIKE ?";
+            $params[] = '%' . $filters['depart'] . '%';
+            $types .= 's';
+        }
+        if (!empty($filters['arrivee'])) {
+            $sql .= " AND t.ville_arrivee LIKE ?";
+            $params[] = '%' . $filters['arrivee'] . '%';
+            $types .= 's';
+        }
+        if (!empty($filters['date'])) {
+            $sql .= " AND t.date_depart = ?";
+            $params[] = $filters['date'];
+            $types .= 's';
+        }
+
+        $stmt = $this->conn->prepare($sql);
+        if (!empty($params)) $stmt->bind_param($types, ...$params);
+
+        $stmt->execute();
+        $total = $stmt->get_result()->fetch_assoc()['total'] ?? 0;
+        $stmt->close();
+
+        return (int)$total;
+    }
+
     // Tous les trajets validés avec filtres et pagination
-    public function getAllValidate($filters = [], $sortField = 'date_depart', $sortOrder = 'ASC', $page = 1, $limit = 10) {
+    public function getAllValidate($filters = [], $sortField = 'date_depart', $sortOrder = 'ASC', $offset = 0, $limit = 10) {
         $allowedSortFields = ['date_depart','heure_depart','ville_depart','ville_arrivee','nom','prenom'];
         $sortField = in_array($sortField, $allowedSortFields) ? $sortField : 'date_depart';
         $sortOrder = strtoupper($sortOrder) === 'DESC' ? 'DESC' : 'ASC';
 
         $sql = "SELECT t.*, u.nom AS conducteur_nom, u.prenom AS conducteur_prenom
-                FROM trajet AS t JOIN utilisateur AS u 
-                ON t.id_conducteur = u.id_utilisateur
-                WHERE t.valider = 1 AND t.places_reservees != t.places_disponibles AND u.statut = 'actif'AND TIMESTAMP(t.date_depart, t.heure_depart) > SYSDATE()
-               ";
+            FROM trajet AS t 
+            JOIN utilisateur AS u ON t.id_conducteur = u.id_utilisateur
+            WHERE t.valider = 1 
+              AND t.places_reservees != t.places_disponibles 
+              AND u.statut = 'actif'
+              AND TIMESTAMP(t.date_depart, t.heure_depart) > SYSDATE()";
 
         $params = [];
         $types = '';
@@ -64,19 +107,7 @@ class TrajetManager {
             $params[] = $filters['date'];
             $types .= 's';
         }
-        if (!empty($filters['nom'])) {
-            $sql .= " AND u.nom LIKE ?";
-            $params[] = '%' . $filters['nom'] . '%';
-            $types .= 's';
-        }
-        if (!empty($filters['prenom'])) {
-            $sql .= " AND u.prenom LIKE ?";
-            $params[] = '%' . $filters['prenom'] . '%';
-            $types .= 's';
-        }
 
-        // Pagination
-        $offset = ($page - 1) * $limit;
         $sql .= " ORDER BY $sortField $sortOrder LIMIT ? OFFSET ?";
         $params[] = $limit;
         $params[] = $offset;
@@ -92,60 +123,37 @@ class TrajetManager {
         while ($row = $result->fetch_assoc()) {
             $trajets[] = $row;
         }
-
         $stmt->close();
         return $trajets;
     }
 
     // Tous les trajets (pour admin) avec filtres et pagination
-    public function getAll($filters = [], $sortField = 'date_depart', $sortOrder = 'ASC', $page = 1, $limit = 10) {
-        $allowedSortFields = ['date_depart','heure_depart','ville_depart','ville_arrivee','nom','prenom'];
-        $sortField = in_array($sortField, $allowedSortFields) ? $sortField : 'date_depart';
-        $sortOrder = strtoupper($sortOrder) === 'DESC' ? 'DESC' : 'ASC';
-
-        $sql = "SELECT t.*, u.nom AS conducteur_nom, u.prenom AS conducteur_prenom
-        FROM trajet t
-        JOIN utilisateur u ON t.id_conducteur = u.id_utilisateur
-        WHERE 1";
-
-        $params = [];
-        $types = '';
-
-        if (!empty($filters['depart'])) {
-            $sql .= " AND t.ville_depart LIKE ?";
-            $params[] = '%' . $filters['depart'] . '%';
-            $types .= 's';
-        }
-        if (!empty($filters['arrivee'])) {
-            $sql .= " AND t.ville_arrivee LIKE ?";
-            $params[] = '%' . $filters['arrivee'] . '%';
-            $types .= 's';
-        }
-        if (!empty($filters['date'])) {
-            $sql .= " AND t.date_depart = ?";
-            $params[] = $filters['date'];
-            $types .= 's';
-        }
-        if (!empty($filters['nom'])) {
-            $sql .= " AND u.nom LIKE ?";
-            $params[] = '%' . $filters['nom'] . '%';
-            $types .= 's';
-        }
-        if (!empty($filters['prenom'])) {
-            $sql .= " AND u.prenom LIKE ?";
-            $params[] = '%' . $filters['prenom'] . '%';
-            $types .= 's';
-        }
-
-        // Pagination
+    public function getAll(int $page = 1, int $limit = 10): array {
         $offset = ($page - 1) * $limit;
-        $sql .= " ORDER BY $sortField $sortOrder LIMIT ? OFFSET ?";
-        $params[] = $limit;
-        $params[] = $offset;
-        $types .= 'ii';
+
+        // Compter le total de trajets
+        $sqlCount = "SELECT COUNT(*) as total FROM trajet";
+        $stmtCount = $this->conn->prepare($sqlCount);
+        $stmtCount->execute();
+        $resultCount = $stmtCount->get_result();
+        $total = $resultCount->fetch_assoc()['total'];
+        $stmtCount->close();
+
+        // Calculer le nombre total de pages
+        $totalPages = ceil($total / $limit);
+
+        // Récupérer les trajets de la page courante
+        $sql = "SELECT t.*, u.nom AS conducteur_nom, u.prenom AS conducteur_prenom,
+            (SELECT COUNT(*) FROM reservation r WHERE r.id_trajet = t.id_trajet) as places_reservees
+            FROM trajet t
+            JOIN utilisateur u ON t.id_conducteur = u.id_utilisateur
+            ORDER BY t.date_depart DESC, t.heure_depart DESC
+            LIMIT " . intval($limit) . " OFFSET " . intval($offset);
 
         $stmt = $this->conn->prepare($sql);
-        if (!empty($params)) $stmt->bind_param($types, ...$params);
+        if (!$stmt) {
+            throw new Exception("Erreur préparation SQL: " . $this->conn->error);
+        }
 
         $stmt->execute();
         $result = $stmt->get_result();
@@ -156,19 +164,34 @@ class TrajetManager {
         }
 
         $stmt->close();
-        return $trajets;
+
+        // Retourner les données avec la pagination
+        return [
+            'trajets' => $trajets,
+            'totalPages' => $totalPages,
+            'page' => $page,
+            'total' => $total
+        ];
     }
 
     // Mes trajets pour un conducteur
-    public function getMyRoutes($userId) {
-        $sql = "SELECT t.*, u.nom, u.prenom 
+    public function getMyRoutes(int $userId, int $page = 1, int $limit = 10): array {
+        $offset = ($page - 1) * $limit;
+
+        $sql = "SELECT t.*, u.nom AS conducteur_nom, u.prenom AS conducteur_prenom
                 FROM trajet t
                 JOIN utilisateur u ON t.id_conducteur = u.id_utilisateur
-                WHERE t.id_conducteur = ? 
-                ORDER BY t.date_depart DESC";
+                WHERE t.id_conducteur = ?
+                ORDER BY t.date_depart DESC, t.heure_depart DESC
+                LIMIT ? OFFSET ?";
 
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("i", $userId);
+        if (!$stmt) {
+            throw new Exception("Erreur préparation SQL: " . $this->conn->error);
+        }
+
+        // bind_param avec 3 paramètres : userId (int), limit (int), offset (int)
+        $stmt->bind_param('iii', $userId, $limit, $offset);
         $stmt->execute();
         $result = $stmt->get_result();
 
@@ -180,6 +203,18 @@ class TrajetManager {
         $stmt->close();
         return $trajets;
     }
+
+    // Compter mes trajets
+    public function countMyRoutes(int $userId): int {
+        $stmt = $this->conn->prepare("SELECT COUNT(*) AS total FROM trajet WHERE id_conducteur = ?");
+        $stmt->bind_param('i', $userId);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        return (int)($result['total'] ?? 0);
+    }
+
+
 
     // Valider un trajet
     public function validateRoute(int $id) {
@@ -213,9 +248,13 @@ class TrajetManager {
     public function refuseRoute(int $id) {
         $stmt = $this->conn->prepare("UPDATE trajet SET valider = 0 WHERE id_trajet = ?");
         $stmt->bind_param('i', $id);
-        $res = $stmt->execute();
+        $affectedRows = $stmt->execute();
         $stmt->close();
-        return $res;
+        if ($affectedRows > 0) {
+            return true; // Trajet trouvé et mis à jour
+        } else {
+            return false; // Trajet inexistant ou déjà refusé
+        }
     }
 
     // Annuler un trajet (conducteur)

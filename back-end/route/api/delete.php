@@ -6,16 +6,13 @@ error_reporting(E_ALL);
 
 header('Content-Type: application/json');
 
-require_once '../../user/api/auth/check_session.php';
+require_once '../../user/api/auth/check_session_logic.php';
 require_once '../../config/Database.php';
 require_once '../models/TrajetManager.php';
 
 try {
-    // Vérifier que l'utilisateur est connecté
-    if (!isset($_SESSION['user_id'])) {
-        echo json_encode(['success' => false, 'error' => 'Utilisateur non connecté']);
-        exit();
-    }
+    // Vérifier si l'utilisateur est connecté
+    requireLogin();
 
     // Lire le JSON reçu
     $rawInput = file_get_contents('php://input');
@@ -35,7 +32,12 @@ try {
 
     // Supprimer toute sortie éventuelle avant le JSON
     ob_clean();
-    echo json_encode(['success' => $success]);
+
+    if ($success ) {
+        echo json_encode(['success' => true, 'message' => 'Trajet supprimé avec succès.']);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Impossible de supprimer ce trajet.']);
+    }
 
 } catch (Exception $e) {
     http_response_code(500);

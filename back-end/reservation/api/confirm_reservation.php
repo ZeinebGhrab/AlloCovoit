@@ -7,15 +7,17 @@ header('Content-Type: application/json; charset=utf-8');
 
 require_once '../../config/Database.php';
 require_once '../models/ReservationManager.php';
+require_once '../../user/api/auth/check_session_logic.php';
 
 try {
-    if (empty($_SESSION['user_id'])) {
-        echo json_encode(['success' => false, 'message' => 'Utilisateur non connecté.'], JSON_UNESCAPED_UNICODE);
-        exit;
-    }
+    // Vérifier la session utilisateur
+    requireLogin();
 
     $input = json_decode(file_get_contents('php://input'), true);
     $reservationId = isset($input['id_reservation']) ? (int)$input['id_reservation'] : 0;
+
+    // Nettoyer le buffer avant d'envoyer le JSON
+    ob_end_clean();
 
     if ($reservationId <= 0) {
         echo json_encode(['success' => false, 'message' => 'ID de réservation invalide.'], JSON_UNESCAPED_UNICODE);

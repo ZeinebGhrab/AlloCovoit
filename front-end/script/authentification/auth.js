@@ -5,7 +5,7 @@ export async function checkSession() {
     try {
         const response = await fetch(`/AlloCovoit/back-end/user/api/auth/check_session.php`);
         const data = await response.json();
-
+        console.log(data);
         if (data.connected) {
             currentUser = data.user;
             updateUserDisplay();
