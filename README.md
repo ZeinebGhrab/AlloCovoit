@@ -54,6 +54,11 @@ AlloCovoit/
 │   │   │   ├─ publication.html          # Post a new ride
 │   │   │   ├─ ride-cart.html            # Ride cart
 │   │   │   └─ ride-publication.html     # My published rides
+│   │   ├─ docs/ 
+│   │   │   ├─ privacy-policy.html       # Privacy policy page
+│   │   │   ├─ terms-and-condition.html  # Terms and conditions page
+│   │   │   └─ support.html              # Support and FAQ page       
+│   │   │
 │   │   └─ main.html                     # Browse all rides (home)
 │   ├─ script/
 │   │   ├─ administration/
