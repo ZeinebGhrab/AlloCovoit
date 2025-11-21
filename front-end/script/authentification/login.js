@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
            if (result.success) {
                 // Redirection en cas de succès
-                window.location.href = '/AlloCovoit/front-end/interfaces/main.html';
+                window.location.href = '/AlloCovoit/front-end/interfaces/route/explore_rides.html';
             } else {
                 showNotification('Email ou mot de passe incorrect.');
                 showError(result.message || 'Email ou mot de passe incorrect.');

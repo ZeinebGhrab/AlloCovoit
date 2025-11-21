@@ -66,7 +66,7 @@ export async function removeFromCart(id) {
 
         if (data.success) await loadCart();
     } catch (error) {
-        console.error('❌ Erreur suppression panier :', error);
+        console.error('Erreur suppression panier :', error);
         showNotification('Erreur lors de la suppression du trajet', 'error');
     }
 }

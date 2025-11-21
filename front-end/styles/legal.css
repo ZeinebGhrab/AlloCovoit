@@ -1,14 +1,10 @@
-/* ============================================
-   Styles pour les pages légales - Design amélioré
-   ============================================ */
-
 .legal-section {
     max-width: 900px;
     margin: 0 auto;
 }
 
 .legal-intro {
-    background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.05) 0%, rgba(249, 115, 22, 0.05) 100%);
     padding: 2rem;
     border-radius: 15px;
     border-left: 5px solid var(--primary);
@@ -27,7 +23,7 @@
     right: 0;
     width: 100px;
     height: 100px;
-    background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(249, 115, 22, 0.1) 100%);
     border-radius: 50%;
     transform: translate(30%, -30%);
 }
@@ -41,7 +37,7 @@
     gap: 0.75rem;
     font-weight: 700;
     padding: 1.25rem;
-    background: linear-gradient(135deg, rgba(37, 99, 235, 0.03) 0%, rgba(118, 75, 162, 0.03) 100%);
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.03) 0%, rgba(249, 115, 22, 0.03) 100%);
     border-radius: 12px;
     border-left: 4px solid var(--primary);
     transition: all 0.3s ease;
@@ -49,7 +45,7 @@
 
 .legal-section h3:hover {
     transform: translateX(5px);
-    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.1);
+    box-shadow: 0 4px 15px rgba(6, 182, 212, 0.1);
 }
 
 .legal-section h3 i {
@@ -58,7 +54,7 @@
     -webkit-text-fill-color: transparent;
     background-clip: text;
     font-size: 1.6rem;
-    filter: drop-shadow(0 2px 4px rgba(37, 99, 235, 0.2));
+    filter: drop-shadow(0 2px 4px rgba(6, 182, 212, 0.2));
 }
 
 .legal-section p {
@@ -87,10 +83,10 @@
 }
 
 .legal-list li:hover {
-    background: linear-gradient(135deg, rgba(37, 99, 235, 0.03) 0%, rgba(118, 75, 162, 0.03) 100%);
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.03) 0%, rgba(249, 115, 22, 0.03) 100%);
     border-color: var(--primary);
     transform: translateX(8px);
-    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.15);
+    box-shadow: 0 4px 15px rgba(6, 182, 212, 0.15);
 }
 
 .legal-list li::before {
@@ -120,7 +116,7 @@
 }
 
 .contact-box {
-    background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.05) 0%, rgba(249, 115, 22, 0.05) 100%);
     padding: 2rem;
     border-radius: 15px;
     margin: 2.5rem 0;
@@ -131,7 +127,7 @@
 
 .contact-box:hover {
     border-color: var(--primary);
-    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.15);
+    box-shadow: 0 6px 20px rgba(6, 182, 212, 0.15);
 }
 
 .contact-box p {
@@ -178,7 +174,7 @@
 
 .faq-item:hover {
     border-color: var(--primary);
-    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.15);
+    box-shadow: 0 6px 20px rgba(6, 182, 212, 0.15);
     transform: translateY(-3px);
 }
 
@@ -262,7 +258,7 @@
 
 .contact-card:hover {
     border-color: var(--primary);
-    box-shadow: 0 10px 30px rgba(37, 99, 235, 0.2);
+    box-shadow: 0 10px 30px rgba(6, 182, 212, 0.2);
     transform: translateY(-8px);
 }
 
@@ -274,7 +270,7 @@
     background-clip: text;
     margin-bottom: 1.25rem;
     display: inline-block;
-    filter: drop-shadow(0 4px 8px rgba(37, 99, 235, 0.2));
+    filter: drop-shadow(0 4px 8px rgba(6, 182, 212, 0.2));
 }
 
 .contact-card h4 {
@@ -301,7 +297,7 @@
 
 /* Support Form */
 .support-form {
-    background: linear-gradient(135deg, rgba(37, 99, 235, 0.03) 0%, rgba(118, 75, 162, 0.03) 100%);
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.03) 0%, rgba(249, 115, 22, 0.03) 100%);
     padding: 2.5rem;
     border-radius: 20px;
     margin: 2.5rem 0;
@@ -328,10 +324,10 @@
 
 .support-form button:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+    box-shadow: 0 8px 25px rgba(6, 182, 212, 0.3);
 }
 
-/* Animations améliorées */
+/* Animations */
 @keyframes slideInLeft {
     from {
         opacity: 0;
@@ -347,7 +343,7 @@
     animation: slideInLeft 0.5s ease;
 }
 
-/* Responsive amélioré */
+/* Responsive */
 @media (max-width: 768px) {
     .legal-intro {
         padding: 1.5rem;

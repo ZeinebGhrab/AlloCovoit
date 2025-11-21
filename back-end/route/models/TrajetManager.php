@@ -75,7 +75,7 @@ class TrajetManager {
     }
 
     // Tous les trajets validés avec filtres et pagination
-    public function getAllValidate($filters = [], $sortField = 'date_depart', $sortOrder = 'ASC', $offset = 0, $limit = 10) {
+    public function getAllValidate($filters = [], $sortField = 'date_depart', $sortOrder = 'ASC', $offset = 0, $limit = 10,$userId) {
         $allowedSortFields = ['date_depart','heure_depart','ville_depart','ville_arrivee','nom','prenom'];
         $sortField = in_array($sortField, $allowedSortFields) ? $sortField : 'date_depart';
         $sortOrder = strtoupper($sortOrder) === 'DESC' ? 'DESC' : 'ASC';
@@ -86,10 +86,11 @@ class TrajetManager {
             WHERE t.valider = 1 
               AND t.places_reservees != t.places_disponibles 
               AND u.statut = 'actif'
+              AND t.id_conducteur != ?
               AND TIMESTAMP(t.date_depart, t.heure_depart) > SYSDATE()";
 
-        $params = [];
-        $types = '';
+        $params = [$userId];
+        $types = 'i';
 
         // Filtres dynamiques
         if (!empty($filters['depart'])) {

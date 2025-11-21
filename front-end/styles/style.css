@@ -1,23 +1,25 @@
-/* ============================================
-   AlloCovoit - Styles améliorés et modernes
-   ============================================ */
-
 :root {
-    --primary: #2563eb;
-    --primary-dark: #1e40af;
-    --primary-light: #3b82f6;
-    --secondary: #10b981;
-    --secondary-dark: #059669;
+    --primary: #06b6d4;
+    --primary-dark: #0891b2;
+    --primary-light: #22d3ee;
+    --secondary: #f97316;
+    --secondary-dark: #ea580c;
+    --accent: #ec4899;
+    --success: #10b981;
     --danger: #ef4444;
     --warning: #f59e0b;
-    --success: #10b981;
-    --dark: #1f2937;
-    --light: #f9fafb;
-    --gray: #6b7280;
-    --border: #e5e7eb;
-    --shadow: rgba(0, 0, 0, 0.1);
-    --shadow-lg: rgba(0, 0, 0, 0.15);
-    --gradient: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    --dark: #0f172a;
+    --gray: #64748b;
+    --light: #f1f5f9;
+    --border: #e2e8f0;
+    
+    --shadow: rgba(6, 182, 212, 0.1);
+    --shadow-md: rgba(6, 182, 212, 0.15);
+    --shadow-lg: rgba(6, 182, 212, 0.2);
+    --shadow-xl: rgba(6, 182, 212, 0.25);
+    
+    --gradient: linear-gradient(135deg, #06b6d4 0%, #f97316 100%);
+    --gradient-alt: linear-gradient(135deg, #22d3ee 0%, #ec4899 100%);
 }
 
 * {
@@ -28,7 +30,7 @@
 
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #0c4a6e 0%, #075985 50%, #0e7490 100%);
     min-height: 100vh;
     color: var(--dark);
     line-height: 1.6;
@@ -39,17 +41,17 @@ body {
    ============================================ */
 
 nav {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    padding: 1rem 2rem;
-    box-shadow: 0 2px 20px var(--shadow);
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
+    padding: 1.25rem 2rem;
+    box-shadow: 0 4px 30px var(--shadow-md);
     position: sticky;
     top: 0;
     z-index: 1000;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    animation: slideDown 0.5s ease;
+    animation: slideDown 0.6s ease;
 }
 
 @keyframes slideDown {
@@ -64,13 +66,19 @@ nav {
 }
 
 .logo {
-    font-size: 1.8rem;
+    font-size: 2rem;
     font-weight: 800;
     background: var(--gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    cursor: pointer;
+    transition: transform 0.3s ease;
     letter-spacing: -0.5px;
+}
+
+.logo:hover {
+    transform: scale(1.05);
 }
 
 .logo span {
@@ -88,19 +96,20 @@ nav {
 .nav-buttons span {
     color: var(--dark);
     font-weight: 600;
-    padding: 0.5rem 1rem;
-    background: var(--light);
-    border-radius: 8px;
+    padding: 0.75rem 1.25rem;
+    background: linear-gradient(135deg, var(--light) 0%, #ffffff 100%);
+    border-radius: 12px;
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    box-shadow: 0 2px 8px var(--shadow);
 }
 
 .nav-buttons button {
-    padding: 0.65rem 1.25rem;
+    padding: 0.75rem 1.5rem;
     background: white;
     border: 2px solid var(--border);
-    border-radius: 8px;
+    border-radius: 12px;
     color: var(--dark);
     font-weight: 600;
     cursor: pointer;
@@ -108,15 +117,21 @@ nav {
     align-items: center;
     gap: 0.5rem;
     transition: all 0.3s ease;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
 }
 
 .nav-buttons button:hover {
     background: var(--gradient);
     color: white;
     border-color: transparent;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px var(--shadow-lg);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px var(--shadow-lg);
+}
+
+.nav-buttons button.active {
+    background: var(--gradient);
+    color: white;
+    border-color: transparent;
 }
 
 .nav-buttons button i {
@@ -129,18 +144,30 @@ nav {
 
 .page {
     max-width: 1200px;
-    margin: 2rem auto;
-    padding: 2.5rem;
+    margin: 2.5rem auto;
+    padding: 3rem;
     background: white;
-    border-radius: 20px;
-    box-shadow: 0 10px 40px var(--shadow-lg);
-    animation: fadeIn 0.6s ease;
+    border-radius: 24px;
+    box-shadow: 0 20px 60px var(--shadow-xl);
+    animation: fadeInUp 0.8s ease;
+    position: relative;
+    overflow: hidden;
 }
 
-@keyframes fadeIn {
+.page::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: var(--gradient);
+}
+
+@keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(40px);
     }
     to {
         opacity: 1;
@@ -150,12 +177,25 @@ nav {
 
 .page h2 {
     color: var(--dark);
-    font-size: 2rem;
-    margin-bottom: 2rem;
+    font-size: 2.25rem;
+    margin-bottom: 2.5rem;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    font-weight: 700;
+    gap: 1rem;
+    font-weight: 800;
+    position: relative;
+    padding-bottom: 1rem;
+}
+
+.page h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 80px;
+    height: 4px;
+    background: var(--gradient);
+    border-radius: 2px;
 }
 
 .page h2 i {
@@ -163,13 +203,14 @@ nav {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    font-size: 2rem;
 }
 
 .page h3 {
     color: var(--dark);
-    font-size: 1.5rem;
-    margin: 2rem 0 1.5rem;
-    font-weight: 600;
+    font-size: 1.75rem;
+    margin: 3rem 0 1.5rem;
+    font-weight: 700;
 }
 
 /* ============================================
@@ -177,29 +218,32 @@ nav {
    ============================================ */
 
 .form-group {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.75rem;
 }
 
 .form-group label {
     display: block;
     color: var(--dark);
     font-weight: 600;
-    margin-bottom: 0.5rem;
-    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .form-group label i {
     color: var(--primary);
-    margin-right: 0.5rem;
+    font-size: 1.1rem;
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
     width: 100%;
-    padding: 0.875rem 1rem;
+    padding: 1rem 1.25rem;
     border: 2px solid var(--border);
-    border-radius: 10px;
+    border-radius: 12px;
     font-size: 1rem;
     transition: all 0.3s ease;
     font-family: inherit;
@@ -211,18 +255,19 @@ nav {
 .form-group textarea:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.1);
+    transform: translateY(-2px);
 }
 
 .form-group textarea {
     resize: vertical;
-    min-height: 100px;
+    min-height: 120px;
 }
 
 .form-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.75rem;
 }
 
 .form-group.full-width {
@@ -230,17 +275,18 @@ nav {
 }
 
 .filter-section {
-    background: var(--light);
-    padding: 2rem;
-    border-radius: 15px;
-    margin-bottom: 2rem;
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.05) 0%, rgba(249, 115, 22, 0.05) 100%);
+    padding: 2.5rem;
+    border-radius: 20px;
+    margin-bottom: 2.5rem;
+    border: 2px solid rgba(6, 182, 212, 0.1);
 }
 
 .filter-row {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.75rem;
+    margin-bottom: 1.75rem;
 }
 
 /* ============================================
@@ -251,32 +297,34 @@ nav {
 .btn-traj {
     background: var(--gradient);
     color: white;
-    padding: 0.875rem 1.75rem;
+    padding: 1rem 2rem;
     border: none;
-    border-radius: 10px;
+    border-radius: 12px;
     font-weight: 600;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.75rem;
     justify-content: center;
     transition: all 0.3s ease;
     font-size: 1rem;
     text-decoration: none;
+    box-shadow: 0 4px 15px var(--shadow-lg);
 }
+
 
 .btn:hover,
 .btn-traj:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px var(--shadow-xl);
 }
 
 .btn-secondary {
     background: white;
     color: var(--danger);
     border: 2px solid var(--danger);
-    padding: 0.625rem 1.25rem;
-    border-radius: 8px;
+    padding: 0.875rem 1.5rem;
+    border-radius: 12px;
     font-weight: 600;
     cursor: pointer;
     display: inline-flex;
@@ -288,7 +336,8 @@ nav {
 .btn-secondary:hover {
     background: var(--danger);
     color: white;
-    transform: translateY(-2px);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
 }
 
 /* ============================================
@@ -298,10 +347,10 @@ nav {
 .trajet-card {
     background: white;
     border: 2px solid var(--border);
-    border-radius: 15px;
-    padding: 1.75rem;
-    margin-bottom: 1.5rem;
-    transition: all 0.3s ease;
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 1.75rem;
+    transition: all 0.4s ease;
     position: relative;
     overflow: hidden;
 }
@@ -311,17 +360,18 @@ nav {
     position: absolute;
     top: 0;
     left: 0;
-    width: 4px;
+    width: 5px;
     height: 100%;
     background: var(--gradient);
     transform: scaleY(0);
-    transition: transform 0.3s ease;
+    transform-origin: top;
+    transition: transform 0.4s ease;
 }
 
 .trajet-card:hover {
     border-color: var(--primary);
-    box-shadow: 0 8px 25px var(--shadow-lg);
-    transform: translateY(-3px);
+    box-shadow: 0 12px 35px var(--shadow-lg);
+    transform: translateY(-5px);
 }
 
 .trajet-card:hover::before {
@@ -330,48 +380,52 @@ nav {
 
 .trajet-card h3 {
     color: var(--dark);
-    font-size: 1.4rem;
-    margin: 0 0 1.25rem 0;
+    font-size: 1.5rem;
+    margin: 0 0 1.5rem 0;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.75rem;
+    font-weight: 700;
 }
 
 .trajet-card h3 i {
     color: var(--primary);
+    font-size: 1.4rem;
 }
 
 .trajet-info {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 1rem;
-    margin-bottom: 1.25rem;
-    padding: 1rem;
-    background: var(--light);
-    border-radius: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.05) 0%, rgba(249, 115, 22, 0.05) 100%);
+    border-radius: 15px;
 }
 
 .trajet-info span {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.75rem;
     color: var(--gray);
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    font-weight: 500;
 }
 
 .trajet-info i {
     color: var(--primary);
-    font-size: 0.9rem;
+    font-size: 1.1rem;
 }
 
 .trajet-info strong {
     color: var(--dark);
+    font-weight: 600;
 }
 
 .trajet-card p {
     color: var(--gray);
-    margin: 1rem 0;
-    line-height: 1.6;
+    margin: 1.25rem 0;
+    line-height: 1.8;
 }
 
 /* ============================================
@@ -382,17 +436,18 @@ nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.5rem;
-    background: var(--light);
-    border-radius: 12px;
-    margin-bottom: 1rem;
-    border: 2px solid transparent;
+    padding: 1.75rem;
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.03) 0%, rgba(249, 115, 22, 0.03) 100%);
+    border-radius: 15px;
+    margin-bottom: 1.25rem;
+    border: 2px solid var(--border);
     transition: all 0.3s ease;
 }
 
 .panier-item:hover {
     border-color: var(--primary);
-    box-shadow: 0 4px 12px var(--shadow);
+    box-shadow: 0 6px 20px var(--shadow);
+    transform: translateX(5px);
 }
 
 /* ============================================
@@ -400,26 +455,33 @@ nav {
    ============================================ */
 
 .badge {
-    padding: 0.4rem 1rem;
-    border-radius: 20px;
-    font-size: 0.85rem;
+    padding: 0.5rem 1.25rem;
+    border-radius: 25px;
+    font-size: 0.875rem;
     font-weight: 600;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .badge-success {
-    background: rgba(16, 185, 129, 0.1);
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.1) 100%);
     color: var(--success);
 }
 
 .badge-warning {
-    background: rgba(245, 158, 11, 0.1);
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(245, 158, 11, 0.1) 100%);
     color: var(--warning);
 }
 
 .badge-danger {
-    background: rgba(239, 68, 68, 0.1);
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(239, 68, 68, 0.1) 100%);
     color: var(--danger);
+}
+
+.badge-primary {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.15) 0%, rgba(6, 182, 212, 0.1) 100%);
+    color: var(--primary);
 }
 
 /* ============================================
@@ -428,19 +490,18 @@ nav {
 
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.75rem;
+    margin-bottom: 2.5rem;
 }
 
 .stat-card {
-    background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
-    backdrop-filter: blur(10px);
-    border: 2px solid rgba(255,255,255,0.3);
+    background: white;
+    border: 2px solid var(--border);
     border-radius: 20px;
-    padding: 2rem;
+    padding: 2.25rem;
     text-align: center;
-    transition: all 0.3s ease;
+    transition: all 0.4s ease;
     position: relative;
     overflow: hidden;
 }
@@ -451,33 +512,37 @@ nav {
     top: 0;
     left: 0;
     right: 0;
-    height: 4px;
+    height: 5px;
     background: var(--gradient);
 }
 
 .stat-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 30px var(--shadow-lg);
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px var(--shadow-lg);
+    border-color: var(--primary);
 }
 
 .stat-card i {
+    font-size: 3.5rem;
     background: var(--gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    margin-bottom: 1.25rem;
 }
 
 .stat-card h3 {
-    font-size: 2.5rem;
+    font-size: 2.75rem;
     color: var(--dark);
-    margin: 0.5rem 0;
-    font-weight: 700;
+    margin: 0.75rem 0;
+    font-weight: 800;
 }
 
 .stat-card p {
     color: var(--gray);
-    font-weight: 500;
+    font-weight: 600;
     margin: 0;
+    font-size: 1.05rem;
 }
 
 /* ============================================
@@ -487,11 +552,11 @@ nav {
 table {
     width: 100%;
     border-collapse: collapse;
-    margin: 1.5rem 0;
+    margin: 2rem 0;
     background: white;
-    border-radius: 12px;
+    border-radius: 15px;
     overflow: hidden;
-    box-shadow: 0 2px 8px var(--shadow);
+    box-shadow: 0 4px 15px var(--shadow);
 }
 
 thead {
@@ -500,23 +565,25 @@ thead {
 }
 
 th {
-    padding: 1rem;
+    padding: 1.25rem;
     text-align: left;
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 td {
-    padding: 1rem;
+    padding: 1.25rem;
     border-bottom: 1px solid var(--border);
 }
 
 tbody tr {
-    transition: background 0.2s ease;
+    transition: all 0.3s ease;
 }
 
 tbody tr:hover {
-    background: var(--light);
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.05) 0%, rgba(249, 115, 22, 0.05) 100%);
 }
 
 tbody tr:last-child td {
@@ -528,36 +595,53 @@ tbody tr:last-child td {
    ============================================ */
 
 footer {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    padding: 2rem;
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(20px);
+    padding: 3rem 2rem;
     text-align: center;
-    margin-top: 3rem;
-    color: var(--dark);
-    box-shadow: 0 -2px 20px var(--shadow);
+    color: white;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: 4rem;
 }
 
 footer p {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
     font-weight: 500;
+    opacity: 0.9;
 }
 
 .footer-links {
     display: flex;
     justify-content: center;
-    gap: 2rem;
+    gap: 3rem;
     flex-wrap: wrap;
 }
 
 .footer-links a {
-    color: var(--gray);
+    color: rgba(255, 255, 255, 0.8);
     text-decoration: none;
     font-weight: 500;
-    transition: color 0.3s ease;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.footer-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--gradient);
+    transition: width 0.3s ease;
 }
 
 .footer-links a:hover {
-    color: var(--primary);
+    color: white;
+}
+
+.footer-links a:hover::after {
+    width: 100%;
 }
 
 /* ============================================
@@ -567,46 +651,53 @@ footer p {
 .circle {
     position: fixed;
     border-radius: 50%;
-    background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
-    animation: float 20s infinite ease-in-out;
+    background: radial-gradient(circle, rgba(34, 211, 238, 0.15), rgba(249, 115, 22, 0.1));
+    animation: float 25s infinite ease-in-out;
     z-index: -1;
+    filter: blur(80px);
 }
 
 .circle-1 {
-    width: 300px;
-    height: 300px;
-    top: -150px;
-    left: -150px;
-    animation-delay: 0s;
+    width: 500px;
+    height: 500px;
+    top: -250px;
+    left: -250px;
 }
 
 .circle-2 {
-    width: 200px;
-    height: 200px;
-    top: 50%;
-    right: -100px;
-    animation-delay: 2s;
+    width: 400px;
+    height: 400px;
+    top: 40%;
+    right: -200px;
+    animation-delay: 5s;
 }
 
 .circle-3 {
-    width: 250px;
-    height: 250px;
-    bottom: -125px;
-    left: 20%;
-    animation-delay: 4s;
+    width: 450px;
+    height: 450px;
+    bottom: -225px;
+    left: 30%;
+    animation-delay: 10s;
 }
 
 .circle-4 {
-    width: 150px;
-    height: 150px;
+    width: 350px;
+    height: 350px;
     top: 20%;
     right: 15%;
-    animation-delay: 6s;
+    animation-delay: 15s;
 }
 
 @keyframes float {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-20px) rotate(180deg); }
+    0%, 100% { 
+        transform: translateY(0) rotate(0deg) scale(1); 
+    }
+    33% { 
+        transform: translateY(-40px) rotate(120deg) scale(1.1); 
+    }
+    66% { 
+        transform: translateY(30px) rotate(240deg) scale(0.9); 
+    }
 }
 
 .form {
@@ -618,19 +709,20 @@ footer p {
 }
 
 .login-card {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-    padding: 3rem;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    max-width: 450px;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    padding: 3.5rem;
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4);
+    max-width: 500px;
     width: 100%;
-    animation: scaleIn 0.5s ease;
+    animation: scaleIn 0.6s ease;
+    border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 @keyframes scaleIn {
     from {
-        transform: scale(0.9);
+        transform: scale(0.95);
         opacity: 0;
     }
     to {
@@ -641,35 +733,37 @@ footer p {
 
 .logo-container {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
 }
 
 .logo-container i {
-    font-size: 4rem;
+    font-size: 5rem;
     background: var(--gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    filter: drop-shadow(0 4px 8px rgba(6, 182, 212, 0.3));
 }
 
 .logo-container h2 {
     color: var(--dark);
-    font-size: 1.8rem;
-    margin-top: 1rem;
-    font-weight: 700;
+    font-size: 2rem;
+    margin-top: 1.25rem;
+    font-weight: 800;
 }
 
 .signup-section {
     text-align: center;
-    margin-top: 1.5rem;
+    margin-top: 2rem;
     color: var(--gray);
+    font-size: 1rem;
 }
 
 .signup-link {
     color: var(--primary);
-    font-weight: 600;
+    font-weight: 700;
     text-decoration: none;
-    transition: color 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .signup-link:hover {
@@ -677,223 +771,174 @@ footer p {
 }
 
 /* ============================================
-   Ride Publication Pages
+   Filter & Action Buttons
    ============================================ */
 
-/* Styles pour les boutons de filtre */
-        .btn-filter, 
-        .btn-filter-res {
-            padding: 0.75rem 1.5rem;
-            background: white;
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            color: var(--dark);
-            font-weight: 600;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.3s ease;
-        }
+.filter-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
 
-        .btn-filter:hover, 
-        .btn-filter-res:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-            transform: translateY(-2px);
-        }
+.btn-filter,
+.btn-filter-res {
+    padding: 0.875rem 1.75rem;
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    color: var(--dark);
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: all 0.3s ease;
+}
 
-        .btn-filter.active, 
-        .btn-filter-res.active {
-            background: var(--gradient);
-            color: white;
-            border-color: transparent;
-        }
+.btn-filter:hover,
+.btn-filter-res:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px var(--shadow);
+}
 
-        /* Active navigation button */
-        .nav-buttons button.active {
-            background: var(--gradient);
-            color: white;
-            border-color: transparent;
-        }
+.btn-filter.active,
+.btn-filter-res.active {
+    background: var(--gradient);
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 4px 15px var(--shadow-lg);
+}
 
-        /* Modal styles */
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(5px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 10000;
-            animation: fadeIn 0.3s ease;
-        }
+.trajet-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 1.75rem;
+    padding-top: 1.75rem;
+    border-top: 2px solid var(--border);
+}
 
-        .modal-content {
-            background: white;
-            border-radius: 20px;
-            padding: 2.5rem;
-            max-width: 500px;
-            width: 90%;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            animation: scaleIn 0.3s ease;
-        }
+.btn-action {
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: all 0.3s ease;
+    border: 2px solid;
+    background: white;
+}
 
-        @keyframes scaleIn {
-            from {
-                transform: scale(0.9);
-                opacity: 0;
-            }
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
+.btn-action-info {
+    color: var(--primary);
+    border-color: var(--primary);
+}
 
-        /* Action buttons in cards */
-        .trajet-actions {
-            display: flex;
-            gap: 0.75rem;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            border-top: 2px solid var(--border);
-        }
+.btn-action-info:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px var(--shadow-lg);
+}
 
-        .btn-action {
-            padding: 0.625rem 1.25rem;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.3s ease;
-            border: 2px solid;
-            background: white;
-        }
+.btn-action-edit {
+    color: var(--warning);
+    border-color: var(--warning);
+}
 
-        .btn-action-info {
-            color: var(--primary);
-            border-color: var(--primary);
-        }
+.btn-action-edit:hover {
+    background: var(--warning);
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+}
 
-        .btn-action-info:hover {
-            background: var(--primary);
-            color: white;
-            transform: translateY(-2px);
-        }
+.btn-action-cancel {
+    color: var(--danger);
+    border-color: var(--danger);
+}
 
-        .btn-action-edit {
-            color: var(--warning);
-            border-color: var(--warning);
-        }
+.btn-action-cancel:hover {
+    background: var(--danger);
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+}
 
-        .btn-action-edit:hover {
-            background: var(--warning);
-            color: white;
-            transform: translateY(-2px);
-        }
+/* ============================================
+   Modal
+   ============================================ */
 
-        .btn-action-cancel {
-            color: var(--danger);
-            border-color: var(--danger);
-        }
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    animation: fadeIn 0.3s ease;
+}
 
-        .btn-action-cancel:hover {
-            background: var(--danger);
-            color: white;
-            transform: translateY(-2px);
-        }
+.modal.show {
+    display: flex;
+}
 
-        /* Status badges */
-        .badge-status {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
 
-        /* Reservations info */
-        .reservations-info {
-            background: var(--light);
-            padding: 1rem;
-            border-radius: 10px;
-            margin-top: 1rem;
-        }
+.modal-content {
+    background: white;
+    border-radius: 24px;
+    padding: 3rem;
+    max-width: 550px;
+    width: 90%;
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.5);
+    animation: scaleIn 0.4s ease;
+}
 
-        .reservations-info h4 {
-            color: var(--dark);
-            font-size: 1rem;
-            margin-bottom: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
+/* ============================================
+   Pagination
+   ============================================ */
 
-        .reservation-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.75rem;
-            background: white;
-            border-radius: 8px;
-            margin-bottom: 0.5rem;
-        }
-
-        .reservation-item:last-child {
-            margin-bottom: 0;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .btn-filter, 
-            .btn-filter-res {
-                padding: 0.5rem 1rem;
-                font-size: 0.9rem;
-            }
-
-            .trajet-actions {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .btn-action {
-                justify-content: center;
-            }
-        }
-
-
-/* Style pour la pagination */
 .pagination-container,
 .pagination-container-trajet,
 .pagination-container-reservation {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 0.5rem;
-    margin-top: 2rem;
-    padding: 1rem 0;
+    gap: 0.75rem;
+    margin-top: 2.5rem;
+    padding: 1.25rem 0;
+    flex-wrap: wrap;
 }
 
 .pagination-btn {
-    min-width: 40px;
-    height: 40px;
-    padding: 0.5rem 0.75rem;
-    border: 2px solid #e0e0e0;
+    min-width: 45px;
+    height: 45px;
+    padding: 0.75rem;
+    border: 2px solid var(--border);
     background: white;
-    color: #333;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    font-weight: 500;
+    color: var(--dark);
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
     display: flex;
@@ -902,18 +947,18 @@ footer p {
 }
 
 .pagination-btn:hover {
-    background: #f5f5f5;
-    border-color: #007bff;
-    color: #007bff;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+    background: var(--light);
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px var(--shadow-lg);
 }
 
 .pagination-btn.active {
-    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    background: var(--gradient);
     color: white;
-    border-color: #007bff;
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    border-color: transparent;
+    box-shadow: 0 6px 20px var(--shadow-lg);
     cursor: default;
 }
 
@@ -921,46 +966,27 @@ footer p {
     transform: none;
 }
 
-/* Version alternative avec style moderne */
-.pagination-btn-alt {
-    min-width: 40px;
-    height: 40px;
-    padding: 0.5rem 0.75rem;
-    border: none;
-    background: #f8f9fa;
-    color: #495057;
+/* ============================================
+   Utility Classes
+   ============================================ */
+
+.text-center {
+    text-align: center;
+}
+
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
     border-radius: 50%;
-    font-size: 0.95rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
 }
 
-.pagination-btn-alt:hover {
-    background: #e9ecef;
-    color: #007bff;
-    transform: scale(1.1);
-}
-
-.pagination-btn-alt.active {
-    background: #007bff;
-    color: white;
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .pagination-btn {
-        min-width: 35px;
-        height: 35px;
-        font-size: 0.85rem;
-        padding: 0.4rem 0.6rem;
-    }
-    
-    .pagination-container,
-    .pagination-container-trajet,
-    .pagination-container-reservation {
-        gap: 0.3rem;
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
     }
 }
 
@@ -974,97 +1000,68 @@ footer p {
         gap: 1rem;
         padding: 1rem;
     }
-    
+
     .nav-buttons {
         width: 100%;
         justify-content: center;
     }
-    
+
     .page {
         padding: 1.5rem;
         margin: 1rem;
     }
-    
+
     .page h2 {
-        font-size: 1.5rem;
+        font-size: 1.75rem;
     }
-    
+
     .form-grid,
     .filter-row {
         grid-template-columns: 1fr;
     }
-    
+
     .trajet-info {
         grid-template-columns: 1fr;
     }
-    
+
     .panier-item {
         flex-direction: column;
         gap: 1rem;
         text-align: center;
     }
-    
+
     .stats-grid {
         grid-template-columns: 1fr;
     }
-    
+
     table {
         font-size: 0.85rem;
     }
-    
-    th, td {
+
+    th,
+    td {
         padding: 0.75rem 0.5rem;
     }
-}
 
-/* ============================================
-   Loading Animation
-   ============================================ */
+    .trajet-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
 
-.loading {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    border: 3px solid rgba(255,255,255,.3);
-    border-radius: 50%;
-    border-top-color: white;
-    animation: spin 1s ease-in-out infinite;
-}
+    .btn-action {
+        justify-content: center;
+    }
 
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
+    .pagination-btn {
+        min-width: 35px;
+        height: 35px;
+        font-size: 0.85rem;
+        padding: 0.4rem 0.6rem;
+    }
 
-/* ============================================
-   Utility Classes
-   ============================================ */
-
-.text-center {
-    text-align: center;
-}
-
-.mt-1 { margin-top: 0.5rem; }
-.mt-2 { margin-top: 1rem; }
-.mt-3 { margin-top: 1.5rem; }
-.mt-4 { margin-top: 2rem; }
-
-.mb-1 { margin-bottom: 0.5rem; }
-.mb-2 { margin-bottom: 1rem; }
-.mb-3 { margin-bottom: 1.5rem; }
-.mb-4 { margin-bottom: 2rem; }
-
-.d-flex {
-    display: flex;
-}
-
-.gap-1 { gap: 0.5rem; }
-.gap-2 { gap: 1rem; }
-.gap-3 { gap: 1.5rem; }
-
-.justify-center {
-    justify-content: center;
-}
-
-.align-center {
-    align-items: center;
+    .pagination-container,
+    .pagination-container-trajet,
+    .pagination-container-reservation {
+        gap: 0.3rem;
+    }
 }

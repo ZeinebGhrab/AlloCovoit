@@ -3,6 +3,14 @@ import { searchTrajets } from './trajets.js';
 import { confirmReservations } from './panier.js';
 
 export function navigation() {
+
+    const logo = document.querySelector('.logo');
+    if (logo) {
+        logo.style.cursor = 'pointer';
+        logo.addEventListener('click', () => {
+            window.location.href = '/AlloCovoit/front-end/interfaces/index.html';
+        });
+    }
     
     const navButtons = document.querySelectorAll('.nav-buttons button');
 
@@ -10,7 +18,7 @@ export function navigation() {
         const page = button.dataset.page;
         switch(page) {
             case 'all-trajets':
-                button.addEventListener('click', () => window.location.href = '/AlloCovoit/front-end/interfaces/main.html');
+                button.addEventListener('click', () => window.location.href = '/AlloCovoit/front-end/interfaces/route/explore_rides.html');
                 break;
             case 'publier-trajet':
                 button.addEventListener('click', () => window.location.href = '/AlloCovoit/front-end/interfaces/route/publication.html');

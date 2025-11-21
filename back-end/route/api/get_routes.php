@@ -14,6 +14,7 @@ try {
     // Vérifier si l'utilisateur est connecté
     requireLogin();
 
+    $userId = (int)$_SESSION['user_id'];
     $manager = new TrajetManager();
 
     // Récupérer les filtres depuis le corps de la requête
@@ -28,9 +29,10 @@ try {
     // Pagination
     $page = isset($input['page']) ? max(1, intval($input['page'])) : 1;
     $limit = isset($input['limit']) ? max(1, intval($input['limit'])) : 10;
+    $offset = ($page - 1) * $limit;
 
     // Récupérer tous les trajets validés (avec pagination)
-    $rawTrajets = $manager->getAllValidate($filters, 'date_depart', 'ASC', $page, $limit); 
+    $rawTrajets = $manager->getAllValidate($filters, 'date_depart', 'ASC', $offset, $limit, $userId);
 
     // Compter le total réel pour pagination
     $total = $manager->countValidate($filters); 

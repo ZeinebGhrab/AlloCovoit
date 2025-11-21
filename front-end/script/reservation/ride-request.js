@@ -352,6 +352,7 @@ async function loadMyReservations() {
         const res = await fetch(`/AlloCovoit/back-end/reservation/api/get_user_reservation.php`);
         const data = await res.json();
         container.innerHTML = '';
+        console.log(data);
 
         if (!data.success || !Array.isArray(data.reservations) || data.reservations.length === 0) {
             container.innerHTML = `<p style="color: gray;">Aucune réservation effectuée.</p>`;

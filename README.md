@@ -51,6 +51,7 @@ AlloCovoit/
 │   │   ├─ reservation/
 │   │   │   └─ ride-request.html         # Manage ride requests/reservations
 │   │   ├─ route/
+│   │   │   ├─ explore_rides.html        # Browse all rides (home)
 │   │   │   ├─ publication.html          # Post a new ride
 │   │   │   ├─ ride-cart.html            # Ride cart
 │   │   │   └─ ride-publication.html     # My published rides
@@ -59,7 +60,7 @@ AlloCovoit/
 │   │   │   ├─ terms-and-condition.html  # Terms and conditions page
 │   │   │   └─ support.html              # Support and FAQ page       
 │   │   │
-│   │   └─ main.html                     # Browse all rides (home)
+│   │   └─ index.html                    # Main homepage of the site         
 │   ├─ script/
 │   │   ├─ administration/
 │   │   │   └─ dashboard.js              # Admin logic
@@ -77,9 +78,12 @@ AlloCovoit/
 │   │   ├─ publication.js                # Ride publishing
 │   │   └─ utils.js                      # Utility functions
 │   └─ styles/
-│       ├─ style.css                     # Main styles
+│       ├─ style.css                     # Global/common styles for the whole site
 │       ├─ dashboard-admin.css           # Admin panel styles
-│       └─ ride_request.css              # Reservation styles
+│       ├─ ride_request.css              # Reservation styles
+│       ├─ legal.css                     # Legal pages (privacy policy, terms, etc.)
+│       └─ index.css                     # Homepage styles
+│
 │
 ├─ back-end/
 │   ├─ config/

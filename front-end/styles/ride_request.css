@@ -56,15 +56,6 @@
     margin-bottom: 0.5rem;
 }
 
-
-/* Filter Buttons */
-.filter-buttons {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
-}
-
 /* Demande Card */
 .demande-card {
     background: white;
@@ -176,7 +167,7 @@
 
 /* Demande Message */
 .demande-message {
-    background: rgba(37, 99, 235, 0.05);
+    background: rgba(6, 182, 212, 0.05);
     padding: 1rem;
     border-radius: 10px;
     border-left: 4px solid var(--primary);
@@ -264,7 +255,7 @@
     transform: translateY(-2px);
 }
 
-/* Reservation Card (pour mes réservations) */
+/* Reservation Card */
 .reservation-card {
     background: white;
     border: 2px solid var(--border);
@@ -373,26 +364,6 @@
 .empty-state p {
     color: var(--gray);
     margin-bottom: 2rem;
-}
-
-/* Modal */
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(5px);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 10000;
-    animation: fadeIn 0.3s ease;
-}
-
-.modal.show {
-    display: flex;
 }
 
 /* Responsive */

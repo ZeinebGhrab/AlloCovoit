@@ -6,17 +6,14 @@ if (session_status() === PHP_SESSION_NONE) session_start();
 header('Content-Type: application/json; charset=utf-8');
 
 require_once '../../config/Database.php';
+require_once '../models/ReservationManager.php';
 require_once '../../user/api/auth/check_session_logic.php';
 
 try {
-    // Vérifier si l'utilisateur est connecté
-    if (empty($_SESSION['user_id'])) {
-        echo json_encode([
-            'success' => false,
-            'message' => 'Utilisateur non connecté.'
-        ], JSON_UNESCAPED_UNICODE);
-        exit;
-    }
+    
+    // Vérifier que l'utilisateur est connecté
+    requireLogin();
+
 
     $userId = (int) $_SESSION['user_id'];
 

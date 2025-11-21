@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const path = window.location.pathname;
 
-    if (path.includes('main.html')) {
+    if (path.includes('explore_rides.html')) {
         loadTrajets();
     }
     if (path.includes('ride-cart.html')) {
