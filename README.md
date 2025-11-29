@@ -45,38 +45,65 @@ AlloCovoit/
 │   ├─ interfaces/
 │   │   ├─ admin/
 │   │   │   └─ dashboard.html            # Admin panel
+│   │   │  
 │   │   ├─ authentication/
 │   │   │   ├─ login.html                # Login page
 │   │   │   └─ sign.html                 # Sign up page
+│   │   │  
 │   │   ├─ reservation/
 │   │   │   └─ ride-request.html         # Manage ride requests/reservations
+│   │   │  
 │   │   ├─ route/
 │   │   │   ├─ explore_rides.html        # Browse all rides (home)
 │   │   │   ├─ publication.html          # Post a new ride
 │   │   │   ├─ ride-cart.html            # Ride cart
 │   │   │   └─ ride-publication.html     # My published rides
+│   │   │  
 │   │   ├─ docs/ 
 │   │   │   ├─ privacy-policy.html       # Privacy policy page
 │   │   │   ├─ terms-and-condition.html  # Terms and conditions page
 │   │   │   └─ support.html              # Support and FAQ page       
 │   │   │
-│   │   └─ index.html                    # Main homepage of the site         
+│   │   └─ index.html                    # Main homepage of the site  
+│   │          
 │   ├─ script/
 │   │   ├─ administration/
-│   │   │   └─ dashboard.js              # Admin logic
+│   │   │   ├─  dashboard.js             # Admin logic
+│   │   │   └─ dashboard_stats.js        # Admin stats handling
+│   │   │        
 │   │   ├─ authentication/
 │   │   │   ├─ auth.js                   # Session management
 │   │   │   ├─ login.js                  # Login handling
 │   │   │   └─ sign.js                   # Signup handling
-│   │   ├─ reservation/
+│   │   │  
+│   │   ├─ reservations/
+│   │   │   ├─ reservations_actions.js   # Reservation action logic
+│   │   │   ├─ reservations_api.js       # API calls for reservations
+│   │   │   ├─ reservations_render.js    # Render reservation UI
+│   │   │   ├─ reservations_section.js   # Reservation section logic
 │   │   │   └─ ride-request.js           # Reservation handling
+│   │   │  
+│   │   ├─ routes
+│   │   │   ├─  myRoutes_render.js       # Render user's rides
+│   │   │   ├─  myRoutes_section.js      # My rides section logic
+│   │   │   ├─ routes_actions.js         # Route action logic
+│   │   │   ├─ routes_api.js             # API calls for routes
+│   │   │   ├─ routes_render.js          # Render route UI
+│   │   │   ├─ routes_search.js          # Search/filter rides
+│   │   │   └─ routes_search.js          # Route section logic
+│   │   │  
+│   │   ├─ users
+│   │   │   ├─ users_actions.js          # User action logic
+│   │   │   ├─ users_api.js              # API calls for users
+│   │   │   ├─ users_render.js           # Render users UI
+│   │   │   └─ users_section.js          # User section logic
 │   │   ├─ main.js                       # App initialization
+│   │   │  
 │   │   ├─ navigation.js                 # Navigation logic
-│   │   ├─ trajets.js                    # Ride navigation
 │   │   ├─ cart.js                       # Cart management
-│   │   ├─ myRoutes.js                   # My rides management
 │   │   ├─ publication.js                # Ride publishing
 │   │   └─ utils.js                      # Utility functions
+│   │   
 │   └─ styles/
 │       ├─ style.css                     # Global/common styles for the whole site
 │       ├─ dashboard-admin.css           # Admin panel styles
@@ -120,6 +147,7 @@ AlloCovoit/
 │   │   │   ├─ delete.php                # Delete ride
 │   │   │   ├─ session_routes.php        # Manage cart session
 │   │   │   └─ .gitignore
+│   │   │  
 │   │   └─ models/
 │   │       ├─ Trajet.php                # Ride entity class
 │   │       └─ TrajetManager.php         # CRUD + email notifications
@@ -133,6 +161,7 @@ AlloCovoit/
 │   │   │   ├─ confirm_reservation.php
 │   │   │   ├─ get_total_reservation.php
 │   │   │   └─ cancel_reservation.php
+│   │   │  
 │   │   └─ models/
 │   │       ├─ Reservation.php
 │   │       └─ ReservationManager.php
@@ -145,10 +174,12 @@ AlloCovoit/
 │
 ├─ database/
 │   └─ allocovoit_database_sql.sql       # Database schema + test data
+│   
 ├─ vendor/                               # Composer dependencies
 │   ├─ autoload.php
 │   └─ vlucas/phpdotenv/
 ├─ .env                                  # Environment config
+│   
 ├─ .gitignore
 ├─ composer.json
 ├─ composer.lock
