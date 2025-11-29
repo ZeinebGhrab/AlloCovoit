@@ -294,10 +294,6 @@ tbody tr:hover {
         gap: 1rem;
     }
 
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
-
     .search-bar {
         flex-direction: column;
     }

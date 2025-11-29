@@ -1,6 +1,6 @@
 import { logout, currentUser } from './authentification/auth.js';
-import { searchTrajets } from './trajets.js';
-import { confirmReservations } from './panier.js';
+import { searchTrajets } from './routes/routes_search.js';
+import { confirmReservations } from './cart.js';
 
 export function navigation() {
 

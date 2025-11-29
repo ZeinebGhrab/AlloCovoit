@@ -16,9 +16,11 @@ try {
     // Vérifier que l'utilisateur est un admin
     requireAdmin();
 
+    $input = json_decode(file_get_contents("php://input"), true) ?? [];
+
     // Pagination depuis POST
-    $page = isset($_POST['page']) ? max(1, intval($_POST['page'])) : 1;
-    $limit = isset($_POST['limit']) ? max(1, intval($_POST['limit'])) : 6;
+    $page = isset($input['page']) ? max(1, intval($input['page'])) : 1;
+    $limit = isset($input['limit']) ? max(1, intval($input['limit'])) : 6;
 
     $userManager = new UserManager();
     $usersData = $userManager->getAllUsers($page, $limit);

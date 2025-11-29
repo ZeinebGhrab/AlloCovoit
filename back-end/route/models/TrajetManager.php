@@ -38,15 +38,19 @@ class TrajetManager {
         return (int)$result['total'];
     }
 
-    // Ajouter cette méthode dans TrajetManager
-    public function countValidate($filters = []): int {
+    // Compter tous les trajets validés
+    public function countValidate($userId,$filters = []): int {
         $sql = "SELECT COUNT(*) AS total
-            FROM trajet t
-            JOIN utilisateur u ON t.id_conducteur = u.id_utilisateur
-            WHERE t.valider = 1 AND t.places_reservees != t.places_disponibles AND u.statut = 'actif' AND TIMESTAMP(t.date_depart, t.heure_depart) > SYSDATE()";
+            FROM trajet AS t
+            JOIN utilisateur AS u ON t.id_conducteur = u.id_utilisateur
+            WHERE t.valider = 1
+              AND t.places_reservees != t.places_disponibles
+              AND u.statut = 'actif'
+              AND t.id_conducteur != ?
+              AND TIMESTAMP(t.date_depart, t.heure_depart) > SYSDATE()";
 
-        $params = [];
-        $types = '';
+        $params = [$userId];
+        $types = 'i';
 
         if (!empty($filters['depart'])) {
             $sql .= " AND t.ville_depart LIKE ?";
@@ -75,7 +79,7 @@ class TrajetManager {
     }
 
     // Tous les trajets validés avec filtres et pagination
-    public function getAllValidate($filters = [], $sortField = 'date_depart', $sortOrder = 'ASC', $offset = 0, $limit = 10,$userId) {
+    public function getAllValidate($userId, $filters = [], $sortField = 'date_depart', $sortOrder = 'ASC', $offset = 0, $limit = 10) {
         $allowedSortFields = ['date_depart','heure_depart','ville_depart','ville_arrivee','nom','prenom'];
         $sortField = in_array($sortField, $allowedSortFields) ? $sortField : 'date_depart';
         $sortOrder = strtoupper($sortOrder) === 'DESC' ? 'DESC' : 'ASC';
@@ -176,23 +180,37 @@ class TrajetManager {
     }
 
     // Mes trajets pour un conducteur
-    public function getMyRoutes(int $userId, int $page = 1, int $limit = 10): array {
+    public function getMyRoutes(int $userId, ?string $statut = null, int $page = 1, int $limit = 10): array {
         $offset = ($page - 1) * $limit;
 
         $sql = "SELECT t.*, u.nom AS conducteur_nom, u.prenom AS conducteur_prenom
-                FROM trajet t
-                JOIN utilisateur u ON t.id_conducteur = u.id_utilisateur
-                WHERE t.id_conducteur = ?
-                ORDER BY t.date_depart DESC, t.heure_depart DESC
-                LIMIT ? OFFSET ?";
+            FROM trajet t
+            JOIN utilisateur u ON t.id_conducteur = u.id_utilisateur
+            WHERE t.id_conducteur = ?";
+
+
+        $params = [$userId];
+        $types = "i";
+
+        if ($statut !== null && $statut !== 'tous') {
+            $sql .= " AND t.statut = ?";
+            $params[] = $statut;
+            $types .= "s";
+        }
+
+        $sql .= " ORDER BY t.date_depart DESC, t.heure_depart DESC
+            LIMIT ? OFFSET ?";
+
+        $params[] = $limit;
+        $params[] = $offset;
+        $types .= "ii";
 
         $stmt = $this->conn->prepare($sql);
         if (!$stmt) {
             throw new Exception("Erreur préparation SQL: " . $this->conn->error);
         }
 
-        // bind_param avec 3 paramètres : userId (int), limit (int), offset (int)
-        $stmt->bind_param('iii', $userId, $limit, $offset);
+        $stmt->bind_param($types, ...$params);
         $stmt->execute();
         $result = $stmt->get_result();
 

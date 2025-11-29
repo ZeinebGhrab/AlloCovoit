@@ -29,3 +29,41 @@ export function showNotification(message, type = 'info') {
     notification.style.display = 'block';
     setTimeout(() => { notification.style.display = 'none'; }, 3000);
 }
+
+
+// Afficher la pagination
+export function displayPagination(totalPages, currentPage, loadFunction, currentFilters = {}, limit = 6, containerId = 'paginationContainer') {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    container.innerHTML = '';
+    container.classList.add('pagination-container');
+
+    if (totalPages <= 1) return;
+
+    // Bouton précédent
+    const prevBtn = document.createElement('button');
+    prevBtn.textContent = 'Précédent';
+    prevBtn.className = 'pagination-btn';
+    prevBtn.disabled = currentPage === 1;
+    prevBtn.addEventListener('click', () => loadFunction(currentFilters, currentPage - 1, limit));
+    container.appendChild(prevBtn);
+
+    // Numéros de page
+    for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement('button');
+        btn.textContent = i;
+        btn.className = 'pagination-btn';
+        if (i === currentPage) btn.classList.add('active');
+        btn.addEventListener('click', () => loadFunction(currentFilters, i, limit));
+        container.appendChild(btn);
+    }
+
+    // Bouton suivant
+    const nextBtn = document.createElement('button');
+    nextBtn.textContent = 'Suivant';
+    nextBtn.className = 'pagination-btn';
+    nextBtn.disabled = currentPage === totalPages;
+    nextBtn.addEventListener('click', () => loadFunction(currentFilters, currentPage + 1, limit));
+    container.appendChild(nextBtn);
+}

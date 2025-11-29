@@ -7,13 +7,13 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+header('Content-Type: application/json; charset=utf-8');
+
 require_once '../../config/Database.php';
 require_once '../models/TrajetManager.php';
 require_once '../../user/api/auth/check_session_logic.php';
 
 try {
-    // Headers
-    header('Content-Type: application/json; charset=utf-8');
 
     // Vérifier si l'utilisateur est connecté
     requireLogin();
@@ -26,9 +26,15 @@ try {
     
     $page = max(1, intval($input['page'] ?? 1));
     $limit = max(1, min(100, intval($input['limit'] ?? 10)));
+    $filters = $input['filters'] ?? [];
+
+    // Extraire le filtre de statut si fourni
+    $statutFilter = isset($filters['statut']) && $filters['statut'] !== 'tous'
+                    ? $filters['statut']
+                    : null;
 
     // Récupérer tous les trajets du conducteur
-    $rawTrajets = $manager->getMyRoutes($userId, $page, $limit);
+    $rawTrajets = $manager->getMyRoutes($userId, $statutFilter, $page, $limit);
     
     // Calculer le total de trajets pour ce conducteur
     $total = $manager->countMyRoutes($userId);

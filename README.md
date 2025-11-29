@@ -73,8 +73,8 @@ AlloCovoit/
 │   │   ├─ main.js                       # App initialization
 │   │   ├─ navigation.js                 # Navigation logic
 │   │   ├─ trajets.js                    # Ride navigation
-│   │   ├─ panier.js                     # Cart management
-│   │   ├─ mesTrajets.js                 # My rides management
+│   │   ├─ cart.js                       # Cart management
+│   │   ├─ myRoutes.js                   # My rides management
 │   │   ├─ publication.js                # Ride publishing
 │   │   └─ utils.js                      # Utility functions
 │   └─ styles/
@@ -200,7 +200,7 @@ MAIL_FROM_NAME=AlloCovoit
 5. Access the app:
 
 ```bash
-http://localhost/AlloCovoit/front-end/interfaces/main.html
+http://localhost/AlloCovoit/front-end/interfaces/index.html
 ```
 
 ---

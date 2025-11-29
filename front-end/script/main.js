@@ -1,10 +1,12 @@
 import { checkSession } from './authentification/auth.js';
 import { navigation } from './navigation.js';
-import { loadTrajets } from './trajets.js';
-import { loadCart, updateCartDisplay } from './panier.js';
-import { initMesTrajets } from './mesTrajets.js';
-import { loadUsersSection } from './administration/dashboard.js';
-import { initRideRequests } from './reservation/ride-request.js';
+import { loadTrajetsSection } from './routes/routes_section.js';
+import { searchTrajets } from './routes/routes_search.js';
+import { loadCart, updateCartDisplay } from './cart.js';
+import { initMesTrajets } from './routes/myRoutes_section.js';
+import { loadDashboardStats } from './administration/dashboard_stats.js';
+import { initRideRequests } from './reservations/ride-request.js';
+import { navigationAdmin } from './administration/dashboard.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     await checkSession();
@@ -13,7 +15,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const path = window.location.pathname;
 
     if (path.includes('explore_rides.html')) {
-        loadTrajets();
+        loadTrajetsSection();
+        searchTrajets();
     }
     if (path.includes('ride-cart.html')) {
         loadCart();
@@ -24,7 +27,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     if (path.includes('dashboard.html')) {
-        loadUsersSection();
+        loadDashboardStats();
+        navigationAdmin();
     }
 
      if (path.includes('ride-request.html')) {

@@ -32,10 +32,10 @@ try {
     $offset = ($page - 1) * $limit;
 
     // Récupérer tous les trajets validés (avec pagination)
-    $rawTrajets = $manager->getAllValidate($filters, 'date_depart', 'ASC', $offset, $limit, $userId);
+    $rawTrajets = $manager->getAllValidate($userId, $filters, 'date_depart', 'ASC', $offset, $limit);
 
     // Compter le total réel pour pagination
-    $total = $manager->countValidate($filters); 
+    $total = $manager->countValidate($userId, $filters); 
     $totalPages = ceil($total / $limit);
 
     // Transformer chaque ligne en tableau JSON
