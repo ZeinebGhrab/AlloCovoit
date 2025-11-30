@@ -4,6 +4,9 @@ import { addToCart } from '../cart.js';
 export function renderTrajetsAdmin(trajets, container) {
 
     container.innerHTML = `
+        <div class="content-header">
+                    <h2><i class="fas fa-route"></i> Trajets</h2>
+        </div>
         <table class="table-container">
             <thead>
                 <tr>

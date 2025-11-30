@@ -2,6 +2,9 @@ import { blockUser, unblockUser, deleteUser } from "./users_actions.js";
 
 export function displayUsers(users, container, refresh) {
     container.innerHTML = `
+        <div class="content-header">
+                    <h2><i class="fas fa-users"></i>Utilisateurs</h2>
+        </div>
         <table class="table-container">
             <thead>
                 <tr>

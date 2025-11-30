@@ -19,14 +19,21 @@ try {
     $conn = $database->connect();
     $manager = new ReservationManager($conn);
 
-    $requests = $manager->getReceivedRequests($conducteurId);
+    $input = json_decode(file_get_contents("php://input"), true) ?? [];
+    
+    $page = max(1, intval($input['page'] ?? 1));
+    $limit = max(1, min(100, intval($input['limit'] ?? 10)));
+    $filters = $input['filters'] ?? 'tous';
+
+    $requests = $manager->getReceivedRequests($conducteurId, $page, $limit, $filters);
 
     // Nettoyer le buffer avant d'envoyer le JSON
     ob_end_clean();
 
     echo json_encode([
         'success' => true,
-        'received_requests' => $requests
+        'received_requests' => $requests['items'],
+        'pagination' => $requests['pagination']
     ], JSON_UNESCAPED_UNICODE);
 
     $manager->close();

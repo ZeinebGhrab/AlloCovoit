@@ -5,7 +5,9 @@ import { searchTrajets } from './routes/routes_search.js';
 import { loadCart, updateCartDisplay } from './cart.js';
 import { initMesTrajets } from './routes/myRoutes_section.js';
 import { loadDashboardStats } from './administration/dashboard_stats.js';
-import { initRideRequests } from './reservations/ride-request.js';
+import { initReceivedRequests } from './reservations/reservations_request.js';
+import { initMyReservations } from './reservations/reservations_my.js';
+import { reservationNavigation } from './reservations/reservations_navigation.js';
 import { navigationAdmin } from './administration/dashboard.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -32,6 +34,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
      if (path.includes('ride-request.html')) {
-        initRideRequests();
+        reservationNavigation();
+        initReceivedRequests();
+        initMyReservations();
     }
 });

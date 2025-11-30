@@ -22,8 +22,15 @@ try {
     $conn = $database->connect();
     $manager = new ReservationManager($conn);
 
+    $input = json_decode(file_get_contents("php://input"), true) ?? [];
+    
+    $page = max(1, intval($input['page'] ?? 1));
+    $limit = max(1, min(100, intval($input['limit'] ?? 10)));
+    $filters = $input['filters'] ?? 'tous';
+
     // Récupérer les réservations
-    $reservations = $manager->getUserReservations($userId);
+    $requests = $manager->getUserReservations($userId, $page, $limit, $filters);
+
 
     // Nettoyer le buffer avant d'envoyer le JSON
     ob_end_clean();
@@ -31,7 +38,8 @@ try {
     echo json_encode([
         'success' => true,
         'user_id' => $userId,
-        'reservations' => $reservations
+        'reservations' => $requests['items'],
+        'pagination' => $requests['pagination']
     ], JSON_UNESCAPED_UNICODE);
 
     $manager->close();

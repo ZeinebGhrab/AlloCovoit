@@ -68,7 +68,7 @@ AlloCovoit/
 │   │          
 │   ├─ script/
 │   │   ├─ administration/
-│   │   │   ├─  dashboard.js             # Admin logic
+│   │   │   ├─ dashboard.js              # Admin logic
 │   │   │   └─ dashboard_stats.js        # Admin stats handling
 │   │   │        
 │   │   ├─ authentication/
@@ -77,15 +77,16 @@ AlloCovoit/
 │   │   │   └─ sign.js                   # Signup handling
 │   │   │  
 │   │   ├─ reservations/
-│   │   │   ├─ reservations_actions.js   # Reservation action logic
+│   │   │   ├─ reservations_actions.js   # Reservation action logic (confirm, cancel)
+│   │   │   ├─ reservations_my.js        # Manage and display user's own reservations 
+│   │   │   ├─ reservations_navigation.js  # Handle navigation between reservation views 
 │   │   │   ├─ reservations_api.js       # API calls for reservations
 │   │   │   ├─ reservations_render.js    # Render reservation UI
-│   │   │   ├─ reservations_section.js   # Reservation section logic
-│   │   │   └─ ride-request.js           # Reservation handling
-│   │   │  
+│   │   │   ├─ reservations_request.js   # Manage and display received reservation requests 
+│   │   │   └─ reservations_section.js   # Reservation section logic (section toggling, stats update)
 │   │   ├─ routes
-│   │   │   ├─  myRoutes_render.js       # Render user's rides
-│   │   │   ├─  myRoutes_section.js      # My rides section logic
+│   │   │   ├─ myRoutes_render.js        # Render user's rides
+│   │   │   ├─ myRoutes_section.js       # My rides section logic
 │   │   │   ├─ routes_actions.js         # Route action logic
 │   │   │   ├─ routes_api.js             # API calls for routes
 │   │   │   ├─ routes_render.js          # Render route UI

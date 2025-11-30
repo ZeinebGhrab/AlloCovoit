@@ -71,28 +71,47 @@ class ReservationManager {
     }
 
     // Obtenir toutes les réservations d’un utilisateur
-    public function getUserReservations(int $userId): array {
+    public function getUserReservations(int $userId, int $page = 1, int $limit = 10, string $status = 'tous'): array {
         $query = "
             SELECT 
-                r.id_reservation,
-                r.id_trajet,
-                r.nombre_places,
-                r.statut AS reservation_statut,
-                r.date_reservation,
-                t.ville_depart,
-                t.ville_arrivee,
-                t.date_depart,
-                t.heure_depart,
-                t.prix,
-                t.statut AS trajet_statut
-            FROM reservation r
-            JOIN trajet t ON r.id_trajet = t.id_trajet
-            WHERE r.id_utilisateur = ?
-            ORDER BY r.date_reservation DESC
+            r.id_reservation,
+            r.id_trajet,
+            r.nombre_places,
+            r.statut AS reservation_statut,
+            r.date_reservation,
+            t.ville_depart,
+            t.ville_arrivee,
+            t.date_depart,
+            t.heure_depart,
+            t.prix,
+            t.statut AS trajet_statut
+        FROM reservation r
+        JOIN trajet t ON r.id_trajet = t.id_trajet
+        WHERE r.id_utilisateur = ?
         ";
 
         $stmt = $this->conn->prepare($query);
         $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+         // Filtrer par statut si nécessaire
+        if ($status !== 'tous') {
+            $query .= " AND r.statut = ? ";
+        }
+
+        // Ajout pagination
+        $query .= " ORDER BY r.date_reservation DESC LIMIT ? OFFSET ?";
+
+        // Préparer la requête selon filtre
+        if ($status !== 'tous') {
+            $stmt = $this->conn->prepare($query);
+            $stmt->bind_param("isii", $userId, $status, $limit, $offset);
+        } else {
+            $stmt = $this->conn->prepare($query);
+            $stmt->bind_param("iii", $userId, $limit, $offset);
+        }
+
         $stmt->execute();
         $result = $stmt->get_result();
 
@@ -112,9 +131,32 @@ class ReservationManager {
                 'date_reservation' => $row['date_reservation']
             ];
         }
-
         $stmt->close();
-        return $reservations;
+
+        // Récupérer le total pour la pagination
+        $countQuery = "SELECT COUNT(*) AS total FROM reservation r WHERE r.id_utilisateur = ?";
+        if ($status !== 'tous') {
+            $countQuery .= " AND r.statut = ? ";
+            $stmt2 = $this->conn->prepare($countQuery);
+            $stmt2->bind_param("is", $userId, $status);
+        } else {
+            $stmt2 = $this->conn->prepare($countQuery);
+            $stmt2->bind_param("i", $userId);
+        }
+
+        $stmt2->execute();
+        $total = $stmt2->get_result()->fetch_assoc()['total'];
+        $stmt2->close();
+
+        return [
+            'items' => $reservations,
+            'pagination' => [
+                'page' => $page,
+                'limit' => $limit,
+                'total' => $total,
+                'totalPages' => ceil($total / $limit)
+            ]
+        ];
     }
 
     // Obtenir seulement le nombre total de réservations d’un utilisateur
@@ -137,37 +179,50 @@ class ReservationManager {
     }
 
     //  Obtenir les demandes reçues par le conducteur
-    public function getReceivedRequests(int $driverId): array {
+    public function getReceivedRequests(int $driverId, int $page, int $limit, string $status = 'tous'): array {
         $query = "
             SELECT 
-                r.id_reservation,
-                r.id_trajet,
-                r.nombre_places,
-                r.statut AS reservation_statut,
-                r.date_reservation,
-                u.nom AS nom_passager,
-                u.prenom AS prenom_passager,
-                u.email AS email_passager,
-                t.ville_depart,
-                t.ville_arrivee,
-                t.date_depart,
-                t.heure_depart,
-                t.prix
-            FROM reservation r
-            JOIN trajet t ON r.id_trajet = t.id_trajet
-            JOIN utilisateur u ON r.id_utilisateur = u.id_utilisateur
-            WHERE t.id_conducteur = ?
-            ORDER BY r.date_reservation DESC
+            r.id_reservation,
+            r.id_trajet,
+            r.nombre_places,
+            r.statut AS reservation_statut,
+            r.date_reservation,
+            u.nom AS nom_passager,
+            u.prenom AS prenom_passager,
+            u.email AS email_passager,
+            t.ville_depart,
+            t.ville_arrivee,
+            t.date_depart,
+            t.heure_depart,
+            t.prix
+        FROM reservation r
+        JOIN trajet t ON r.id_trajet = t.id_trajet
+        JOIN utilisateur u ON r.id_utilisateur = u.id_utilisateur
+        WHERE t.id_conducteur = ?
         ";
 
-        $stmt = $this->conn->prepare($query);
-        $stmt->bind_param("i", $driverId);
+        // Filter by reservation status
+        if ($status !== 'tous') {
+            $query .= " AND r.statut = ? ";
+        }
+
+        // Order + pagination
+        $query .= " ORDER BY r.date_reservation DESC LIMIT ? OFFSET ?";
+
+        if ($status !== 'tous') {
+            $stmt = $this->conn->prepare($query);
+            $stmt->bind_param("isii", $driverId, $status, $limit, $offset);
+        } else {
+            $stmt = $this->conn->prepare($query);
+            $stmt->bind_param("iii", $driverId, $limit, $offset);
+        }
+
         $stmt->execute();
         $result = $stmt->get_result();
 
-        $demandes = [];
+        $items = [];
         while ($row = $result->fetch_assoc()) {
-            $demandes[] = [
+            $items[] = [
                 'id_reservation' => $row['id_reservation'],
                 'id_trajet' => $row['id_trajet'],
                 'nom_passager' => $row['prenom_passager'] . ' ' . $row['nom_passager'],
@@ -179,16 +234,45 @@ class ReservationManager {
                 'prix' => $row['prix'],
                 'nombre_places' => $row['nombre_places'],
                 'statut_reservation' => $row['reservation_statut'],
-                'date_reservation' => $row['date_reservation']
+                'date_reservation' => $row['date_reservation'],
             ];
         }
 
         $stmt->close();
-        return $demandes;
+        
+        // Count total rows (for pagination)
+        $countQuery = "
+            SELECT COUNT(*) AS total
+            FROM reservation r
+            JOIN trajet t ON r.id_trajet = t.id_trajet
+            WHERE t.id_conducteur = ?
+        ";
+
+        if ($status !== 'tous') {
+            $countQuery .= " AND r.statut = ? ";
+            $stmt2 = $this->conn->prepare($countQuery);
+            $stmt2->bind_param("is", $driverId, $status);
+        } else {
+            $stmt2 = $this->conn->prepare($countQuery);
+            $stmt2->bind_param("i", $driverId);
+        }
+
+        $stmt2->execute();
+        $total = $stmt2->get_result()->fetch_assoc()['total'];
+        $stmt2->close();
+
+        return [
+            'items' => $items,
+            'pagination' => [
+                'page' => $page,
+                'limit' => $limit,
+                'total' => $total,
+                'totalPages' => ceil($total / $limit)
+            ]
+        ];
     }
 
     // Obtenir seulement le nombre total de demande de réservations d’un utilisateur
-
     public function getReceivedRequestsCount(int $driverId): int {
         $query = "
             SELECT COUNT(*) AS total_Request_Reservations

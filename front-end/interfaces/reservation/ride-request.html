@@ -17,7 +17,6 @@
     <div class="nav-buttons">
       <span><i class="fas fa-user"></i></span>
       <button data-page="all-trajets"><i class="fas fa-search"></i> Tous les trajets</button>
-      <button data-page="publier-trajet"><i class="fas fa-plus"></i> Publier un trajet</button>
       <button data-page="panier"><i class="fas fa-shopping-cart"></i> Mon panier</button>
       <button data-page="mes-trajets"><i class="fas fa-car"></i> Mes trajets publiés</button>
       <button data-page="demandes"><i class="fas fa-inbox"></i> Mes demandes</button>
@@ -31,11 +30,9 @@
     <div class="tabs-nav">
       <button class="tab-btn active" data-tab="demandes-recues">
         <i class="fas fa-inbox"></i> Demandes reçues
-        <span class="badge badge-warning" id="demandesBadge">0</span>
       </button>
       <button class="tab-btn" data-tab="mes-reservations">
-        <i class="fas fa-ticket-alt"></i> Mes réservations
-        <span class="badge badge-primary" id="reservationsBadge">0</span>
+        <i class="fas fa-ticket-alt"></i> Mes réservation
       </button>
     </div>
 
@@ -43,6 +40,9 @@
     <div class="tab-content active" id="demandes-recues">
       <div class="section-header">
         <h2><i class="fas fa-inbox"></i> Demandes de réservation reçues</h2>
+        <p style="color: var(--gray); margin-top: 0.5rem;">
+          Consultez et gérez vos demandes de réservations reçues.
+        </p>
       </div>
 
       <!-- Statistiques -->
@@ -79,7 +79,9 @@
 
       <!-- Liste des demandes -->
       <div id="demandesRecuesListe" class="reservations-list"></div>
+      <div id="reservations-pagination"></div>
     </div>
+
 
     <!-- Mes réservations -->
     <div class="tab-content" id="mes-reservations">
@@ -123,6 +125,7 @@
       </div>
       <!-- Liste des réservations -->
       <div id="mesReservationsListe" class="reservations-list"></div>
+      <div id="paginationMy"></div>
     </div>
   </div>
 

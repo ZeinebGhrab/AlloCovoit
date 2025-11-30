@@ -56,215 +56,25 @@
     margin-bottom: 0.5rem;
 }
 
-/* Demande Card */
-.demande-card {
-    background: white;
-    border: 2px solid var(--border);
-    border-radius: 15px;
-    padding: 1.75rem;
-    margin-bottom: 1.5rem;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
+
+.requests-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)) !important;
+    gap: 1.5rem !important;
+    padding: 1rem !important;
+    max-width: 1400px !important;
+    margin: 0 auto !important;
 }
 
-.demande-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 100%;
-    background: var(--gradient);
-    transform: scaleY(0);
-    transition: transform 0.3s ease;
-}
-
-.demande-card:hover {
-    border-color: var(--primary);
-    box-shadow: 0 8px 25px var(--shadow-lg);
-    transform: translateY(-3px);
-}
-
-.demande-card:hover::before {
-    transform: scaleY(1);
-}
-
-/* Demande Header */
-.demande-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 1.25rem;
-    padding-bottom: 1rem;
-    border-bottom: 2px solid var(--light);
-}
-
-.demande-user {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.user-avatar {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: var(--gradient);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1.5rem;
-    font-weight: 700;
-    flex-shrink: 0;
-}
-
-.user-info h3 {
-    color: var(--dark);
-    font-size: 1.2rem;
-    margin-bottom: 0.25rem;
-}
-
-.user-info p {
-    color: var(--gray);
-    font-size: 0.9rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin: 0;
-}
-
-.demande-status {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 0.5rem;
-}
-
-.badge-pending {
-    background: rgba(245, 158, 11, 0.1);
-    color: var(--warning);
-}
-
-.badge-confirmed {
-    background: rgba(16, 185, 129, 0.1);
-    color: var(--success);
-}
-
-.badge-rejected {
-    background: rgba(239, 68, 68, 0.1);
-    color: var(--danger);
-}
-
-.demande-time {
-    color: var(--gray);
-    font-size: 0.85rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-/* Demande Message */
-.demande-message {
-    background: rgba(6, 182, 212, 0.05);
-    padding: 1rem;
-    border-radius: 10px;
-    border-left: 4px solid var(--primary);
-    margin-bottom: 1.5rem;
-}
-
-.demande-message p {
-    color: var(--gray);
-    margin: 0;
-    font-size: 0.95rem;
-    line-height: 1.6;
-}
-
-/* Demande Actions */
-.demande-actions {
-    display: flex;
-    gap: 0.75rem;
-    align-items: center;
-    flex-wrap: wrap;
-    padding-top: 1.5rem;
-    border-top: 2px solid var(--border);
-}
-
-/* Buttons */
-.btn-confirm {
-    background: var(--success);
-    color: white;
-    padding: 0.75rem 1.5rem;
-    border-radius: 10px;
-    font-weight: 600;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: all 0.3s ease;
-    border: none;
-    font-size: 1rem;
-}
-
-.btn-confirm:hover {
-    background: var(--secondary-dark);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-}
-
-.btn-reject {
-    background: white;
-    color: var(--danger);
-    border: 2px solid var(--danger);
-    padding: 0.75rem 1.5rem;
-    border-radius: 10px;
-    font-weight: 600;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: all 0.3s ease;
-    font-size: 1rem;
-}
-
-.btn-reject:hover {
-    background: var(--danger);
-    color: white;
-    transform: translateY(-2px);
-}
-
-.btn-info {
-    background: white;
-    color: var(--primary);
-    border: 2px solid var(--primary);
-    padding: 0.75rem 1.5rem;
-    border-radius: 10px;
-    font-weight: 600;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: all 0.3s ease;
-    font-size: 1rem;
-}
-
-.btn-info:hover {
-    background: var(--primary);
-    color: white;
-    transform: translateY(-2px);
-}
-
-/* Reservation Card */
 .reservation-card {
-    background: white;
-    border: 2px solid var(--border);
-    border-radius: 15px;
-    padding: 1.75rem;
-    margin-bottom: 1.5rem;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%) !important;
+    border-radius: 16px !important;
+    padding: 1.5rem !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.06) !important;
+    border: 1px solid rgba(0, 0, 0, 0.05) !important;
+    position: relative !important;
+    overflow: hidden !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 .reservation-card::before {
@@ -274,95 +84,356 @@
     left: 0;
     width: 4px;
     height: 100%;
+    background: var(--gradient);
     transform: scaleY(0);
+    transform-origin: top;
     transition: transform 0.3s ease;
+    z-index: 0;
 }
 
-.reservation-card.status-en-attente::before {
-    background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
-}
-
-.reservation-card.status-confirmé::before {
-    background: linear-gradient(135deg, var(--success) 0%, var(--secondary-dark) 100%);
-}
-
-.reservation-card.status-refusé::before {
-    background: linear-gradient(135deg, var(--danger) 0%, #b91c1c 100%);
+.reservation-card::after {
+    content: '';
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, rgba(6, 182, 212, 0.08), transparent);
+    border-radius: 50%;
+    transform: scale(0);
+    transition: transform 0.4s ease;
+    z-index: 0;
 }
 
 .reservation-card:hover {
-    border-color: var(--primary);
-    box-shadow: 0 8px 25px var(--shadow-lg);
-    transform: translateY(-3px);
+    transform: translateY(-4px) !important;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.08) !important;
 }
 
 .reservation-card:hover::before {
     transform: scaleY(1);
 }
 
-.reservation-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 1.25rem;
-    padding-bottom: 1rem;
-    border-bottom: 2px solid var(--light);
+.reservation-card:hover::after {
+    transform: scale(1);
 }
 
-.reservation-driver {
+.reservation-card h3 {
+    font-size: 1.25rem !important;
+    font-weight: 700 !important;
+    color: #1f2937 !important;
+    margin: 0 0 1rem 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+.reservation-card h3 i {
+    margin-right: 0.5rem !important;
+}
+
+/* Style pour le titre avec route */
+.reservation-card h3[style*="padding"] {
+    padding: 0.5rem !important;
+    background: rgba(79, 70, 229, 0.08) !important;
+    border-radius: 8px !important;
+    border-left: 3px solid #4F46E5 !important;
+}
+
+
+.reservation-card > p {
+    font-size: 0.95rem !important;
+    color: #4b5563 !important;
+    margin: 0.5rem 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+.reservation-card > p i{
+    color: #6366f1 !important;
+    margin-right: 0.5rem !important;
+    width: 24px !important;
+}
+
+.reservation-card > p strong {
+    font-weight: 700 !important;
+}
+
+/* Style spécial pour le prix en vert */
+.reservation-card > p strong[style*="color: #10b981"] {
+    color: #10b981 !important;
+    font-size: 1.05rem !important;
+}
+
+
+.reservation-driver,
+.demande-user {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 1.5rem;
 }
 
-.response-message {
-    background: rgba(16, 185, 129, 0.05);
-    padding: 1rem;
-    border-radius: 10px;
-    border-left: 4px solid var(--success);
-    margin-bottom: 1.5rem;
+.user-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2rem;
+    font-weight: 900;
+    box-shadow: 0 8px 24px var(--shadow-lg);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 4px solid white;
+    position: relative;
+    overflow: hidden;
 }
 
-.response-message.rejected {
-    background: rgba(239, 68, 68, 0.05);
-    border-left-color: var(--danger);
+.user-avatar::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transform: rotate(45deg);
+    transition: all 0.6s ease;
 }
 
-.response-message p {
-    color: var(--gray);
+.user-info h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0 0 0.25rem 0;
+    color: #1f2937;
+}
+
+.user-info p {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--secondary);
     margin: 0;
+    padding: 0.5rem;
+    background: rgba(79,70,229,0.08);
+    border-radius: 8px;
+}
+/* Statut */
+
+
+.badge-en_attente {
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    color: #92400e;
+    border: 1px solid #fbbf24;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+}
+
+.badge-confirmé {
+    background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+    color: #065f46;
+    border: 1px solid #10b981;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+}
+
+.badge-annulé {
+    background: linear-gradient(135deg, #fee2e2, #fecaca);
+    color: #991b1b;
+    border: 1px solid #ef4444;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+}
+
+.badge-terminé {
+    background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+    color: #3730a3;
+    border: 1px solid #818cf8;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+}
+
+/* Info lignes */
+.demande-time {
     font-size: 0.95rem;
-    line-height: 1.6;
+    color: #4b5563;
+    margin: 0.5rem 0;
+    display: flex;
+    align-items: center;
 }
 
-.response-message strong {
-    color: var(--success);
+/* Actions buttons */
+.demande-actions {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.5rem;
 }
 
-.response-message.rejected strong {
-    color: var(--danger);
+.btn-confirm {
+    background: #10b981;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-/* Empty State */
+.btn-confirm:hover {
+    background: #059669;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(16,185,129,0.3);
+}
+
+.btn-reject {
+    background: white;
+    color: #ef4444;
+    border: 2px solid #ef4444;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-reject:hover {
+    background: #ef4444;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Empty state */
 .empty-state {
     text-align: center;
     padding: 3rem;
+    color: #6b7280;
 }
 
 .empty-state i {
     font-size: 80px;
-    color: var(--gray);
     opacity: 0.3;
     margin-bottom: 1rem;
 }
 
 .empty-state h3 {
-    color: var(--gray);
     margin-bottom: 1rem;
 }
 
 .empty-state p {
-    color: var(--gray);
+    margin-bottom: 2rem;
+}
+
+
+/* Container Grid *
+
+/* Reservation Card */
+.reservation-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.06);
+    border: 1px solid rgba(0,0,0,0.05);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+
+.reservation-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.12), 0 4px 8px rgba(0,0,0,0.08);
+}
+
+/* Card Title */
+.reservation-card h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    color: #1f2937;
+}
+
+/* Info lines */
+.reservation-card p {
+    font-size: 0.95rem;
+    color: #4b5563;
+    margin: 0.5rem 0;
+}
+
+/* Status Badge */
+.reservation-card span {
+    padding: 0.3rem 0.6rem;
+    border-radius: 16px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+/* Status colors */
+.reservation-card.status-en_attente span {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.reservation-card.status-confirmé span {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.reservation-card.status-annulé span {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.reservation-card.status-terminée span {
+    background: #e0e7ff;
+    color: #3730a3;
+}
+
+/* Cancel button */
+.reservation-card button {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.reservation-card button:hover {
+    transform: translateY(-2px);
+}
+
+.reservation-card button:contains('Annuler') {
+    background-color: #ef4444;
+    color: white;
+}
+
+.reservation-card button:contains('Annuler'):hover {
+    background-color: #dc2626;
+}
+
+/* Empty state */
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #6b7280;
+}
+
+.empty-state i {
+    font-size: 80px;
+    opacity: 0.3;
+    margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+    margin-bottom: 1rem;
+}
+
+.empty-state p {
     margin-bottom: 2rem;
 }
 

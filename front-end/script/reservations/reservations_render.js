@@ -1,5 +1,8 @@
 export function renderReservations(reservations, container) {
     container.innerHTML = `
+        <div class="content-header">
+                    <h2><i class="fas fa-ticket-alt"></i> Réservations</h2>
+        </div>
         <table class="table-container">
             <thead>
                 <tr>
