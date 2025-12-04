@@ -28,11 +28,13 @@ $description = $_POST['description'] ?? '';
 
 // Vérifications côté serveur
 if (!$ville_depart || !$ville_arrivee || !$date_depart || !$heure_depart || !$prix || !$places) {
+    ob_clean();
     echo json_encode(['success' => false, 'message' => 'Veuillez remplir tous les champs']);
     exit;
 }
 
 if ($places < 1 || $places > 5) {
+    ob_clean();
     echo json_encode(['success' => false, 'message' => 'Le nombre de places doit être entre 1 et 5']);
     exit;
 }
@@ -42,6 +44,7 @@ $selectedDateTime = DateTime::createFromFormat('Y-m-d H:i', "$date_depart $heure
 $now = new DateTime();
 
 if (!$selectedDateTime || $selectedDateTime <= $now) {
+    ob_clean();
     echo json_encode(['success' => false, 'message' => 'La date et l’heure doivent être dans le futur']);
     exit;
 }
@@ -59,8 +62,11 @@ $data = [
 ];
 
 if ($trajet->save($data, $db)) {
+    ob_clean();
     echo json_encode(['success' => true, 'message' => 'Trajet publié avec succès']);
 } else {
+    ob_clean();
     echo json_encode(['success' => false, 'message' => 'Erreur lors de l\'enregistrement']);
 }
 exit;
+?>

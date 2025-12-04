@@ -3,6 +3,7 @@ import { navigation } from './navigation.js';
 import { loadTrajetsSection } from './routes/routes_section.js';
 import { searchTrajets } from './routes/routes_search.js';
 import { loadCart, updateCartDisplay } from './cart.js';
+import { initPublicationForm } from './routes/route_publication.js';
 import { initMesTrajets } from './routes/myRoutes_section.js';
 import { loadDashboardStats } from './administration/dashboard_stats.js';
 import { initReceivedRequests } from './reservations/reservations_request.js';
@@ -24,8 +25,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         loadCart();
         updateCartDisplay();
     }
+
     if (path.includes('ride-publication.html')) {
         initMesTrajets();
+    }
+
+    if (path.includes('publication.html')) {
+        initPublicationForm();
     }
 
     if (path.includes('dashboard.html')) {

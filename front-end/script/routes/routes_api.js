@@ -15,6 +15,23 @@ export async function fetchTrajetsAdmin(page = 1, limit = 8) {
     }
 }
 
+export async function addTrajet(formData) {
+    try {
+        const response = await fetch('/AlloCovoit/back-end/route/api/save.php', {
+            method: 'POST',
+            body: formData
+        });
+
+        const data = await response.json(); 
+        return data;
+
+    } catch (err) {
+        console.error(err);
+        return { error: err };
+    }
+}
+
+
 export async function validateTrajet(id) {
     return callTrajetApi('/AlloCovoit/back-end/route/api/validate_route.php', id);
 }
@@ -71,7 +88,7 @@ export async function fetchTrajets(filters = {}, page = 1, limit = 10) {
 
 
 let allTrajets = [];
-const limit = 10;
+const limit = 5;
 
 export async function fetchMyTrajets(filters = {}, page = 1) {
     currentPage = page;

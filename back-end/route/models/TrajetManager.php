@@ -14,7 +14,7 @@ require_once '../../phpmailer/src/Exception.php';
 require_once '../../phpmailer/src/PHPMailer.php';
 require_once '../../phpmailer/src/SMTP.php';
 
-require_once '../../../vendor/autoload.php'; // Composer autoload
+require_once '../../../vendor/autoload.php'; 
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../..'); 
 $dotenv->load();
@@ -233,8 +233,6 @@ class TrajetManager {
         return (int)($result['total'] ?? 0);
     }
 
-
-
     // Valider un trajet
     public function validateRoute(int $id) {
         $stmt = $this->conn->prepare("UPDATE trajet SET valider = 1 WHERE id_trajet = ?");
@@ -340,6 +338,19 @@ class TrajetManager {
         } catch (Exception $e) {
             error_log("Erreur d'envoi d'email : {$mail->ErrorInfo}");
         }
+    }
+
+    // Retourne le revenu total de tous les trajets validés
+    public function getTotalRevenue() {
+        $sql = "SELECT SUM(prix * places_reservees) AS total_revenue 
+            FROM trajet 
+            WHERE valider = 1";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+
+        return (float)($result['total_revenue'] ?? 0);
     }
 }
 ?>
