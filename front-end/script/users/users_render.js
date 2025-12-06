@@ -1,9 +1,10 @@
 import { blockUser, unblockUser, deleteUser } from "./users_actions.js";
+import { showUserDetails } from "../administration/modal_user_details.js";
 
 export function displayUsers(users, container, refresh) {
     container.innerHTML = `
         <div class="content-header">
-                    <h2><i class="fas fa-users"></i>Utilisateurs</h2>
+            <h2><i class="fas fa-users"></i> Utilisateurs</h2>
         </div>
         <table class="table-container">
             <thead>
@@ -21,12 +22,21 @@ export function displayUsers(users, container, refresh) {
                         <td>${u.nom}</td>
                         <td>${u.prenom}</td>
                         <td>${u.email}</td>
-                        <td>${u.statut}</td>
+                        <td><span class="badge ${u.statut === 'actif' ? 'badge-success' : 'badge-danger'}">${u.statut}</span></td>
                         <td>
+                            <button class="view-btn btn-action" data-id="${u.id_utilisateur}" title="Voir les détails">
+                                <i class="fas fa-eye"></i>
+                            </button>
                             ${u.statut === 'actif' 
-                                ? `<button class="block-btn " style="background: orange; color: white; padding: 0.875rem 0.875rem; border: none; border-radius: 10px; font-weight: 100; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; justify-content: center; transition: all 0.3s ease; font-size: 0.9rem; text-decoration: none;" data-id="${u.id_utilisateur}"><i class="fa-solid fa-lock"></i>Bloquer</button>` 
-                                : `<button class="unblock-btn" style="background: green; color: white; padding: 0.875rem 0.875rem; border: none; border-radius: 10px; font-weight: 100; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; justify-content: center; transition: all 0.3s ease; font-size: 0.9rem; text-decoration: none;"  data-id="${u.id_utilisateur}"><i class="fa-solid fa-unlock"></i>Débloquer</button>`}
-                            <button class="delete-btn" style="background: #dc3545;color: white;padding: 0.875rem 0.875rem;border: none;border-radius: 10px;font-weight: 100;cursor: pointer;display: inline-flex;align-items: center;gap: 0.5rem;justify-content: center;transition: all 0.3s ease;font-size: 0.9rem;text-decoration: none; margin-left:5px" data-id="${u.id_utilisateur}"><i class="fa-solid fa-trash"></i>Supprimer</button>
+                                ? `<button class="block-btn btn-action" data-id="${u.id_utilisateur}" title="Bloquer">
+                                    <i class="fas fa-lock"></i>
+                                   </button>` 
+                                : `<button class="unblock-btn btn-action" data-id="${u.id_utilisateur}" title="Débloquer">
+                                    <i class="fas fa-unlock"></i>
+                                   </button>`}
+                            <button class="delete-btn btn-action" data-id="${u.id_utilisateur}" title="Supprimer">
+                                <i class="fas fa-trash"></i>
+                            </button>
                         </td>
                     </tr>
                 `).join('')}
@@ -34,6 +44,14 @@ export function displayUsers(users, container, refresh) {
         </table>
         <div id="users-pagination"></div>
     `;
+
+    // Bouton Voir
+    container.querySelectorAll('.view-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const user = users.find(u => u.id_utilisateur == btn.dataset.id);
+            if (user) showUserDetails(user);
+        });
+    });
 
     // Événements pour les boutons utilisateur
     container.querySelectorAll('.block-btn').forEach(btn => {

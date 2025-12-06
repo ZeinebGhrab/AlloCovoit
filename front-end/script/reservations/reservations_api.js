@@ -47,10 +47,22 @@ export async function confirmReservation(id_reservation) {
 
 // Annuler / refuser une réservation
 export async function cancelReservation(id_reservation) {
-    const res = await fetch('/AlloCovoit/back-end/reservation/api/ccancel_reservation.php', {
+    const res = await fetch('/AlloCovoit/back-end/reservation/api/cancel_reservation.php', {
         method: 'POST',
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id_reservation })
     });
+    return res.json();
+}
+
+
+// Supprimer une réservation
+export async function deleteReservation(id_reservation) {
+    const res = await fetch('/AlloCovoit/back-end/reservation/api/delete_reservation.php', {
+        method: 'POST',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id_reservation })
+    });
+    console.log(res);
     return res.json();
 }

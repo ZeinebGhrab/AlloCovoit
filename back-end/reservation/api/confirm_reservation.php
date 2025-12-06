@@ -33,7 +33,7 @@ try {
     if ($result) {
         echo json_encode(['success' => true, 'message' => 'Réservation confirmée avec succès.'], JSON_UNESCAPED_UNICODE);
     } else {
-        echo json_encode(['success' => false, 'message' => 'Impossible de confirmer la réservation.'], JSON_UNESCAPED_UNICODE);
+        echo json_encode(['success' => false, 'message' => 'Toutes les places sont déjà réservées.'], JSON_UNESCAPED_UNICODE);
     }
 
     $manager->close();

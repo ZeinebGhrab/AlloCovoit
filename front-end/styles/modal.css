@@ -1,0 +1,130 @@
+/* modal-details.css - Styles pour les modals de détails */
+
+.modal-content {
+    position: relative;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid var(--border);
+}
+
+.modal-header h2 {
+    font-size: 1.75rem;
+    color: var(--dark);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0;
+}
+
+.modal-header h2::after {
+    display: none;
+}
+
+.modal-header h2 i {
+    color: var(--primary);
+    font-size: 2rem;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--gray);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0.5rem;
+    border-radius: 8px;
+}
+
+.modal-close:hover {
+    background: var(--light);
+    color: var(--danger);
+    transform: rotate(90deg);
+}
+
+.modal-body {
+    margin-bottom: 2rem;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+.detail-item {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.03) 0%, rgba(249, 115, 22, 0.03) 100%);
+    padding: 1.25rem;
+    border-radius: 12px;
+    border: 2px solid var(--border);
+    transition: all 0.3s ease;
+}
+
+.detail-item:hover {
+    border-color: var(--primary);
+    box-shadow: 0 4px 15px var(--shadow);
+    transform: translateY(-2px);
+}
+
+.detail-item.full-width {
+    grid-column: 1 / -1;
+}
+
+.detail-item label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
+}
+
+.detail-item label i {
+    color: var(--primary);
+    font-size: 1.1rem;
+}
+
+.detail-item span {
+    color: var(--gray);
+    font-size: 1rem;
+    font-weight: 500;
+    display: block;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid var(--border);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .modal-content {
+        max-width: 95%;
+        padding: 2rem;
+    }
+
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .modal-header h2 {
+        font-size: 1.5rem;
+    }
+
+    .detail-item {
+        padding: 1rem;
+    }
+}

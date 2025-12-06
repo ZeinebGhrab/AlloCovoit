@@ -1,11 +1,11 @@
 import { handleTrajetAction } from "./routes_actions.js";
 import { addToCart } from '../cart.js';
+import { showTrajetDetails } from "../administration/modal_route_details.js";
 
 export function renderTrajetsAdmin(trajets, container) {
-
     container.innerHTML = `
         <div class="content-header">
-                    <h2><i class="fas fa-route"></i> Trajets</h2>
+            <h2><i class="fas fa-route"></i> Trajets</h2>
         </div>
         <table class="table-container">
             <thead>
@@ -14,7 +14,6 @@ export function renderTrajetsAdmin(trajets, container) {
                     <th>Arrivée</th>
                     <th>Date</th>
                     <th>Heure</th>
-                    <th>Conducteur</th>
                     <th>Prix</th>
                     <th>Places</th>
                     <th>Réservées</th>
@@ -23,25 +22,33 @@ export function renderTrajetsAdmin(trajets, container) {
                 </tr>
             </thead>
             <tbody>
-                 ${trajets.map(t => {
-                    const isValidated = Number(t.valider) === 1; // conversion
+                ${trajets.map(t => {
+                    const isValidated = Number(t.valider) === 1;
                     return `
                         <tr>
                             <td>${t.ville_depart}</td>
                             <td>${t.ville_arrivee}</td>
                             <td>${t.date_depart}</td>
                             <td>${t.heure_depart}</td>
-                            <td>${t.conducteur_nom || ''} ${t.conducteur_prenom || ''}</td>
                             <td>${t.prix} DT</td>
                             <td>${t.places_disponibles}</td>
-                            <td>${t.places_reservees}</td>
-                            <td>${isValidated ? 'Validé' : 'En attente'}</td>
+                            <td>${t.places_reservees || 0}</td>
+                            <td><span class="badge ${isValidated ? 'badge-success' : 'badge-warning'}">${isValidated ? 'Validé' : 'En attente'}</span></td>
                             <td>
+                                <button class="view-trajet-btn btn-action" data-id="${t.id_trajet}" title="Voir les détails">
+                                    <i class="fas fa-eye"></i>
+                                </button>
                                 ${isValidated
-                                    ? `<button class="refuse-btn" style="background: orange; color: white; padding: 0.875rem 0.875rem; border: none; border-radius: 10px; font-weight: 100; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; justify-content: center; transition: all 0.3s ease; font-size: 0.9rem; text-decoration: none;" data-id="${t.id_trajet}"><i class="fa-solid fa-ban"></i></button>`
-                                    : `<button class="validate-btn" style="background: green; color: white; padding: 0.875rem 0.875rem; border: none; border-radius: 10px; font-weight: 100; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; justify-content: center; transition: all 0.3s ease; font-size: 0.9rem; text-decoration: none;" data-id="${t.id_trajet}"><i class="fa-solid fa-square-check"></i></button>`
+                                    ? `<button class="refuse-btn btn-action" data-id="${t.id_trajet}" title="Refuser">
+                                        <i class="fas fa-ban"></i>
+                                       </button>`
+                                    : `<button class="validate-btn btn-action" data-id="${t.id_trajet}" title="Valider">
+                                        <i class="fas fa-check"></i>
+                                       </button>`
                                 }
-                                <button class="delete-trajet-btn" style="background: #dc3545;color: white;padding: 0.875rem 0.875rem;border: none;border-radius: 10px;font-weight: 100;cursor: pointer;display: inline-flex;align-items: center;gap: 0.5rem;justify-content: center;transition: all 0.3s ease;font-size: 0.9rem;text-decoration: none; margin-left:5px" data-id="${t.id_trajet}"><i class="fa-solid fa-trash"></i></button>
+                                <button class="delete-trajet-btn btn-action" data-id="${t.id_trajet}" title="Supprimer">
+                                    <i class="fas fa-trash"></i>
+                                </button>
                             </td>
                         </tr>
                     `;
@@ -51,19 +58,29 @@ export function renderTrajetsAdmin(trajets, container) {
         <div id="trajets-pagination"></div>
     `;
 
-    // Boutons actions
+    // Bouton Voir détails
+    container.querySelectorAll('.view-trajet-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const trajet = trajets.find(t => t.id_trajet == btn.dataset.id);
+            if (trajet) showTrajetDetails(trajet);
+        });
+    });
+
+    // Boutons Valider
     container.querySelectorAll('.validate-btn').forEach(btn =>
         btn.addEventListener("click", () =>
             handleTrajetAction("validate", btn.dataset.id)
         )
     );
 
+    // Boutons Refuser
     container.querySelectorAll('.refuse-btn').forEach(btn =>
         btn.addEventListener("click", () =>
             handleTrajetAction("refuse", btn.dataset.id)
         )
     );
 
+    // Boutons Supprimer
     container.querySelectorAll('.delete-trajet-btn').forEach(btn =>
         btn.addEventListener("click", () => {
             if (confirm("Supprimer ce trajet ?"))
@@ -72,8 +89,6 @@ export function renderTrajetsAdmin(trajets, container) {
     );
 }
 
-
-
 export function renderTrajets(trajets) {
     const container = document.getElementById('trajetsContainer');
     if (!container) return;
@@ -81,7 +96,12 @@ export function renderTrajets(trajets) {
     container.innerHTML = '';
 
     if (trajets.length === 0) {
-        container.innerHTML = '<p style="text-align: center; color: #666;">Aucun trajet disponible</p>';
+        container.innerHTML = `
+            <div class="empty-state" style="text-align:center;">
+                <i class="fas fa-car" style="text-align:center;font-size: 80px;opacity: 0.3;"></i>
+                <h3 style="text-align:center;">Aucun trajet</h3>
+                <p style="text-align:center;color:#666;">Aucun trajet n’a été publié pour le moment.</p>
+            </div>`;
         return;
     }
 
@@ -102,7 +122,7 @@ function createTrajetCard(trajet) {
             <span><i class="fas fa-clock"></i> <strong>Heure:</strong> ${trajet.heure_depart}</span>
             <span><i class="fas fa-euro-sign"></i> <strong>Prix:</strong> ${trajet.prix} DT</span>
             <span><i class="fas fa-users"></i> <strong>Places:</strong> ${trajet.places_disponibles}</span>
-            <span><i class="fas fa-user"></i> <strong>Conducteur:</strong> ${trajet.conducteur_nom}</span>
+            <span><i class="fas fa-user"></i> <strong>Conducteur:</strong> ${trajet.conducteur_prenom} ${trajet.conducteur_nom}</span>
         </div>
         <p>${trajet.description || 'Trajet confortable'}</p>
         <button class="btn-traj">
@@ -123,4 +143,3 @@ function createTrajetCard(trajet) {
 
     return div;
 }
-

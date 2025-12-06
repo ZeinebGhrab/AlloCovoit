@@ -39,6 +39,8 @@ try {
             'description' => $trajet->getDescription(),
             'conducteur_nom' => $t['conducteur_nom'] ?? '',
             'conducteur_prenom' => $t['conducteur_prenom'] ?? '',
+            'conducteur_email' => $t['conducteur_email'] ?? '',
+            'conducteur_telephone' => $t['conducteur_telephone'] ?? '',
             'statut' => $trajet->getStatut(),
             'valider' => $trajet->getValider()
         ];

@@ -18,5 +18,5 @@ export async function handleTrajetAction(type, id) {
         loadTrajetsSectionAdmin();
     }
 
-    showNotification(result.message || result.error);
+    showNotification(result.message);
 }

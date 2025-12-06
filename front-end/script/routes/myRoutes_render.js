@@ -11,33 +11,42 @@ export function displayMesTrajets(containerId = 'mesTrajets') {
     const trajetsToDisplay = currentFilter === 'tous' ? allTrajets : allTrajets.filter(t => t.statut === currentFilter);
 
     if (trajetsToDisplay.length === 0) {
-        container.innerHTML = '<p style="text-align:center;color:#666;">Aucun trajet trouvé</p>';
+        container.innerHTML = `
+            <div class="empty-state" style="text-align:center;">
+                <i class="fas fa-car" style="text-align:center;font-size: 80px;opacity: 0.3;"></i>
+                <h3 style="text-align:center;">Aucun trajet</h3>
+                <p style="text-align:center;color:#666;">Vous n’avez publié aucun trajet pour le moment.</p>
+            </div>`;
         return;
     }
 
     trajetsToDisplay.forEach(t => {
         const div = document.createElement('div');
+        const prix = t.prix + ' DT';
         div.className = 'trajet-card';
         div.innerHTML = `
-            <h3>${t.ville_depart} → ${t.ville_arrivee}</h3>
-            <p>Date: ${t.date_depart}</p>
-            <p>Heure: ${t.heure_depart}</p>
-            <p>Prix: ${t.prix} DT</p>
-            <p>Places: ${t.places_disponibles}</p>
-            <p>Statut: ${t.statut}</p>
+        <h3><i class="fas fa-route"></i>${t.ville_depart} → ${t.ville_arrivee}</h3>
+        <div class="trajet-info">
+            <span><i class="fas fa-calendar"></i><strong>Date:</strong> ${t.date_depart}</span>
+            <span><i class="fas fa-clock"></i><strong>Heure:</strong> ${t.heure_depart}</span>
+            <span><i class="fas fa-users"></i><strong>Places:</strong> ${t.places_disponibles}</span>
+            <span><i class="fas fa-euro-sign"></i><strong>Prix:</strong> ${prix}</span>
+            <span><i class="fas fa-users"></i><strong>Statut:</strong>${t.statut}</span>
+        </div>
+         
         `;
 
         if (t.statut === 'actif') {
             const btnCancel = document.createElement('button');
             btnCancel.innerHTML = '<i class="fa-solid fa-ban"></i> Annuler ce trajet';
-            btnCancel.style.cssText = `background: orange;color: white;padding: 0.875rem 0.875rem;border: none;border-radius: 10px;font-weight: 100;cursor: pointer;display: inline-flex;align-items: center;gap: 0.5rem;justify-content: center;transition: all 0.3s ease;font-size: 0.9rem;text-decoration: none;`;
+            btnCancel.className = `btn-action refuse-btn`;
             btnCancel.addEventListener('click', () => openModal(t.id_trajet, 'cancel'));
             div.appendChild(btnCancel);
         }
 
         const btnDelete = document.createElement('button');
         btnDelete.innerHTML = '<i class="fa-solid fa-trash"></i> Supprimer ce trajet';
-        btnDelete.style.cssText = `background: #dc3545;color: white;padding: 0.875rem 0.875rem;border: none;border-radius: 10px;font-weight: 100;cursor: pointer;display: inline-flex;align-items: center;gap: 0.5rem;justify-content: center;transition: all 0.3s ease;font-size: 0.9rem;text-decoration: none; margin-left:5px`;
+        btnDelete.className = `delete-btn btn-action`;
         btnDelete.addEventListener('click', () => openModal(t.id_trajet, 'delete'));
         div.appendChild(btnDelete);
 

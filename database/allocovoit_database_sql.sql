@@ -91,4 +91,3 @@ INSERT INTO reservation (id_utilisateur, id_trajet, statut, nombre_places) VALUE
 (4, 2, 'confirmé', 1),
 (1, 3, 'en_attente', 1);
 
--- Mot de passe par défaut pour tous les comptes de test : "password123"

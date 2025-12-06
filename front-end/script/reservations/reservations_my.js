@@ -50,10 +50,10 @@ function displayReservations(container, reservations) {
     container.innerHTML = '';
     if (!reservations.length) {
         container.innerHTML = `
-            <div class="empty-state">
-                <i class="fa-solid fa-inbox"></i>
-                <h3>Aucune réservation</h3>
-                <p>Vous n'avez aucune réservation pour le moment.</p>
+            <div class="empty-state" style="text-align:center;">
+                <i class="fa-solid fa-inbox" style="text-align:center;"></i>
+                <h3 style="text-align:center;">Aucune réservation</h3>
+                <p style="text-align:center;">Vous n'avez aucune réservation pour le moment.</p>
             </div>`;
         updateStats([]);
         return;

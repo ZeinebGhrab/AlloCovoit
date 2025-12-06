@@ -148,7 +148,7 @@ class TrajetManager {
         $totalPages = ceil($total / $limit);
 
         // Récupérer les trajets de la page courante
-        $sql = "SELECT t.*, u.nom AS conducteur_nom, u.prenom AS conducteur_prenom,
+        $sql = "SELECT t.*, u.nom AS conducteur_nom, u.prenom AS conducteur_prenom, u.email AS conducteur_email, u.telephone AS conducteur_telephone,
             (SELECT COUNT(*) FROM reservation r WHERE r.id_trajet = t.id_trajet) as places_reservees
             FROM trajet t
             JOIN utilisateur u ON t.id_conducteur = u.id_utilisateur

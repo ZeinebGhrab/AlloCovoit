@@ -344,6 +344,16 @@ nav {
    Trajet Cards
    ============================================ */
 
+.trajets-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)) !important;
+    gap: 1.5rem !important;
+    padding: 1rem !important;
+    max-width: 1500px !important;
+    margin: 0 auto !important;
+    text-align: center;
+}
+
 .trajet-card {
     background: white;
     border: 2px solid var(--border);
@@ -395,7 +405,7 @@ nav {
 
 .trajet-info {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
     gap: 1.25rem;
     margin-bottom: 1.5rem;
     padding: 1.5rem;
@@ -823,52 +833,217 @@ footer p {
 }
 
 .btn-action {
-    padding: 0.75rem 1.5rem;
-    border-radius: 12px;
+    padding: 0.625rem 0.875rem;
+    border-radius: 10px;
     font-weight: 600;
     cursor: pointer;
+    border: none;
     display: inline-flex;
     align-items: center;
-    gap: 0.75rem;
+    justify-content: center;
+    gap: 0.5rem;
     transition: all 0.3s ease;
-    border: 2px solid;
-    background: white;
+    font-size: 0.9rem;
+    margin: 0 0.25rem;
+    min-width: 40px;
 }
 
-.btn-action-info {
+.btn-action i {
+    font-size: 1rem;
+}
+
+/* Bouton Voir (Eye) */
+.view-btn,
+.view-trajet-btn,
+.view-reservation-btn {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(6, 182, 212, 0.15) 100%);
     color: var(--primary);
-    border-color: var(--primary);
+    border: 2px solid rgba(6, 182, 212, 0.3);
 }
 
-.btn-action-info:hover {
+.view-btn:hover,
+.view-trajet-btn:hover,
+.view-reservation-btn:hover {
     background: var(--primary);
     color: white;
+    border-color: var(--primary);
     transform: translateY(-3px);
-    box-shadow: 0 6px 20px var(--shadow-lg);
+    box-shadow: 0 6px 20px rgba(6, 182, 212, 0.4);
 }
 
-.btn-action-edit {
+/* Bouton Bloquer (Lock) */
+.block-btn {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.15) 100%);
     color: var(--warning);
-    border-color: var(--warning);
+    border: 2px solid rgba(245, 158, 11, 0.3);
 }
 
-.btn-action-edit:hover {
+.block-btn:hover {
     background: var(--warning);
     color: white;
+    border-color: var(--warning);
     transform: translateY(-3px);
     box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
 }
 
-.btn-action-cancel {
-    color: var(--danger);
-    border-color: var(--danger);
+/* Bouton Débloquer (Unlock) */
+.unblock-btn {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.15) 100%);
+    color: var(--success);
+    border: 2px solid rgba(16, 185, 129, 0.3);
 }
 
-.btn-action-cancel:hover {
+.unblock-btn:hover {
+    background: var(--success);
+    color: white;
+    border-color: var(--success);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}
+
+/* Bouton Valider (Check) */
+.validate-btn {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.15) 100%);
+    color: var(--success);
+    border: 2px solid rgba(16, 185, 129, 0.3);
+}
+
+.validate-btn:hover {
+    background: var(--success);
+    color: white;
+    border-color: var(--success);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}
+
+/* Bouton Refuser (Ban) */
+.refuse-btn {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.15) 100%);
+    color: var(--warning);
+    border: 2px solid rgba(245, 158, 11, 0.3);
+}
+
+.refuse-btn:hover {
+    background: var(--warning);
+    color: white;
+    border-color: var(--warning);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+}
+
+/* Bouton Supprimer (Trash) */
+.delete-btn,
+.delete-trajet-btn {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(239, 68, 68, 0.15) 100%);
+    color: var(--danger);
+    border: 2px solid rgba(239, 68, 68, 0.3);
+}
+
+.delete-btn:hover,
+.delete-trajet-btn:hover {
     background: var(--danger);
     color: white;
+    border-color: var(--danger);
     transform: translateY(-3px);
     box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+}
+
+/* Animation des boutons */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.8;
+    }
+}
+
+.btn-action:active {
+    transform: translateY(-1px);
+    animation: pulse 0.3s ease;
+}
+
+/* Groupement des boutons d'action */
+td .btn-action {
+    margin: 0.125rem;
+}
+
+/* Responsive pour petits écrans */
+@media (max-width: 768px) {
+    .btn-action {
+        padding: 0.5rem 0.625rem;
+        font-size: 0.85rem;
+        min-width: 35px;
+    }
+
+    .btn-action i {
+        font-size: 0.9rem;
+    }
+
+    td .btn-action {
+        display: block;
+        margin: 0.25rem auto;
+        width: fit-content;
+    }
+}
+
+/* États désactivés */
+.btn-action:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+.btn-action:disabled:hover {
+    background: inherit;
+    color: inherit;
+    border-color: inherit;
+    box-shadow: none;
+}
+
+/* Tooltip pour les boutons */
+.btn-action[title] {
+    position: relative;
+}
+
+.btn-action[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0.5rem 0.75rem;
+    background: var(--dark);
+    color: white;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    margin-top: 0.5rem;
+    z-index: 1000;
+    animation: fadeIn 0.2s ease;
+}
+
+.btn-action[title]:hover::before {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-bottom-color: var(--dark);
+    margin-top: -6px;
+    z-index: 1000;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
 }
 
 /* ============================================

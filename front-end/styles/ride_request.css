@@ -64,6 +64,7 @@
     padding: 1rem !important;
     max-width: 1400px !important;
     margin: 0 auto !important;
+    text-align: center;
 }
 
 .reservation-card {

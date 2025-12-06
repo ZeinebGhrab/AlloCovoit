@@ -41,7 +41,7 @@ class ReservationManager {
 
         // Récupérer les réservations
         $query = "
-            SELECT r.*, t.ville_depart, t.ville_arrivee, t.date_depart, t.heure_depart, t.prix, u.nom AS nom_utilisateur, u.prenom AS prenom_utilisateur
+            SELECT r.*, t.ville_depart, t.ville_arrivee, t.date_depart, t.heure_depart, t.prix, u.nom AS nom_utilisateur, u.prenom AS prenom_utilisateur, u.email AS email_utilisateur, u.telephone AS telephone_utilisateur
             FROM reservation r
             JOIN trajet t ON r.id_trajet = t.id_trajet
             JOIN utilisateur u ON r.id_utilisateur = u.id_utilisateur
@@ -496,7 +496,70 @@ class ReservationManager {
 
         return true;
     }
-    
+
+    // Supprimer une réservation
+    public function deleteReservation(int $reservationId): bool {
+
+        // Récupérer la réservation avant suppression
+        $stmt = $this->conn->prepare("
+            SELECT r.id_trajet, r.nombre_places, r.statut AS statut_reservation,
+               u.email, u.prenom, u.nom
+            FROM reservation r
+            JOIN utilisateur u ON r.id_utilisateur = u.id_utilisateur
+            WHERE r.id_reservation = ?
+        ");
+        $stmt->bind_param("i", $reservationId);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        $reservation = $res->fetch_assoc();
+        $stmt->close();
+
+        if (!$reservation) {
+            return false; // Rien à supprimer
+        }
+
+        $trajetId = (int)$reservation['id_trajet'];
+        $places = (int)$reservation['nombre_places'];
+        $statutReservation = $reservation['statut_reservation'];
+
+        // Si la réservation était confirmée , libérer les places
+        if ($statutReservation === 'confirmé') {
+            $stmt = $this->conn->prepare("
+                UPDATE trajet 
+                    SET places_reservees = GREATEST(places_reservees - ?, 0)
+                WHERE id_trajet = ?
+            ");
+            $stmt->bind_param("ii", $places, $trajetId);
+            $stmt->execute();
+            $stmt->close();
+        }
+
+        // Supprimer la réservation
+        $stmt = $this->conn->prepare("DELETE FROM reservation WHERE id_reservation = ?");
+        $stmt->bind_param("i", $reservationId);
+        $deleted = $stmt->execute();
+        $stmt->close();
+
+        if (!$deleted) return false;
+
+        // Envoi email au passager
+        $subject = "Suppression de votre réservation ❌";
+        $body = "Bonjour {$reservation['prenom']} {$reservation['nom']},<br><br>
+            Votre réservation pour le trajet (ID: $trajetId) a été supprimée définitivement.<br>
+            Places concernées : $places.<br><br>
+            Merci d'utiliser AlloCovoit.<br>
+            <i>L'équipe AlloCovoit</i>";
+
+        $this->sendUserEmail(
+            $reservation['email'],
+            $reservation['prenom'],
+            $reservation['nom'],
+            $subject,
+            $body
+        );
+        return true;
+    }
+
     // Fermer la connexion
    
     public function close(): void {
