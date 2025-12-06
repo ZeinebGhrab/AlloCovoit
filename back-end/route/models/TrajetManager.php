@@ -133,31 +133,65 @@ class TrajetManager {
     }
 
     // Tous les trajets (pour admin) avec filtres et pagination
-    public function getAll(int $page = 1, int $limit = 10): array {
+    public function getAll(int $page = 1, int $limit = 10, string $searchCity = ''): array {
         $offset = ($page - 1) * $limit;
 
-        // Compter le total de trajets
-        $sqlCount = "SELECT COUNT(*) as total FROM trajet";
+        // Construire le filtre 
+        $filterSql = "";
+        $params = [];
+        $types = "";
+
+        if (!empty($searchCity)) {
+            $filterSql = "WHERE t.ville_depart LIKE ? OR t.ville_arrivee LIKE ?";
+            $searchTerm = "%$searchCity%";
+            $params[] = $searchTerm;
+            $params[] = $searchTerm;
+            $types .= "ss";
+        }
+
+        //  Compter le total filtré 
+        $sqlCount = "SELECT COUNT(*) AS total FROM trajet t $filterSql";
         $stmtCount = $this->conn->prepare($sqlCount);
+
+        if (!empty($searchCity)) {
+            $stmtCount->bind_param($types, ...$params);
+        }
+
         $stmtCount->execute();
-        $resultCount = $stmtCount->get_result();
-        $total = $resultCount->fetch_assoc()['total'];
+        $total = $stmtCount->get_result()->fetch_assoc()['total'];
         $stmtCount->close();
 
-        // Calculer le nombre total de pages
         $totalPages = ceil($total / $limit);
 
-        // Récupérer les trajets de la page courante
-        $sql = "SELECT t.*, u.nom AS conducteur_nom, u.prenom AS conducteur_prenom, u.email AS conducteur_email, u.telephone AS conducteur_telephone,
-            (SELECT COUNT(*) FROM reservation r WHERE r.id_trajet = t.id_trajet) as places_reservees
+        //  Récupérer trajets filtrés + paginés
+        $sql = "
+            SELECT 
+                t.*, 
+                u.nom AS conducteur_nom, 
+                u.prenom AS conducteur_prenom, 
+                u.email AS conducteur_email, 
+                u.telephone AS conducteur_telephone,
+                (SELECT COUNT(*) FROM reservation r WHERE r.id_trajet = t.id_trajet) AS places_reservees
             FROM trajet t
             JOIN utilisateur u ON t.id_conducteur = u.id_utilisateur
+            $filterSql
             ORDER BY t.date_depart DESC, t.heure_depart DESC
-            LIMIT " . intval($limit) . " OFFSET " . intval($offset);
+            LIMIT ? OFFSET ?
+        ";
 
         $stmt = $this->conn->prepare($sql);
         if (!$stmt) {
-            throw new Exception("Erreur préparation SQL: " . $this->conn->error);
+            throw new Exception("Erreur SQL: " . $this->conn->error);
+        }
+
+        // Ajout des paramètres à bind
+        if (!empty($searchCity)) {
+            $types .= "ii";   // pour LIMIT + OFFSET
+            $params[] = $limit;
+            $params[] = $offset;
+            $stmt->bind_param($types, ...$params);
+        } else {
+            $stmt->bind_param("ii", $limit, $offset);
         }
 
         $stmt->execute();
@@ -167,15 +201,14 @@ class TrajetManager {
         while ($row = $result->fetch_assoc()) {
             $trajets[] = $row;
         }
-
         $stmt->close();
 
-        // Retourner les données avec la pagination
         return [
             'trajets' => $trajets,
             'totalPages' => $totalPages,
             'page' => $page,
-            'total' => $total
+            'total' => $total,
+            'search' => $searchCity
         ];
     }
 

@@ -33,21 +33,56 @@ class UserManager {
     }
 
     // Tous les utilisateurs avec pagination
-    public function getAllUsers(int $page = 1, int $limit = 10) {
+    public function getAllUsers(int $page = 1, int $limit = 10, string $searchName = '') {
         try {
             $offset = ($page - 1) * $limit;
 
-            // Récupérer le nombre total d'utilisateurs
-            $countStmt = $this->conn->prepare("SELECT COUNT(*) AS total FROM utilisateur");
+            // Filtre de recherche (nom ou prénom)
+            $searchQuery = "";
+            $params = [];
+            $types = "";
+
+            if (!empty($searchName)) {
+                $searchQuery = "WHERE nom LIKE ? OR prenom LIKE ?";
+                $searchTerm = "%$searchName%";
+                $params[] = $searchTerm;
+                $params[] = $searchTerm;
+                $types .= "ss";
+            }
+
+            // Compter les utilisateurs filtrés ---
+            $countSql = "SELECT COUNT(*) AS total FROM utilisateur $searchQuery";
+            $countStmt = $this->conn->prepare($countSql);
+
+            if (!empty($searchName)) {
+                $countStmt->bind_param($types, ...$params);
+            }
+
             $countStmt->execute();
-            $countResult = $countStmt->get_result()->fetch_assoc();
-            $totalUsers = $countResult['total'];
+            $totalUsers = $countStmt->get_result()->fetch_assoc()['total'];
             $countStmt->close();
 
-            // Récupérer les utilisateurs pour la page courante
-            $sql = "SELECT * FROM utilisateur ORDER BY nom ASC, prenom ASC LIMIT ? OFFSET ?";
+            // Récupérer les utilisateurs filtrés + paginés ---
+            $sql = "
+                SELECT *
+                FROM utilisateur
+                $searchQuery
+                ORDER BY nom ASC, prenom ASC
+                LIMIT ? OFFSET ?
+            ";
             $stmt = $this->conn->prepare($sql);
-            $stmt->bind_param('ii', $limit, $offset);
+
+            // Ajouter les paramètres search si présents
+            if (!empty($searchName)) {
+                $types .= "ii";
+                $params[] = $limit;
+                $params[] = $offset;
+                $stmt->bind_param($types, ...$params);
+            } else {
+                // Sans recherche , uniquement limit + offset
+                $stmt->bind_param("ii", $limit, $offset);
+            }
+
             $stmt->execute();
             $result = $stmt->get_result();
 

@@ -103,7 +103,7 @@ export async function fetchMyTrajets(filters = {}, page = 1) {
         const data = await res.json();
 
         allTrajets = data.trajets ? data.trajets : [];
-        return allTrajets;
+        return data;
     } catch (err) {
         console.error('Erreur lors du fetch des trajets :', err);
         return [];

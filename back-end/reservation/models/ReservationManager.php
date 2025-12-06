@@ -31,26 +31,79 @@ class ReservationManager {
     }
 
 
-    public function getAllReservations(int $page = 1, int $limit = 5): array {
+    // Tous les réservations (pour admin) avec filtres et pagination
+    public function getAllReservations(int $page = 1, int $limit = 5, string $search = ''): array {
         $offset = ($page - 1) * $limit;
 
-        // Compter le total
-        $totalQuery = "SELECT COUNT(*) AS total FROM reservation";
-        $result = $this->conn->query($totalQuery);
-        $total = (int)$result->fetch_assoc()['total'];
+        // Construire filtre 
+        $filterSql = "";
+        $params = [];
+        $types = "";
 
-        // Récupérer les réservations
-        $query = "
-            SELECT r.*, t.ville_depart, t.ville_arrivee, t.date_depart, t.heure_depart, t.prix, u.nom AS nom_utilisateur, u.prenom AS prenom_utilisateur, u.email AS email_utilisateur, u.telephone AS telephone_utilisateur
+        if (!empty($search)) {
+            $filterSql = "
+                WHERE 
+                    u.nom LIKE ? 
+                    OR u.prenom LIKE ?
+                    OR t.ville_depart LIKE ?
+                    OR t.ville_arrivee LIKE ?
+            ";
+
+            $searchTerm = "%$search%";
+
+            $params = [$searchTerm, $searchTerm, $searchTerm, $searchTerm];
+            $types = "ssss";
+        }
+
+        // Compter le total filtré 
+        $countQuery = "
+            SELECT COUNT(*) AS total
             FROM reservation r
             JOIN trajet t ON r.id_trajet = t.id_trajet
             JOIN utilisateur u ON r.id_utilisateur = u.id_utilisateur
+            $filterSql
+        ";
+
+        $countStmt = $this->conn->prepare($countQuery);
+
+        if (!empty($search)) {
+            $countStmt->bind_param($types, ...$params);
+        }
+
+        $countStmt->execute();
+        $total = (int)$countStmt->get_result()->fetch_assoc()['total'];
+        $countStmt->close();
+
+        // Pagination calculée
+        $totalPages = ceil($total / $limit);
+
+        // Récupérer les réservations filtrées 
+        $query = "
+            SELECT 
+                r.*, 
+                t.ville_depart, t.ville_arrivee, t.date_depart, t.heure_depart, t.prix,
+                u.nom AS nom_utilisateur, u.prenom AS prenom_utilisateur, 
+                u.email AS email_utilisateur, u.telephone AS telephone_utilisateur
+            FROM reservation r
+            JOIN trajet t ON r.id_trajet = t.id_trajet
+            JOIN utilisateur u ON r.id_utilisateur = u.id_utilisateur
+            $filterSql
             ORDER BY r.date_reservation DESC
             LIMIT ? OFFSET ?
         ";
 
         $stmt = $this->conn->prepare($query);
-        $stmt->bind_param("ii", $limit, $offset);
+
+        // Ajouter LIMIT & OFFSET
+        if (!empty($search)) {
+            $types .= "ii";
+            $params[] = $limit;
+            $params[] = $offset;
+            $stmt->bind_param($types, ...$params);
+        } else {
+            $stmt->bind_param("ii", $limit, $offset);
+        }
+
         $stmt->execute();
         $result = $stmt->get_result();
 
@@ -66,7 +119,8 @@ class ReservationManager {
             'page' => $page,
             'limit' => $limit,
             'total' => $total,
-            'totalPages' => ceil($total / $limit)
+            'totalPages' => $totalPages,
+            'search' => $search
         ];
     }
 

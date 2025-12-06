@@ -70,10 +70,10 @@ AlloCovoit/
 │   │   ├─ administration/
 │   │   │   ├─ dashboard.js              # Admin logic
 │   │   │   ├─ dashboard_stats.js        # Admin stats handling
-│   │   │   ├─ modal_details.js
-│   │   │   ├─ modal_reservation_details.js
-│   │   │   ├─ modal_route_details.js
-│   │   │   └─ modal_user_details.js
+│   │   │   ├─ modal_details.js          # Generic modal management
+│   │   │   ├─ modal_reservation_details.js # Reservation details modal logic
+│   │   │   ├─ modal_route_details.js    # Route details modal logic
+│   │   │   └─ modal_user_details.js     # User details modal logic
 │   │   │        
 │   │   ├─ authentication/
 │   │   │   ├─ auth.js                   # Session management

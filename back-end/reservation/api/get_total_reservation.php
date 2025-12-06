@@ -25,9 +25,10 @@ try {
     $input = json_decode(file_get_contents("php://input"), true) ?? [];
     $page = max(1, intval($input['page'] ?? 1));
     $limit = max(1, intval($input['limit'] ?? 5));
+    $search = $input['search'] ? $input['search'] :  '';
 
     $reservationManager = new ReservationManager($conn);
-    $reservationData = $reservationManager->getAllReservations($page, $limit);
+    $reservationData = $reservationManager->getAllReservations($page, $limit, $search);
 
     // Nettoyer le buffer avant d'envoyer le JSON
     ob_end_clean();

@@ -12,13 +12,14 @@ export async function loadMesTrajets(filters = {}) {
     if (!filters.statut) filters.statut = currentFilter;
 
     // Récupérer les trajets depuis l'API
-    const trajets = await fetchMyTrajets(filters);
-
+    const data = await fetchMyTrajets(filters);
+    const trajets = Array.isArray(data.trajets) ? Array.isArray(data.trajets) : [] ;
     // Mettre à jour l'affichage
     displayMesTrajets();
 
     // Mettre à jour les statistiques
     updateStats(trajets);
+    
 }
 
 // Initialisation de la page "Mes trajets"

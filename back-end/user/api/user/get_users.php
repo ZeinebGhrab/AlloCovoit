@@ -21,9 +21,10 @@ try {
     // Pagination depuis POST
     $page = isset($input['page']) ? max(1, intval($input['page'])) : 1;
     $limit = isset($input['limit']) ? max(1, intval($input['limit'])) : 6;
+    $search = $input['search'] ? $input['search'] :  '';
 
     $userManager = new UserManager();
-    $usersData = $userManager->getAllUsers($page, $limit);
+    $usersData = $userManager->getAllUsers($page, $limit, $search);
 
     // Nettoyer le buffer avant d'envoyer le JSON
     ob_end_clean();

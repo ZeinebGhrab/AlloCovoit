@@ -17,11 +17,13 @@ try {
 
     // Pagination
     $input = json_decode(file_get_contents("php://input"), true) ?? [];
+
     $page = max(1, intval($input['page'] ?? 1));
     $limit = max(1, intval($input['limit'] ?? 5));
+    $search = $input['search'] ? $input['search'] :  '';
 
     // Récupérer les trajets avec pagination
-    $rawTrajets = $manager->getAll($page, $limit);
+    $rawTrajets = $manager->getAll($page, $limit, $search);
 
     // Transformer les trajets en tableau JSON utilisable
     $trajets = [];
