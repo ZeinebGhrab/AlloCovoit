@@ -7,6 +7,8 @@ const limit = 6;
 
 let selectedReservationId = null;
 let currentAction = null;
+let allReceivedRequests = [];     
+let filteredReceivedRequests = []; 
 
 document.addEventListener('DOMContentLoaded', initReceivedRequests);
 
@@ -28,7 +30,15 @@ export async function loadReceivedRequests(filters = {}, page = 1, limitValue = 
         const requests = data.received_requests || [];
         const pagination = data.pagination || {};
 
-        displayRequests(container, requests);
+        if (filters.filter === 'tous') {
+            allReceivedRequests = requests;
+        }
+
+        filteredReceivedRequests = requests;
+
+        displayRequests(container, filteredReceivedRequests);
+
+
         displayPagination(
             pagination.totalPages || 1,
             page,
@@ -39,6 +49,8 @@ export async function loadReceivedRequests(filters = {}, page = 1, limitValue = 
             limitValue,
             'reservations-pagination'
         );
+
+        updateStats(allReceivedRequests);
 
     } catch (err) {
         console.error(err);
@@ -209,14 +221,15 @@ async function handleModalAction() {
 
         if (result.success) {
             showNotification(
-                currentAction === 'confirm' ? 'Reservation confirmed' : 'Reservation canceled',
+                currentAction === 'confirm' ? 'Reservation confirmée' : 'Reservation annulée',
                 'success'
             );
             closeModal();
             // Recharge uniquement la page courante avec les filtres actuels
             await loadReceivedRequests(currentFilters, currentPage, limit);
         } else {
-            showNotification('Failed to update reservation', 'error');
+            console.log(result);
+            showNotification(result.message);
         }
     } catch (err) {
         console.error(err);

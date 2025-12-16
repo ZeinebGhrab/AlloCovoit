@@ -1,9 +1,9 @@
-export async function fetchUsers(page, limit) {
+export async function fetchUsers(search ,page, limit) {
     try {
         const response = await fetch('/AlloCovoit/back-end/user/api/user/get_users.php', {
             method: 'POST',
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ page, limit })
+            body: JSON.stringify({ search ,page, limit })
         });
 
         return await response.json();

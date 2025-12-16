@@ -10,8 +10,8 @@ export async function loadTrajetsSectionAdmin(filters = {}, page = 1, limit = tr
     const container = document.getElementById("trajets");
 
     currentTrajetPage = page;
-
-    const data = await fetchTrajetsAdmin(page, limit);
+   console.log(filters);
+    const data = await fetchTrajetsAdmin(filters.search, page, limit);
 
     renderTrajetsAdmin(data.trajets || [], container);
 
@@ -29,7 +29,7 @@ export async function loadTrajetsSectionAdmin(filters = {}, page = 1, limit = tr
 
 let currentPage = 1;
 let currentFilters = {};
-const limit = 10;
+const limit = 4;
 
 export async function loadTrajetsSection(filters = {}, page = 1, limitParam = limit) {
     try {

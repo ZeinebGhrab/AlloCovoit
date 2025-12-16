@@ -80,16 +80,24 @@ class TrajetManager {
 
     // Tous les trajets validés avec filtres et pagination
     public function getAllValidate($userId, $filters = [], $sortField = 'date_depart', $sortOrder = 'ASC', $offset = 0, $limit = 10) {
+        
+        $this->updateFinishedRoutes();
+        
         $allowedSortFields = ['date_depart','heure_depart','ville_depart','ville_arrivee','nom','prenom'];
         $sortField = in_array($sortField, $allowedSortFields) ? $sortField : 'date_depart';
         $sortOrder = strtoupper($sortOrder) === 'DESC' ? 'DESC' : 'ASC';
 
-        $sql = "SELECT t.*, u.nom AS conducteur_nom, u.prenom AS conducteur_prenom
+        $sql = "SELECT t.*, 
+            u.nom AS conducteur_nom, 
+            u.prenom AS conducteur_prenom,
+            u.email AS conducteur_email,
+            u.telephone AS conducteur_tel
             FROM trajet AS t 
             JOIN utilisateur AS u ON t.id_conducteur = u.id_utilisateur
             WHERE t.valider = 1 
               AND t.places_reservees != t.places_disponibles 
               AND u.statut = 'actif'
+              AND t.statut = 'actif'
               AND t.id_conducteur != ?
               AND TIMESTAMP(t.date_depart, t.heure_depart) > SYSDATE()";
 
@@ -134,6 +142,9 @@ class TrajetManager {
 
     // Tous les trajets (pour admin) avec filtres et pagination
     public function getAll(int $page = 1, int $limit = 10, string $searchCity = ''): array {
+
+        $this->updateFinishedRoutes();
+
         $offset = ($page - 1) * $limit;
 
         // Construire le filtre 
@@ -214,6 +225,9 @@ class TrajetManager {
 
     // Mes trajets pour un conducteur
     public function getMyRoutes(int $userId, ?string $statut = null, int $page = 1, int $limit = 10): array {
+
+        $this->updateFinishedRoutes();
+
         $offset = ($page - 1) * $limit;
 
         $sql = "SELECT t.*, u.nom AS conducteur_nom, u.prenom AS conducteur_prenom
@@ -384,6 +398,16 @@ class TrajetManager {
         $stmt->close();
 
         return (float)($result['total_revenue'] ?? 0);
+    }
+
+
+    public function updateFinishedRoutes() {
+        $sql = "UPDATE trajet 
+            SET statut = 'terminé'
+            WHERE statut != 'terminé'
+              AND TIMESTAMP(date_depart, heure_depart) < NOW()";
+
+        $this->conn->query($sql);
     }
 }
 ?>

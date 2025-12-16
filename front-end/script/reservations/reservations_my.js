@@ -7,6 +7,9 @@ const limit = 6;
 
 let selectedReservationId = null;
 let currentAction = null;
+let allReservations = [];        // contient TOUTES les réservations
+let filteredReservations = [];   // réservations après filtre
+
 
 document.addEventListener('DOMContentLoaded', initMyReservations);
 
@@ -27,6 +30,14 @@ export async function loadReservations(filters = {}, page = 1, limitValue = limi
         const reservations = data.reservations || [];
         const pagination = data.pagination || {};
 
+        if (filters.filter === 'tous') {
+            allReservations = reservations;
+        }
+
+        filteredReservations = reservations;
+
+        displayReservations(container, filteredReservations);
+
         displayReservations(container, reservations);
         displayPagination(
             pagination.totalPages || 1,
@@ -38,6 +49,8 @@ export async function loadReservations(filters = {}, page = 1, limitValue = limi
             limitValue,
             'paginationMy'
         );
+
+        updateStats(allReservations);
 
     } catch (err) {
         console.error(err);

@@ -49,9 +49,12 @@ try {
             'heure_depart' => $t['heure_depart'],
             'prix' => $t['prix'],
             'places_disponibles' => $t['places_disponibles'],
+            'places_reservees' => $t['places_reservees'],
             'description' => $t['description'],
             'conducteur_nom' => $t['conducteur_nom'] ?? '',
             'conducteur_prenom' => $t['conducteur_prenom'] ?? '',
+            'conducteur_email' => $t['conducteur_email'] ?? '',
+            'conducteur_tel' => $t['conducteur_tel'] ?? '',
             'statut' => $t['statut'],
             'valider' => $t['valider'] ?? 0
         ];

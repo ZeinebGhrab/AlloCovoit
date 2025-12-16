@@ -428,7 +428,7 @@ class ReservationManager {
     }
 
 
-    // Confirmer une réservation et mettre à jour les places
+     // Confirmer une réservation et mettre à jour les places
      
     public function confirmReservation(int $reservationId): bool {
         // Récupérer la réservation et l'utilisateur

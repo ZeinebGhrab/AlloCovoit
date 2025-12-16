@@ -18,6 +18,7 @@ export function initPublicationForm() {
                 window.location.href = "/AlloCovoit/front-end/interfaces/route/ride-publication.html";
             }, 1000);
         } else {
+            showNotification(res.message);
             console.log(res.message);
         }
     });

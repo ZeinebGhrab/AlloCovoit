@@ -6,6 +6,10 @@ let currentAction = null;
 let selectedTrajetId = null;
 let currentFilter = 'tous'; // filtre courant
 
+let allTrajets = [];   // contient TOUS les trajets
+let filteredTrajets = []; // contient les trajets du filtre
+
+
 // Charger les trajets depuis le back avec filtre
 export async function loadMesTrajets(filters = {}) {
     // Ajouter le filtre courant si non fourni
@@ -13,12 +17,21 @@ export async function loadMesTrajets(filters = {}) {
 
     // Récupérer les trajets depuis l'API
     const data = await fetchMyTrajets(filters);
-    const trajets = Array.isArray(data.trajets) ? Array.isArray(data.trajets) : [] ;
+    const trajets = Array.isArray(data.trajets) ? data.trajets : [];
+
     // Mettre à jour l'affichage
     displayMesTrajets();
 
+
+    if (filters.statut === 'tous') {
+        allTrajets = trajets;           
+        filteredTrajets = trajets;      
+    } else {
+        filteredTrajets = trajets;      
+    }
+  
     // Mettre à jour les statistiques
-    updateStats(trajets);
+    updateStats(allTrajets);
     
 }
 
@@ -90,8 +103,13 @@ async function confirmAction() {
 
 // Statistiques
 function updateStats(trajets) {
+    // Revenu réel = prix * places_reservees
+    const revenuTotal = trajets.reduce((acc, t) => acc + ((t.places_reservees || 0) * (t.prix || 0)), 0);
+
+    // Revenu maximum potentiel = prix * places_disponibles
+    const revenuMax = trajets.reduce((acc, t) => acc + ((t.places_disponibles || 0) * (t.prix || 0)), 0);
     document.getElementById('totalTrajets').textContent = trajets.length;
     document.getElementById('trajetsActifs').textContent = trajets.filter(t => t.statut === 'actif').length;
-    document.getElementById('totalReservations').textContent = trajets.reduce((acc, t) => acc + (t.reservations || 0), 0);
-    document.getElementById('revenuTotal').textContent = trajets.reduce((acc, t) => acc + (t.revenu || 0), 0) + ' DT';
+    document.getElementById('trajetsTerminés').textContent = trajets.filter(t => t.statut === 'terminé').length;
+    document.getElementById('revenuTotal').textContent = revenuMax + ' DT';
 }

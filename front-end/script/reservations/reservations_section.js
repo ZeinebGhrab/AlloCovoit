@@ -9,7 +9,7 @@ export async function loadReservationsSection(filters = {}, page = 1, limit = re
     const container = document.getElementById('reservations');
     currentReservationPage = page;
 
-    const data = await fetchReservations(page, limit);
+    const data = await fetchReservations(filters.search, page, limit);
     renderReservations(data.reservations || [], container);
 
     displayPagination(

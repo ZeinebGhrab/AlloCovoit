@@ -1,10 +1,24 @@
 import { showReservationDetails } from "../administration/modal_reservation_details.js";
 import { handleReservationsAction } from "./reservations_actions.js";
+import { loadReservationsSection } from "./reservations_section.js";
 
 export function renderReservations(reservations, container) {
     container.innerHTML = `
         <div class="content-header">
             <h2><i class="fas fa-ticket-alt"></i> Réservations</h2>
+        </div> 
+        <div class="search-box">
+            <div class="search-input-wrapper">
+                <i class="fas fa-search"></i>
+                <input 
+                    type="text" 
+                    id="searchReservationsInput" 
+                    placeholder="Rechercher par départ ou arrivée"
+                >
+            <button class="btn-search">
+                <i class="fas fa-search"></i>
+                Rechercher
+            </button>
         </div>     
         <table class="table-container">
             <thead>
@@ -70,13 +84,25 @@ export function renderReservations(reservations, container) {
         )
     );
     
-        // Boutons Supprimer
-        container.querySelectorAll('.delete-btn').forEach(btn =>
-            btn.addEventListener("click", () => {
-                if (confirm("Supprimer cette réservation ?"))
-                    handleReservationsAction("delete", btn.dataset.id);
-            })
-        );
+    // Boutons Supprimer
+    container.querySelectorAll('.delete-btn').forEach(btn =>
+        btn.addEventListener("click", () => {
+            if (confirm("Supprimer cette réservation ?"))
+                handleReservationsAction("delete", btn.dataset.id);
+        })
+    );
+
+    // Recherche côté API
+    const searchInput = container.querySelector('#searchReservationsInput');
+    const searchBtn = container.querySelector('.btn-search');
+    
+    const performSearch = () => {
+        const query = searchInput.value.trim();
+        loadReservationsSection({ search: query }, 1); // page 1
+    };
+    
+    searchInput.addEventListener('keyup', e => { if (e.key === 'Enter') performSearch(); });
+    searchBtn.addEventListener('click', performSearch);
 }
 
 function getStatusBadge(statut) {

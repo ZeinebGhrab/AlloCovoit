@@ -1,9 +1,9 @@
-export async function fetchTrajetsAdmin(page = 1, limit = 8) {
+export async function fetchTrajetsAdmin(search = '',page = 1, limit = 8) {
     try {
         const response = await fetch('/AlloCovoit/back-end/route/api/get_routes_admin.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ page, limit })
+            body: JSON.stringify({search, page, limit })
         });
 
         if (!response.ok) throw new Error('Erreur lors de la récupération des trajets.');
@@ -61,7 +61,7 @@ async function callTrajetApi(url, id) {
 let currentPage = 1;
 let currentFilters = {};
 
-export async function fetchTrajets(filters = {}, page = 1, limit = 10) {
+export async function fetchTrajets(filters = {}, page = 1, limit = 4) {
     try {
         currentPage = page;
         currentFilters = filters;

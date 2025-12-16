@@ -12,7 +12,7 @@ export function displayMesTrajets(containerId = 'mesTrajets') {
 
     if (trajetsToDisplay.length === 0) {
         container.innerHTML = `
-            <div class="empty-state" style="text-align:center;">
+            <div class="empty-state">
                 <i class="fas fa-car" style="text-align:center;font-size: 80px;opacity: 0.3;"></i>
                 <h3 style="text-align:center;">Aucun trajet</h3>
                 <p style="text-align:center;color:#666;">Vous n’avez publié aucun trajet pour le moment.</p>

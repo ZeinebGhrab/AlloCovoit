@@ -1,11 +1,26 @@
 import { handleTrajetAction } from "./routes_actions.js";
 import { addToCart } from '../cart.js';
 import { showTrajetDetails } from "../administration/modal_route_details.js";
+import { loadTrajetsSectionAdmin } from "./routes_section.js";
+
 export function renderTrajetsAdmin(trajets, container) {
     container.innerHTML = `
         <div class="content-header">
             <h2><i class="fas fa-route"></i> Trajets</h2>
-        </div>      
+        </div>
+        <div class="search-box">
+            <div class="search-input-wrapper">
+                <i class="fas fa-search"></i>
+                <input 
+                    type="text" 
+                    id="searchTrajetsInput" 
+                    placeholder="Rechercher par départ ou arrivée"
+                >
+                <button class="btn-search">
+                    <i class="fas fa-search"></i>
+                    Rechercher
+                </button>
+            </div>      
         <table class="table-container">
             <thead>
                 <tr>
@@ -86,6 +101,18 @@ export function renderTrajetsAdmin(trajets, container) {
                 handleTrajetAction("delete", btn.dataset.id);
         })
     );
+
+    // Recherche côté API
+    const searchInput = container.querySelector('#searchTrajetsInput');
+    const searchBtn = container.querySelector('.btn-search');
+
+    const performSearch = () => {
+        const query = searchInput.value.trim();
+        loadTrajetsSectionAdmin({ search: query }, 1); // page 1
+    };
+
+    searchInput.addEventListener('keyup', e => { if (e.key === 'Enter') performSearch(); });
+    searchBtn.addEventListener('click', performSearch);
 }
 
 export function renderTrajets(trajets) {
@@ -96,10 +123,10 @@ export function renderTrajets(trajets) {
 
     if (trajets.length === 0) {
         container.innerHTML = `
-            <div class="empty-state" style="text-align:center;">
-                <i class="fas fa-car" style="text-align:center;font-size: 80px;opacity: 0.3;"></i>
-                <h3 style="text-align:center;">Aucun trajet</h3>
-                <p style="text-align:center;color:#666;">Aucun trajet n’a été publié pour le moment.</p>
+            <div class="empty-state">
+                <i class="fas fa-car" style="font-size: 80px; opacity: 0.3;"></i>
+                <h3>Aucun trajet</h3>
+                <p style="color:#666;">Aucun trajet n’a été publié pour le moment.</p>
             </div>`;
         return;
     }
@@ -120,15 +147,20 @@ function createTrajetCard(trajet) {
             <span><i class="fas fa-calendar"></i> <strong>Date:</strong> ${trajet.date_depart}</span>
             <span><i class="fas fa-clock"></i> <strong>Heure:</strong> ${trajet.heure_depart}</span>
             <span><i class="fas fa-euro-sign"></i> <strong>Prix:</strong> ${trajet.prix} DT</span>
-            <span><i class="fas fa-users"></i> <strong>Places:</strong> ${trajet.places_disponibles}</span>
-            <span><i class="fas fa-user"></i> <strong>Conducteur:</strong> ${trajet.conducteur_prenom} ${trajet.conducteur_nom}</span>
+            <span><i class="fas fa-users"></i> <strong>Places:</strong> ${trajet.places_disponibles - trajet.places_reservees}</span>
         </div>
-        <p>${trajet.description || 'Trajet confortable'}</p>
-        <button class="btn-traj">
-            <i class="fas fa-cart-plus"></i> Ajouter au panier
-        </button>
+
+        <div class="trajet-actions">
+            <button class="btn-traj">
+                <i class="fas fa-cart-plus"></i> Ajouter au panier
+            </button>
+            <button class="btn-details">
+                <i class="fas fa-eye"></i> Voir les détails
+            </button>
+        </div>
     `;
 
+    // Ajouter au panier
     div.querySelector('.btn-traj').addEventListener('click', () => {
         addToCart(
             trajet.id_trajet,
@@ -138,6 +170,11 @@ function createTrajetCard(trajet) {
             trajet.heure_depart,
             trajet.prix
         );
+    });
+
+    // Voir les détails
+    div.querySelector('.btn-details').addEventListener('click', () => {
+        showTrajetDetails(trajet);
     });
 
     return div;

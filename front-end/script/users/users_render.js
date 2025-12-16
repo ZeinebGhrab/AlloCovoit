@@ -1,10 +1,24 @@
 import { blockUser, unblockUser, deleteUser } from "./users_actions.js";
 import { showUserDetails } from "../administration/modal_user_details.js";
+import { loadUsersSection } from "./users_section.js";
 
 export function displayUsers(users, container, refresh) {
     container.innerHTML = `
         <div class="content-header">
             <h2><i class="fas fa-users"></i> Utilisateurs</h2>
+        </div>
+        <div class="search-box">
+            <div class="search-input-wrapper">
+                <i class="fas fa-search"></i>
+                <input 
+                    type="text" 
+                    id="searchUsersInput" 
+                    placeholder="Rechercher par nom ou prénom"
+                >
+            <button class="btn-search">
+                <i class="fas fa-search"></i>
+                Rechercher
+            </button>
         </div>
         <table class="table-container">
             <thead>
@@ -76,4 +90,16 @@ export function displayUsers(users, container, refresh) {
             }
         });
     });
+
+    // Recherche côté API
+    const searchInput = container.querySelector('#searchUsersInput');
+    const searchBtn = container.querySelector('.btn-search');
+    
+    const performSearch = () => {
+        const query = searchInput.value.trim();
+        loadUsersSection({ search: query }, 1); // page 1
+    };
+    
+    searchInput.addEventListener('keyup', e => { if (e.key === 'Enter') performSearch(); });
+    searchBtn.addEventListener('click', performSearch);
 }

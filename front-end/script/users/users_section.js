@@ -11,7 +11,7 @@ export async function loadUsersSection(filters = {}, page = 1, limit = usersPerP
 
     const container = document.getElementById("users");
 
-    const data = await fetchUsers(page, limit);
+    const data = await fetchUsers(filters.search, page, limit);
 
     displayUsers(data.users, container);
 
