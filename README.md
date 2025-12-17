@@ -188,7 +188,7 @@ AlloCovoit/
 │   └─ vlucas/phpdotenv/
 ├─ .env                                  # Environment config
 │ 
-├─ AlloCovoit.mp4 # demo Video 
+├─ AlloCovoit.mp4                        # demo Video 
 ├─ .gitignore
 ├─ composer.json
 ├─ composer.lock
