@@ -5,7 +5,7 @@
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES6%252B-F7DF1E?logo=javascript)]()
 [![License](https://img.shields.io/badge/license-MIT-green.svg)]()
 
-AlloCovoit is a modern web application for **carpooling**, built with **Vanilla JavaScript, PHP, and MySQL**.  
+AlloCovoit is a modern web application for **carpooling**, built with **JavaScript, PHP, and MySQL**.  
 It allows users to share trips, manage reservations, and connect with other travelers securely.
 
 ---
